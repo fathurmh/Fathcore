@@ -11,6 +11,7 @@ using Fathcore.Abstractions;
 using Fathcore.Extensions;
 using Fathcore.Filters;
 using Fathcore.Infrastructures;
+using Fathcore.Infrastructures.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -92,7 +93,10 @@ namespace Fathcore
         /// <returns>Service provider</returns>
         public virtual IServiceCollection ConfigureServices(IConfiguration configuration = null)
         {
-            ResolveUnregistered(typeof(DependencyRegistrar));
+            Assembly.GetExecutingAssembly().GetTypes()
+                    .Where(type => type.GetInterfaces().Contains(typeof(IDependencyRegistrar))).ToList()
+                    .ForEach(registrar => ResolveUnregistered(registrar));
+
             _serviceCollection.AddHttpContextAccessor();
             _serviceCollection.AddLocalization();
             _serviceCollection.AddResponseCaching();
