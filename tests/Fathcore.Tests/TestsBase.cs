@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using Fathcore;
 using Fathcore.Data.Abstractions;
+using Fathcore.Extensions;
 using Fathcore.Tests.Fakes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,46 @@ namespace Fathcore.Tests
             configure(services);
 
             return services.BuildServiceProvider();
+        }
+        #endregion
+
+        #region Database Methods
+        public DbContextOptions<T> DatabaseOptions<T>() where T : DbContext, IDbContext
+        {
+            string databaseName = Guid.NewGuid().ToString();
+            return DatabaseOptions<T>(databaseName);
+        }
+
+        public DbContextOptions<T> DatabaseOptions<T>(string databaseName) where T : DbContext, IDbContext
+        {
+            DbContextOptions<T> options = new DbContextOptionsBuilder<T>().UseInMemoryDatabase(databaseName).Options;
+
+            using (T context = Activator.CreateInstance(typeof(T), new object[] { options }) as T) context.Database.EnsureDeleted();
+            using (T context = Activator.CreateInstance(typeof(T), new object[] { options }) as T) context.Database.EnsureCreated();
+
+            return options;
+        }
+
+        public DbContextOptions<T> DatabaseOptionsWithData<T>(Type contextType = null) where T : DbContext, IDbContext
+        {
+            string databaseName = Guid.NewGuid().ToString();
+            return DatabaseOptionsWithData<T>(databaseName, contextType ?? typeof(T));
+        }
+
+        public DbContextOptions<T> DatabaseOptionsWithData<T>(string databaseName, Type contextType) where T : DbContext, IDbContext
+        {
+            DbContextOptions<T> options = DatabaseOptions<T>(databaseName);
+
+            List<FakeEntity> fakeEntities = new FakeEntities();
+
+            using (IDbContext context = Activator.CreateInstance(contextType, new object[] { options }) as IDbContext)
+            {
+                context.Set<FakeEntity>().AddRange(fakeEntities);
+                context.Audit();
+                context.SaveChanges();
+            }
+
+            return options;
         }
         #endregion
     }

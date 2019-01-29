@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Fathcore.Data.Abstractions;
@@ -127,6 +128,44 @@ namespace Fathcore.Extensions
         {
             return context.ChangeTracker.Entries()
                 .Where(entry => entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.State == EntityState.Deleted);
+        }
+        
+        /// <summary>
+        /// Specifies related entities to include in the query results.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call to with comma (,).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
+        /// <param name="entities">The source entities query</param>
+        /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
+        /// <returns>A new query with the related data included.</returns>
+        public static IQueryable<TEntity> IncludeProperties<TEntity>(this IQueryable<TEntity> entities, Expression<Func<TEntity, object>>[] navigationProperties)
+            where TEntity : BaseEntity
+        {
+            foreach (Expression<Func<TEntity, object>> navigationProperty in navigationProperties)
+            {
+                entities = entities.Include(navigationProperty);
+            }
+            return entities;
+        }
+
+        /// <summary>
+        /// Specifies related entities to include in the query results.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call to with comma (,).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
+        /// <param name="entities">The source entities query</param>
+        /// <param name="navigationProperties">A string representing the navigation property to be included (Property1).</param>
+        /// <returns>A new query with the related data included.</returns>
+        public static IQueryable<TEntity> IncludeProperties<TEntity>(this IQueryable<TEntity> entities, string[] navigationProperties)
+            where TEntity : BaseEntity
+        {
+            foreach (string navigationProperty in navigationProperties)
+            {
+                entities = entities.Include(navigationProperty);
+            }
+            return entities;
         }
         
         private static EntityEntry WriteUserModifier(this EntityEntry entry, string currentUsername, DateTime now)
