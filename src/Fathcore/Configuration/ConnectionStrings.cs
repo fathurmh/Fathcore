@@ -1,12 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Fathcore.Configuration
 {
+    /// <summary>
+    /// Represents list of connection strings
+    /// </summary>
     public class ConnectionStrings : List<ConnectionString>
     {
-        public const string Default = "Default";
-        public string this[string name] => FindLast(prop => prop.Name == name).ToString();
+        /// <summary>
+        /// Get default connection strings.
+        /// </summary>
+        /// <returns>Returns default connection strings.</returns>
+        public string Default => FindLast(nameof(Default));
+
+        /// <summary>
+        /// Get connection strings with specified name.
+        /// </summary>
+        /// <param name="name">Specified name connection strings.</param>
+        /// <returns></returns>
+        public string this[string name] => FindLast(name);
+
+        private string FindLast(string name)
+        {
+            if(!string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+            
+            return this.FindLast(prop => prop.Name == name).ToString() ?? string.Empty;
+        }
     }
 
     /// <summary>

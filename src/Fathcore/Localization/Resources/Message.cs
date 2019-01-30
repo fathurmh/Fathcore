@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets the hello message
         /// </summary>
-        public const string Hello = "Hello";
+        public const string Hello = nameof(Hello);
     }
 }

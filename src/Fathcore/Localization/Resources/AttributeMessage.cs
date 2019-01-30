@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets the required attribute message
         /// </summary>
-        public const string Required = "Required";
+        public const string Required = nameof(Required);
     }
 }
