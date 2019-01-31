@@ -6,20 +6,38 @@ using Fathcore.Helpers;
 using Fathcore.Helpers.Abstractions;
 using Fathcore.Providers;
 using Fathcore.Providers.Abstractions;
+using Microsoft.AspNetCore.Hosting;
+using Moq;
 using Xunit;
 
 namespace Fathcore.Tests.Helpers
 {
     public class PasswordHasherTests
     {
+        public ICommonHelpers CommonHelpers => new CommonHelpers(CoreFileProvider);
+        public ICoreFileProvider CoreFileProvider
+        {
+            get
+            {
+                var _hostingEnvironmentMock = new Mock<IHostingEnvironment>();
+                _hostingEnvironmentMock
+                    .Setup(prop => prop.ContentRootPath)
+                    .Returns("D:\\Personal\\Dev\\fmh-codebase\\Presentation\\CodeBase.Web.Api");
+                _hostingEnvironmentMock
+                    .Setup(prop => prop.WebRootPath)
+                    .Returns("D:\\Personal\\Dev\\fmh-codebase\\Presentation\\CodeBase.Web.Api");
+                
+                return new CoreFileProvider(_hostingEnvironmentMock.Object);
+            }
+        }
+
         [Theory]
         [InlineData("Sample String")]
         [InlineData("1sKQ^+@?J.Euq>|g|&lp6u$zNmWMo]RB{xe.iC!LsUqUP1o8)")]
         [InlineData("Песня про надежду")]
         public void Should_Hash_A_String(string plainPassword)
         {
-            ICommonHelpers commonHelpers = new CommonHelpers();
-            IPasswordHasher passwordHasher = new PasswordHasher(commonHelpers);
+            IPasswordHasher passwordHasher = new PasswordHasher(CommonHelpers);
 
             string hashedPassword = passwordHasher.HashPassword(plainPassword);
 
@@ -32,8 +50,7 @@ namespace Fathcore.Tests.Helpers
         [InlineData("Песня про надежду")]
         public void Should_Verify_Hashed_String(string plainPassword)
         {
-            ICommonHelpers commonHelpers = new CommonHelpers();
-            IPasswordHasher passwordHasher = new PasswordHasher(commonHelpers);
+            IPasswordHasher passwordHasher = new PasswordHasher(CommonHelpers);
 
             string hashedPassword = passwordHasher.HashPassword(plainPassword);
             var result = passwordHasher.VerifyHashedPassword(hashedPassword, plainPassword);
@@ -47,8 +64,7 @@ namespace Fathcore.Tests.Helpers
         [InlineData("Песня про надежду")]
         public void Should_Verify_Non_Hashed_String(string plainPassword)
         {
-            ICommonHelpers commonHelpers = new CommonHelpers();
-            IPasswordHasher passwordHasher = new PasswordHasher(commonHelpers);
+            IPasswordHasher passwordHasher = new PasswordHasher(CommonHelpers);
 
             string hashedPassword = plainPassword;
             var result = passwordHasher.VerifyHashedPassword(hashedPassword, plainPassword);
@@ -62,8 +78,7 @@ namespace Fathcore.Tests.Helpers
         [InlineData("Песня про надежду")]
         public void Verify_Hashed_String_Should_Fail_If_Not_The_Same(string plainPassword)
         {
-            ICommonHelpers commonHelpers = new CommonHelpers();
-            IPasswordHasher passwordHasher = new PasswordHasher(commonHelpers);
+            IPasswordHasher passwordHasher = new PasswordHasher(CommonHelpers);
 
             string hashedPassword = passwordHasher.HashPassword("Password Verification Status Will Failed");
             var result = passwordHasher.VerifyHashedPassword(hashedPassword, plainPassword);
@@ -77,8 +92,7 @@ namespace Fathcore.Tests.Helpers
         [InlineData("Песня про надежду")]
         public void Hashed_Password_Never_The_Same(string plainPassword)
         {
-            ICommonHelpers commonHelpers = new CommonHelpers();
-            IPasswordHasher passwordHasher = new PasswordHasher(commonHelpers);
+            IPasswordHasher passwordHasher = new PasswordHasher(CommonHelpers);
 
             string hashedPassword = passwordHasher.HashPassword(plainPassword);
             string hashedPassword1 = passwordHasher.HashPassword(plainPassword);
@@ -89,6 +103,47 @@ namespace Fathcore.Tests.Helpers
             Assert.Matches(new Regex(@"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$"), hashedPassword);
             Assert.Matches(new Regex(@"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$"), hashedPassword1);
             Assert.Matches(new Regex(@"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$"), hashedPassword2);
+        }
+
+        [Fact]
+        public void Should_Encrypt_And_Decrypt()
+        {
+            IPasswordHasher passwordHasher = new PasswordHasher(CommonHelpers);
+            var plainString = "Test RSA Encrypt.";
+
+            var encrypted = passwordHasher.Encrypt(plainString);
+            var encrypted1 = passwordHasher.Encrypt(plainString);
+            var encrypted2 = passwordHasher.Encrypt(plainString);
+            var decrypted = passwordHasher.Decrypt(encrypted);
+            var decrypted1 = passwordHasher.Decrypt(encrypted1);
+            var decrypted2 = passwordHasher.Decrypt(encrypted2);
+            
+            Assert.NotEqual(encrypted, encrypted1);
+            Assert.NotEqual(encrypted1, encrypted2);
+
+            Assert.Equal(plainString, decrypted);
+            Assert.Equal(plainString, decrypted1);
+            Assert.Equal(plainString, decrypted2);
+        }
+
+        [Fact]
+        public void Should_Verify_Encrypted_Data()
+        {
+            IPasswordHasher passwordHasher = new PasswordHasher(CommonHelpers);
+            var plainString = "Test RSA Encrypt.";
+
+            var encrypted = passwordHasher.Encrypt(plainString);
+            var encrypted1 = passwordHasher.Encrypt(plainString);
+            var encrypted2 = passwordHasher.Encrypt(plainString);
+
+            var verificationStatus = passwordHasher.VerifyEncyptedData(encrypted, encrypted1);
+            var verificationStatus1 = passwordHasher.VerifyEncyptedData(encrypted1, encrypted2);
+            
+            Assert.NotEqual(encrypted, encrypted1);
+            Assert.NotEqual(encrypted1, encrypted2);
+
+            Assert.Equal(PasswordVerificationStatus.Success, verificationStatus);
+            Assert.Equal(PasswordVerificationStatus.Success, verificationStatus1);
         }
     }
 }

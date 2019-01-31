@@ -36,9 +36,9 @@ namespace Fathcore.Infrastructures
         /// <remarks>If you change this so that Core assemblies aren't investigated (e.g. by not including something like "^Core|..." you may break core functionality.</remarks>
         public string AssemblyRestrictToLoadingPattern { get; set; } = ".*";
         
-        public AppDomainTypeFinder(ICoreFileProvider fileProvider = null)
+        public AppDomainTypeFinder(ICoreFileProvider fileProvider)
         {
-            this._fileProvider = fileProvider ?? CommonHelpers.DefaultFileProvider;
+            _fileProvider = fileProvider;
         }
 
         /// <summary>

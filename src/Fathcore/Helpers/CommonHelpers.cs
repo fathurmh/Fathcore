@@ -11,16 +11,18 @@ namespace Fathcore.Helpers
     {
         private const string _encodedPattern = @"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
 
-        private static readonly Regex s_encodedRegex;
+        private readonly Regex _encodedRegex;
+        private readonly ICoreFileProvider _coreFileProvider;
         
         /// <summary>
         /// Gets or sets the default file provider
         /// </summary>
-        public static ICoreFileProvider DefaultFileProvider { get; set; }
+        public ICoreFileProvider DefaultFileProvider => _coreFileProvider;
 
-        static CommonHelpers()
+        public CommonHelpers(ICoreFileProvider coreFileProvider)
         {
-            s_encodedRegex = new Regex(_encodedPattern);
+            _encodedRegex = new Regex(_encodedPattern);
+            _coreFileProvider = coreFileProvider;
         }
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace Fathcore.Helpers
             if (string.IsNullOrEmpty(providedString))
                 return false;
 
-            return (providedString.Length % 4 == 0) && s_encodedRegex.IsMatch(providedString);
+            return (providedString.Length % 4 == 0) && _encodedRegex.IsMatch(providedString);
         }
     }
 }

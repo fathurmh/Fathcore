@@ -16,7 +16,7 @@ namespace Fathcore.Providers
     /// </summary>
     public class CoreFileProvider : PhysicalFileProvider, ICoreFileProvider
     {
-        protected string BaseDirectory { get; }
+        public string BaseDirectory { get; }
 
         /// <summary>
         /// Initializes a new instance of a CoreFileProvider

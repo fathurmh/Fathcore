@@ -1,4 +1,5 @@
 ﻿using Fathcore.Abstractions;
+using Fathcore.Providers.Abstractions;
 
 namespace Fathcore.Helpers.Abstractions
 {
@@ -7,6 +8,12 @@ namespace Fathcore.Helpers.Abstractions
     /// </summary>
     public interface ICommonHelpers : ISingletonService
     {
+        
+        /// <summary>
+        /// Gets or sets the default file provider
+        /// </summary>
+        ICoreFileProvider DefaultFileProvider { get; }
+
         /// <summary>
         /// Verifies that a string is endoded format
         /// </summary>

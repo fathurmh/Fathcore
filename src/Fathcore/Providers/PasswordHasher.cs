@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Text;
 using Fathcore.Helpers.Abstractions;
+using Fathcore.Infrastructures;
 using Fathcore.Providers.Abstractions;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using PemUtils;
 
 namespace Fathcore.Providers
 {
@@ -14,12 +19,26 @@ namespace Fathcore.Providers
     /// </summary>
     public class PasswordHasher : IPasswordHasher
     {
+        private const string _rsaPublicKeyFileName = "rsa_2048_pub.pem";
+        private const string _rsaPrivateKeyFileName = "rsa_2048_priv.pem";
         private readonly int _iterCount;
+        private readonly RSA _rsa;
         private readonly RandomNumberGenerator _rng;
         private readonly ICommonHelpers _commonHelpers;
 
+        /// <summary>
+        /// Returns RSA public key file name
+        /// </summary>
+        public string RSAPublicKeyFileName => _rsaPublicKeyFileName;
+
+        /// <summary>
+        /// Returns RSA private key file name
+        /// </summary>
+        public string RSAPrivateKeyFileName => _rsaPrivateKeyFileName;
+        
         public PasswordHasher(ICommonHelpers commonHelpers, IOptions<PasswordHasherOptions> optionsAccessor = null)
         {
+            _commonHelpers = commonHelpers;
             var options = optionsAccessor?.Value ?? new PasswordHasherOptions();
 
             _iterCount = options.IterationCount;
@@ -29,7 +48,7 @@ namespace Fathcore.Providers
             }
 
             _rng = RandomNumberGenerator.Create();
-            _commonHelpers = commonHelpers;
+            _rsa = ReadRSA();
         }
 
         /// <summary>
@@ -89,6 +108,223 @@ namespace Fathcore.Providers
             {
                 return hashedPassword == providedPassword ? PasswordVerificationStatus.SuccessRehashNeeded : PasswordVerificationStatus.Failed;
             }
+        }
+
+        /// <summary>
+        /// Encrypts the input data.
+        /// </summary>
+        /// <param name="data">The data to encrypt.</param>
+        /// <returns>The encrypted data.</returns>
+        public virtual string Encrypt(string data)
+        {
+            string encryptedData = Encrypt(data, RSAEncryptionPadding.OaepSHA512);
+            return encryptedData;
+        }
+
+        /// <summary>
+        /// Encrypts the input data using the specified padding mode.
+        /// </summary>
+        /// <param name="data">The data to encrypt.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <returns>The encrypted data.</returns>
+        public virtual string Encrypt(string data, RSAEncryptionPadding padding)
+        {
+            byte[] bytesData = Encoding.UTF8.GetBytes(data);
+            byte[] bytesEncryptedData = Encrypt(bytesData, padding, _rsaPrivateKeyFileName);
+            string encryptedData = Convert.ToBase64String(bytesEncryptedData);
+            return encryptedData;
+        }
+
+        /// <summary>
+        /// Encrypts the input data using the specified padding mode and private key file path.
+        /// </summary>
+        /// <param name="data">The data to encrypt.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <param name="privateKeyFilePath">The private key file path.</param>
+        /// <returns>The encrypted data.</returns>
+        public virtual byte[] Encrypt(byte[] data, RSAEncryptionPadding padding, string privateKeyFilePath)
+        {
+            RSA rsa = privateKeyFilePath == _rsaPrivateKeyFileName ? _rsa : ReadRSA(privateKeyFilePath);
+            var encrypted = rsa.Encrypt(data, padding);
+            return encrypted;
+        }
+
+        /// <summary>
+        /// Decrypts the input data.
+        /// </summary>
+        /// <param name="data">The data to decrypt.</param>
+        /// <returns>The decrypted data.</returns>
+        public virtual string Decrypt(string data)
+        {
+            string decryptedData = Decrypt(data, RSAEncryptionPadding.OaepSHA512);
+            return decryptedData;
+        }
+
+        /// <summary>
+        /// Decrypts the input data using the specified padding mode.
+        /// </summary>
+        /// <param name="data">The data to decrypt.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <returns>The decrypted data.</returns>
+        public virtual string Decrypt(string data, RSAEncryptionPadding padding)
+        {
+            byte[] bytesData = Convert.FromBase64String(data);
+            byte[] bytesDecryptedData = Decrypt(bytesData, padding, _rsaPrivateKeyFileName);
+            string decryptedData = Encoding.UTF8.GetString(bytesDecryptedData);
+            return decryptedData;
+        }
+        
+        /// <summary>
+        /// Decrypts the input data using the specified padding mode and private key file path.
+        /// </summary>
+        /// <param name="data">The data to decrypt.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <param name="privateKeyFilePath">The private key file path.</param>
+        /// <returns>The decrypted data.</returns>
+        public virtual byte[] Decrypt(byte[] data, RSAEncryptionPadding padding, string privateKeyFilePath)
+        {
+            RSA rsa = privateKeyFilePath == _rsaPrivateKeyFileName ? _rsa : ReadRSA(privateKeyFilePath);
+            var decrypted = rsa.Decrypt(data, padding);
+            return decrypted;
+        }
+        
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The data to compare.</param>
+        /// <param name="anotherData">The another data to compare.</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        public virtual PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData)
+        {
+            var verificationStatus = VerifyEncyptedData(data, anotherData, RSAEncryptionPadding.OaepSHA512);
+            return verificationStatus;
+        }
+        
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The data to compare.</param>
+        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        public virtual PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding)
+        {
+            var verificationStatus = VerifyEncyptedData(data, anotherData, padding, _rsaPrivateKeyFileName);
+            return verificationStatus;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The data to compare.</param>
+        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <param name="privateKeyFilePath">The private key file path.</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        public virtual PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding, string privateKeyFilePath)
+        {
+            byte[] bytesData = Convert.FromBase64String(data);
+            byte[] bytesAnotherData = Convert.FromBase64String(anotherData);
+
+            var verificationStatus = VerifyEncyptedData(bytesData, bytesAnotherData, padding, privateKeyFilePath);
+            return verificationStatus;
+        }
+        
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The data to compare.</param>
+        /// <param name="anotherData">The another data to compare.</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        public virtual PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData)
+        {
+            var verificationStatus = VerifyEncyptedData(data, anotherData, RSAEncryptionPadding.OaepSHA512);
+            return verificationStatus;
+        }
+        
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The data to compare.</param>
+        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        public virtual PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding)
+        {
+            var verificationStatus = VerifyEncyptedData(data, anotherData, padding, _rsaPrivateKeyFileName);
+            return verificationStatus;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The data to compare.</param>
+        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <param name="privateKeyFilePath">The private key file path.</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        public virtual PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding, string privateKeyFilePath)
+        {
+            var decryptedData = Decrypt(data, padding, privateKeyFilePath);
+            var decryptedAnotherData = Decrypt(anotherData, padding, privateKeyFilePath);
+            var areSame = ByteArraysEqual(decryptedData, decryptedAnotherData);
+
+            if (areSame)
+            {
+                return PasswordVerificationStatus.Success;
+            }
+            else
+            {
+                return PasswordVerificationStatus.Failed;
+            }
+        }
+
+        private RSA ReadRSA(string filePath = _rsaPrivateKeyFileName)
+        {
+            RSA rsa = null;
+            string fileDir = Path.Combine(_commonHelpers.DefaultFileProvider.BaseDirectory, filePath);
+            if ((SingletonDictionary<string, RSA>.Instance).ContainsKey(filePath))
+            {
+                rsa = (SingletonDictionary<string, RSA>.Instance)[filePath];
+            }
+            else
+            {
+                if (_commonHelpers.DefaultFileProvider.FileExists(fileDir))
+                {
+                    using (var stream = File.OpenRead(fileDir))
+                    {
+                        using (var reader = new PemReader(stream))
+                        {
+                            var rsaParameters = reader.ReadRsaKey();
+                            rsa = RSA.Create(rsaParameters);
+                        }
+                    }
+                    (SingletonDictionary<string, RSA>.Instance).Add(filePath, rsa);
+                }
+                else
+                {
+                    rsa = RSA.Create();
+                    (SingletonDictionary<string, RSA>.Instance).Add(filePath, rsa);
+
+                    using (var stream = File.OpenWrite(fileDir))
+                    {
+                        using (var writer = new PemWriter(stream))
+                        {
+                            writer.WritePrivateKey(rsa);
+                        }
+                    }
+
+                    using (var stream = File.OpenWrite(Path.Combine(_commonHelpers.DefaultFileProvider.GetParentDirectory(fileDir), _rsaPublicKeyFileName)))
+                    {
+                        using (var writer = new PemWriter(stream))
+                        {
+                            writer.WritePublicKey(rsa);
+                        }
+                    }
+                }
+            }
+
+            return rsa;
         }
 
         /// <summary>

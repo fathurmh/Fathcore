@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Fathcore.Helpers;
 using Fathcore.Helpers.Abstractions;
+using Fathcore.Providers.Abstractions;
+using Moq;
 using Xunit;
 
 namespace Fathcore.Tests.Helpers
@@ -13,7 +15,7 @@ namespace Fathcore.Tests.Helpers
         [MemberData(nameof(Data))]
         public void Should_Determine_Base_64_Encoded_String(string stringEncoded, bool expected)
         {
-            ICommonHelpers commonHelpers = new CommonHelpers();
+            ICommonHelpers commonHelpers = new CommonHelpers(new Mock<ICoreFileProvider>().Object);
 
             bool result = commonHelpers.IsBase64Encoded(stringEncoded);
 

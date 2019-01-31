@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Text;
+using Fathcore.Abstractions;
 using Microsoft.Extensions.FileProviders;
 
 namespace Fathcore.Providers.Abstractions
@@ -9,8 +10,10 @@ namespace Fathcore.Providers.Abstractions
     /// <summary>
     /// A file provider abstraction
     /// </summary>
-    public interface ICoreFileProvider : IFileProvider
+    public interface ICoreFileProvider : IFileProvider, ISingletonService
     {
+        string BaseDirectory { get; }
+
         /// <summary>
         /// Combines an array of strings into a path
         /// </summary>
