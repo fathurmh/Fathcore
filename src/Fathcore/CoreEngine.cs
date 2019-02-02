@@ -137,7 +137,10 @@ namespace Fathcore
         /// <returns>Resolved service</returns>
         public virtual T Resolve<T>() where T : class
         {
-            return (T)ServiceProvider.GetRequiredService(typeof(T));
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                return (T)scope.ServiceProvider.GetRequiredService(typeof(T));
+            }
         }
 
         /// <summary>
@@ -147,7 +150,10 @@ namespace Fathcore
         /// <returns>Resolved service</returns>
         public virtual object Resolve(Type type)
         {
-            return ServiceProvider.GetRequiredService(type);
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                return scope.ServiceProvider.GetRequiredService(type);
+            }
         }
 
         /// <summary>
@@ -157,7 +163,10 @@ namespace Fathcore
         /// <returns>Collection of resolved services</returns>
         public virtual IEnumerable<T> ResolveAll<T>()
         {
-            return (IEnumerable<T>)ServiceProvider.GetServices(typeof(T));
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                return (IEnumerable<T>)scope.ServiceProvider.GetServices(typeof(T));
+            }
         }
 
         /// <summary>
