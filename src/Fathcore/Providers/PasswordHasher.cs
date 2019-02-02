@@ -35,10 +35,12 @@ namespace Fathcore.Providers
         /// Returns RSA private key file name
         /// </summary>
         public string RSAPrivateKeyFileName => _rsaPrivateKeyFileName;
-        
-        public PasswordHasher(ICommonHelpers commonHelpers, IOptions<PasswordHasherOptions> optionsAccessor = null)
+        private readonly IValidationHelpers _validationHelpers;
+
+        public PasswordHasher(ICommonHelpers commonHelpers, IValidationHelpers validationHelpers, IOptions<PasswordHasherOptions> optionsAccessor = null)
         {
             _commonHelpers = commonHelpers;
+            _validationHelpers = validationHelpers;
             var options = optionsAccessor?.Value ?? new PasswordHasherOptions();
 
             _iterCount = options.IterationCount;
@@ -58,26 +60,21 @@ namespace Fathcore.Providers
         /// <returns>A hashed representation of the supplied <paramref name="password"/></returns>
         public virtual string HashPassword(string password)
         {
+            _validationHelpers.ThrowIfNull(password, nameof(password));
             return Convert.ToBase64String(HashPasswordV3(password, _rng));
         }
 
         /// <summary>
         /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison
         /// </summary>
-        /// <param name="hashedPassword">The hash value for a user's stored password</param>
         /// <param name="providedPassword">The password supplied for comparison</param>
+        /// <param name="hashedPassword">The hash value for a user's stored password</param>
         /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
         /// <remarks>Implementations of this method should be time consistent</remarks>
-        public virtual PasswordVerificationStatus VerifyHashedPassword(string hashedPassword, string providedPassword)
+        public virtual PasswordVerificationStatus VerifyHashedPassword(string providedPassword, string hashedPassword)
         {
-            if (string.IsNullOrEmpty(hashedPassword))
-            {
-                throw new ArgumentNullException(nameof(hashedPassword));
-            }
-            if (string.IsNullOrEmpty(providedPassword))
-            {
-                throw new ArgumentNullException(nameof(providedPassword));
-            }
+            _validationHelpers.ThrowIfNull(providedPassword, nameof(providedPassword));
+            _validationHelpers.ThrowIfNull(hashedPassword, nameof(hashedPassword));
 
             if (_commonHelpers.IsBase64Encoded(hashedPassword))
             {
@@ -111,12 +108,61 @@ namespace Fathcore.Providers
         }
 
         /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="providedPassword">The password supplied for comparison</param>
+        /// <param name="encryptedPassword">The encrypted value for a user's stored password</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        public virtual PasswordVerificationStatus VerifyEncyptedPassword(string providedPassword, string encryptedPassword)
+        {
+            _validationHelpers.ThrowIfNull(providedPassword, nameof(providedPassword));
+            _validationHelpers.ThrowIfNull(encryptedPassword, nameof(encryptedPassword));
+            
+            return VerifyEncyptedPassword(providedPassword, encryptedPassword, RSAEncryptionPadding.OaepSHA512);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="providedPassword">The password supplied for comparison</param>
+        /// <param name="encryptedPassword">The encrypted value for a user's stored password</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        public virtual PasswordVerificationStatus VerifyEncyptedPassword(string providedPassword, string encryptedPassword, RSAEncryptionPadding padding)
+        {
+            _validationHelpers.ThrowIfNull(providedPassword, nameof(providedPassword));
+            _validationHelpers.ThrowIfNull(encryptedPassword, nameof(encryptedPassword));
+
+            if (providedPassword == encryptedPassword)
+            {
+                return PasswordVerificationStatus.SuccessRehashNeeded;
+            }
+            else if (_commonHelpers.IsBase64Encoded(encryptedPassword))
+            {
+                var decryptedPassword = Decrypt(encryptedPassword, padding);
+                if (providedPassword == decryptedPassword)
+                {
+                    return PasswordVerificationStatus.Success;
+                }
+                else
+                {
+                    return PasswordVerificationStatus.Failed;
+                }
+            }
+            else
+            {
+                return PasswordVerificationStatus.Failed;
+            }
+        }
+
+        /// <summary>
         /// Encrypts the input data.
         /// </summary>
         /// <param name="data">The data to encrypt.</param>
         /// <returns>The encrypted data.</returns>
         public virtual string Encrypt(string data)
         {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
             string encryptedData = Encrypt(data, RSAEncryptionPadding.OaepSHA512);
             return encryptedData;
         }
@@ -129,6 +175,9 @@ namespace Fathcore.Providers
         /// <returns>The encrypted data.</returns>
         public virtual string Encrypt(string data, RSAEncryptionPadding padding)
         {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(padding, nameof(padding));
+
             byte[] bytesData = Encoding.UTF8.GetBytes(data);
             byte[] bytesEncryptedData = Encrypt(bytesData, padding, _rsaPrivateKeyFileName);
             string encryptedData = Convert.ToBase64String(bytesEncryptedData);
@@ -144,6 +193,10 @@ namespace Fathcore.Providers
         /// <returns>The encrypted data.</returns>
         public virtual byte[] Encrypt(byte[] data, RSAEncryptionPadding padding, string privateKeyFilePath)
         {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(padding, nameof(padding));
+            _validationHelpers.ThrowIfNull(privateKeyFilePath, nameof(privateKeyFilePath));
+
             RSA rsa = privateKeyFilePath == _rsaPrivateKeyFileName ? _rsa : ReadRSA(privateKeyFilePath);
             var encrypted = rsa.Encrypt(data, padding);
             return encrypted;
@@ -156,6 +209,8 @@ namespace Fathcore.Providers
         /// <returns>The decrypted data.</returns>
         public virtual string Decrypt(string data)
         {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+
             string decryptedData = Decrypt(data, RSAEncryptionPadding.OaepSHA512);
             return decryptedData;
         }
@@ -168,12 +223,15 @@ namespace Fathcore.Providers
         /// <returns>The decrypted data.</returns>
         public virtual string Decrypt(string data, RSAEncryptionPadding padding)
         {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(padding, nameof(padding));
+
             byte[] bytesData = Convert.FromBase64String(data);
             byte[] bytesDecryptedData = Decrypt(bytesData, padding, _rsaPrivateKeyFileName);
             string decryptedData = Encoding.UTF8.GetString(bytesDecryptedData);
             return decryptedData;
         }
-        
+
         /// <summary>
         /// Decrypts the input data using the specified padding mode and private key file path.
         /// </summary>
@@ -183,104 +241,126 @@ namespace Fathcore.Providers
         /// <returns>The decrypted data.</returns>
         public virtual byte[] Decrypt(byte[] data, RSAEncryptionPadding padding, string privateKeyFilePath)
         {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(padding, nameof(padding));
+            _validationHelpers.ThrowIfNull(privateKeyFilePath, nameof(privateKeyFilePath));
+
             RSA rsa = privateKeyFilePath == _rsaPrivateKeyFileName ? _rsa : ReadRSA(privateKeyFilePath);
             var decrypted = rsa.Decrypt(data, padding);
             return decrypted;
         }
-        
+
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        public virtual PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData)
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        public virtual bool VerifyEncyptedData(string data, string anotherData)
         {
-            var verificationStatus = VerifyEncyptedData(data, anotherData, RSAEncryptionPadding.OaepSHA512);
-            return verificationStatus;
-        }
-        
-        /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
-        /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
-        /// <param name="padding">The padding mode.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        public virtual PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding)
-        {
-            var verificationStatus = VerifyEncyptedData(data, anotherData, padding, _rsaPrivateKeyFileName);
-            return verificationStatus;
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(anotherData, nameof(anotherData));
+
+            var areSame = VerifyEncyptedData(data, anotherData, RSAEncryptionPadding.OaepSHA512);
+            return areSame;
         }
 
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        public virtual bool VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding)
+        {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(anotherData, nameof(anotherData));
+            _validationHelpers.ThrowIfNull(padding, nameof(padding));
+
+            var areSame = VerifyEncyptedData(data, anotherData, padding, _rsaPrivateKeyFileName);
+            return areSame;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
         /// <param name="padding">The padding mode.</param>
         /// <param name="privateKeyFilePath">The private key file path.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        public virtual PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding, string privateKeyFilePath)
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        public virtual bool VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding, string privateKeyFilePath)
         {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(anotherData, nameof(anotherData));
+            _validationHelpers.ThrowIfNull(padding, nameof(padding));
+            _validationHelpers.ThrowIfNull(privateKeyFilePath, nameof(privateKeyFilePath));
+
             byte[] bytesData = Convert.FromBase64String(data);
             byte[] bytesAnotherData = Convert.FromBase64String(anotherData);
 
-            var verificationStatus = VerifyEncyptedData(bytesData, bytesAnotherData, padding, privateKeyFilePath);
-            return verificationStatus;
-        }
-        
-        /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
-        /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        public virtual PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData)
-        {
-            var verificationStatus = VerifyEncyptedData(data, anotherData, RSAEncryptionPadding.OaepSHA512);
-            return verificationStatus;
-        }
-        
-        /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
-        /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
-        /// <param name="padding">The padding mode.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        public virtual PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding)
-        {
-            var verificationStatus = VerifyEncyptedData(data, anotherData, padding, _rsaPrivateKeyFileName);
-            return verificationStatus;
+            var areSame = VerifyEncyptedData(bytesData, bytesAnotherData, padding, privateKeyFilePath);
+            return areSame;
         }
 
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        public virtual bool VerifyEncyptedData(byte[] data, byte[] anotherData)
+        {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(anotherData, nameof(anotherData));
+            
+            var areSame = VerifyEncyptedData(data, anotherData, RSAEncryptionPadding.OaepSHA512);
+            return areSame;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        public virtual bool VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding)
+        {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(anotherData, nameof(anotherData));
+            _validationHelpers.ThrowIfNull(padding, nameof(padding));
+            
+            var areSame = VerifyEncyptedData(data, anotherData, padding, _rsaPrivateKeyFileName);
+            return areSame;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
         /// <param name="padding">The padding mode.</param>
         /// <param name="privateKeyFilePath">The private key file path.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        public virtual PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding, string privateKeyFilePath)
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        public virtual bool VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding, string privateKeyFilePath)
         {
+            _validationHelpers.ThrowIfNull(data, nameof(data));
+            _validationHelpers.ThrowIfNull(anotherData, nameof(anotherData));
+            _validationHelpers.ThrowIfNull(padding, nameof(padding));
+            _validationHelpers.ThrowIfNull(privateKeyFilePath, nameof(privateKeyFilePath));
+
             var decryptedData = Decrypt(data, padding, privateKeyFilePath);
             var decryptedAnotherData = Decrypt(anotherData, padding, privateKeyFilePath);
             var areSame = ByteArraysEqual(decryptedData, decryptedAnotherData);
-
-            if (areSame)
-            {
-                return PasswordVerificationStatus.Success;
-            }
-            else
-            {
-                return PasswordVerificationStatus.Failed;
-            }
+            return areSame;
         }
 
         private RSA ReadRSA(string filePath = _rsaPrivateKeyFileName)
         {
+            _validationHelpers.ThrowIfNull(filePath, nameof(filePath));
+            
             RSA rsa = null;
             string fileDir = Path.Combine(_commonHelpers.DefaultFileProvider.BaseDirectory, filePath);
             if ((SingletonDictionary<string, RSA>.Instance).ContainsKey(filePath))

@@ -206,10 +206,11 @@ namespace Fathcore
         /// Post configure web host
         /// </summary>
         /// <param name="webHost"></param>
+        /// <param name="assembly"></param>
         /// <returns></returns>
-        public virtual async Task<IWebHost> PostConfigureAsync(IWebHost webHost)
+        public virtual async Task<IWebHost> PostConfigureAsync(IWebHost webHost, Assembly assembly)
         {
-            await webHost.DatabaseMigrateAsync();
+            await webHost.DatabaseMigrateAsync(assembly);
             return webHost;
         }
     }

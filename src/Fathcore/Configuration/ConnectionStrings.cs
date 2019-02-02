@@ -24,7 +24,7 @@ namespace Fathcore.Configuration
 
         private string FindLast(string name)
         {
-            if(!string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+            if(string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
             
             return this.FindLast(prop => prop.Name == name).ToString() ?? string.Empty;
         }

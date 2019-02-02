@@ -74,66 +74,83 @@ namespace Fathcore.Providers.Abstractions
         byte[] Decrypt(byte[] data, RSAEncryptionPadding padding, string privateKeyFilePath);
 
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData);
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        bool VerifyEncyptedData(string data, string anotherData);
         
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
         /// <param name="padding">The padding mode.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding);
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        bool VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding);
 
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
         /// <param name="padding">The padding mode.</param>
         /// <param name="privateKeyFilePath">The private key file path.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        PasswordVerificationStatus VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding, string privateKeyFilePath);
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        bool VerifyEncyptedData(string data, string anotherData, RSAEncryptionPadding padding, string privateKeyFilePath);
         
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData);
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        bool VerifyEncyptedData(byte[] data, byte[] anotherData);
         
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
         /// <param name="padding">The padding mode.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding);
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        bool VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding);
 
         /// <summary>
-        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// Returns a <see cref="bool"/> indicating the result of a encrypted data comparison.
         /// </summary>
-        /// <param name="data">The data to compare.</param>
-        /// <param name="anotherData">The another data to compare.</param>
+        /// <param name="data">The encrypted data to compare.</param>
+        /// <param name="anotherData">The another encrypted data to compare.</param>
         /// <param name="padding">The padding mode.</param>
         /// <param name="privateKeyFilePath">The private key file path.</param>
-        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
-        PasswordVerificationStatus VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding, string privateKeyFilePath);
+        /// <returns>A <see cref="bool"/> indicating the result of a password hash comparison</returns>
+        bool VerifyEncyptedData(byte[] data, byte[] anotherData, RSAEncryptionPadding padding, string privateKeyFilePath);
 
         /// <summary>
         /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison
         /// </summary>
-        /// <param name="hashedPassword">The hash value for a user's stored password</param>
         /// <param name="providedPassword">The password supplied for comparison</param>
+        /// <param name="hashedPassword">The hash value for a user's stored password</param>
         /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
         /// <remarks>Implementations of this method should be time consistent</remarks>
         PasswordVerificationStatus VerifyHashedPassword(string hashedPassword, string providedPassword);
+
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="providedPassword">The password supplied for comparison</param>
+        /// <param name="encryptedPassword">The encrypted value for a user's stored password</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        PasswordVerificationStatus VerifyEncyptedPassword(string providedPassword, string encryptedPassword);
+        
+        /// <summary>
+        /// Returns a <see cref="PasswordVerificationStatus"/> indicating the result of a encrypted data comparison.
+        /// </summary>
+        /// <param name="providedPassword">The password supplied for comparison</param>
+        /// <param name="encryptedPassword">The encrypted value for a user's stored password</param>
+        /// <param name="padding">The padding mode.</param>
+        /// <returns>A <see cref="PasswordVerificationStatus"/> indicating the result of a password hash comparison</returns>
+        PasswordVerificationStatus VerifyEncyptedPassword(string providedPassword, string encryptedPassword, RSAEncryptionPadding padding);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -47,8 +48,9 @@ namespace Fathcore.Abstractions
         /// Post configure web host
         /// </summary>
         /// <param name="webHost"></param>
+        /// <param name="assembly"></param>
         /// <returns></returns>
-        Task<IWebHost> PostConfigureAsync(IWebHost webHost);
+        Task<IWebHost> PostConfigureAsync(IWebHost webHost, Assembly assembly);
 
         /// <summary>
         /// Configure an application's request pipeline.

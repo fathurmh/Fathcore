@@ -21,13 +21,19 @@ namespace Fathcore.Extensions
         /// Migrate database context that inherits from DbContext or implements from IDbContext
         /// </summary>
         /// <param name="host"></param>
+        /// <param name="assembly"></param>
         /// <returns></returns>
-        public static async Task DatabaseMigrateAsync(this IWebHost host)
+        public static async Task DatabaseMigrateAsync(this IWebHost host, Assembly assembly)
         {
             using (var scope = host.Services.CreateScope())
             {
-                var contextTypes = Assembly.GetExecutingAssembly().GetTypes()
-                    .Where(type => (type.BaseType == typeof(DbContext) || type.GetInterfaces().Contains(typeof(IDbContext))));
+                var contextTypes = new List<Type>();
+                var assemblyName = assembly.FullName.Split('.')[0];
+                AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(prop => prop.FullName.Contains(assemblyName)).ToList()
+                    .ForEach(item =>
+                        contextTypes.AddRange(item.GetTypes()
+                            .Where(type => (type.BaseType == typeof(DbContext) || type.GetInterfaces().Contains(typeof(IDbContext))))));
                 
                 foreach (var contextType in contextTypes)
                 {
