@@ -345,9 +345,9 @@ namespace Fathcore.Providers
                 return false;
             }
             var areSame = true;
-            for (var i = 0; i < a.Length; i++)
+            for (var i = 0; i < a.Length && areSame; i++)
             {
-                areSame &= (a[i] == b[i]);
+                areSame = (a[i] == b[i]);
             }
             return areSame;
         }

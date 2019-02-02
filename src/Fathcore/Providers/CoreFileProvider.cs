@@ -25,7 +25,7 @@ namespace Fathcore.Providers
         public CoreFileProvider(IHostingEnvironment hostingEnvironment) 
             : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
         {
-            var path = hostingEnvironment.ContentRootPath ?? string.Empty;
+            var path = hostingEnvironment.WebRootPath ?? string.Empty;
             if (File.Exists(path))
                 path = Path.GetDirectoryName(path);
 
