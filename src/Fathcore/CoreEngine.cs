@@ -122,12 +122,12 @@ namespace Fathcore
         }
 
         /// <summary>
-        /// Configure HTTP request pipeline
+        /// Configure an application's request pipeline.
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public virtual void ConfigureRequestPipeline(IApplicationBuilder application)
         {
-            throw new NotImplementedException();
+            application.ConfigureAppLocalization();
         }
 
         /// <summary>

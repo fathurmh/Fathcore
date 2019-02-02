@@ -51,7 +51,7 @@ namespace Fathcore.Abstractions
         Task<IWebHost> PostConfigureAsync(IWebHost webHost);
 
         /// <summary>
-        /// Configure HTTP request pipeline
+        /// Configure an application's request pipeline.
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         void ConfigureRequestPipeline(IApplicationBuilder application);
