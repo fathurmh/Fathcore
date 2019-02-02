@@ -49,7 +49,7 @@ namespace Fathcore.Providers
                 Audience = _jwtAuthentication.Audience,
                 Issuer = _jwtAuthentication.Issuer,
                 Expires = DateTime.UtcNow.AddMinutes(_jwtAuthentication.Expires),
-                NotBefore = _jwtAuthentication.NotBefore,
+                NotBefore = DateTime.UtcNow,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 

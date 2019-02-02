@@ -35,11 +35,5 @@ namespace Fathcore.Configuration
         /// Gets or sets the jwt authentication key
         /// </summary>
         public string Key { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the notbefore time for the security token
-        /// </summary>
-        /// <value></value>
-        public DateTime? NotBefore { get; set; }
     }
 }
