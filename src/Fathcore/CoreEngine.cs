@@ -105,15 +105,15 @@ namespace Fathcore
                 options.EnableForHttps = true;
             });
             
-            _serviceCollection.AddMvcCore(options =>
+            _serviceCollection.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ApiExceptionFilterAttribute));
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-            .AddJsonFormatters(opt =>
+            .AddJsonOptions(opt =>
             {
-                opt.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                opt.ContractResolver = new DefaultContractResolver();
+                opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
             });
 
             _serviceProvider = _serviceCollection.BuildServiceProvider();
