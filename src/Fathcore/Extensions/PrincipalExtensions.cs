@@ -8,7 +8,7 @@ namespace Fathcore.Extensions
     public static class PrincipalExtensions
     {
         /// <summary>
-        /// Get claim value from specified identity
+        /// Get claim values from specified identity
         /// </summary>
         /// <param name="identity">IIDentity object</param>
         /// <param name="claimTypes">ClaimTypes</param>
@@ -16,10 +16,25 @@ namespace Fathcore.Extensions
         public static string[] GetClaimValue(this IIdentity identity, string claimTypes)
         {
             ClaimsIdentity claimsIdentity = identity as ClaimsIdentity;
-            string [] claimValue = claimsIdentity.Claims
+            string[] claimValue = claimsIdentity.Claims
                 .Where(prop => prop.Type == claimTypes)
                 .Select(prop => prop.Value)
                 .ToArray();
+
+            return claimValue;
+        }
+
+        /// <summary>
+        /// Get single claim value from specified identity
+        /// </summary>
+        /// <param name="identity">IIDentity object</param>
+        /// <param name="claimTypes">ClaimTypes</param>
+        /// <returns>Returns claim value from specified identity</returns>
+        public static string GetSingleClaimValue(this IIdentity identity, string claimTypes)
+        {
+            ClaimsIdentity claimsIdentity = identity as ClaimsIdentity;
+            string claimValue = claimsIdentity.Claims
+                .FirstOrDefault(prop => prop.Type == claimTypes)?.Value;
 
             return claimValue;
         }

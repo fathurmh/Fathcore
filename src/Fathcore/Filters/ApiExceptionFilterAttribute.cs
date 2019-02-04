@@ -38,29 +38,30 @@ namespace Fathcore.Filters
             int code = 0;
             string responseMessage = string.Empty;
 
-            if (context.Exception is ApiException)
+            if (context.Exception is ApiException apiException)
             {
-                var ex = context.Exception as ApiException;
-                apiError = new ApiError(ex.Message)
+                apiError = new ApiError(apiException.Message)
                 {
-                    ValidationErrors = ex.Errors,
-                    ReferenceErrorCode = ex.ReferenceErrorCode,
-                    ReferenceDocumentLink = ex.ReferenceDocumentLink
+                    ValidationErrors = apiException.Errors,
+                    ReferenceErrorCode = apiException.ReferenceErrorCode,
+                    ReferenceDocumentLink = apiException.ReferenceDocumentLink
                 };
-                code = ex.StatusCode;
+                code = apiException.StatusCode;
 
             }
-            else if (context.Exception is UnauthorizedAccessException)
+            else if (context.Exception is UnauthorizedAccessException unauthorizedException)
             {
                 responseMessage = _stringLocalizer[ApiResponseMessage.Unauthorized];
-                apiError = new ApiError(responseMessage);
+                apiError = new ApiError(responseMessage)
+                {
+                    Details = unauthorizedException.Message,
+                };
                 code = (int)HttpStatusCode.Unauthorized;
             }
-            else if (context.Exception is CoreException)
+            else if (context.Exception is CoreException coreException)
             {
-                var ex = context.Exception as CoreException;
-                apiError = new ApiError(ex.Message);
-                code = ex.StatusCode;
+                apiError = new ApiError(coreException.Message);
+                code = coreException.StatusCode;
             }
             else
             {

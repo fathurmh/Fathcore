@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Fathcore.Extensions
 {
@@ -25,28 +27,29 @@ namespace Fathcore.Extensions
         /// <returns></returns>
         public static async Task DatabaseMigrateAsync(this IWebHost host, Assembly assembly)
         {
-            using (var scope = host.Services.CreateScope())
+            ILogger logger = EngineContext.Current.Resolve<ILogger<DbContext>>();
+            try
             {
-                var contextTypes = new List<Type>();
-                var assemblyName = assembly.FullName.Split('.')[0];
-                AppDomain.CurrentDomain.GetAssemblies()
-                    .Where(prop => prop.FullName.Contains(assemblyName)).ToList()
-                    .ForEach(item =>
-                        contextTypes.AddRange(item.GetTypes()
-                            .Where(type => (type.BaseType == typeof(DbContext) || type.GetInterfaces().Contains(typeof(IDbContext))))));
-                
-                foreach (var contextType in contextTypes)
+                using (var scope = host.Services.CreateScope())
                 {
-                    try
+                    var contextTypes = new List<Type>();
+                    var assemblyName = assembly.FullName.Split('.')[0];
+                    AppDomain.CurrentDomain.GetAssemblies()
+                        .Where(prop => prop.FullName.Contains(assemblyName)).ToList()
+                        .ForEach(item =>
+                            contextTypes.AddRange(item.GetTypes()
+                                .Where(type => (type.BaseType == typeof(DbContext) || type.GetInterfaces().Contains(typeof(IDbContext))))));
+                    
+                    foreach (var contextType in contextTypes)
                     {
                         var context = (DbContext)scope.ServiceProvider.GetRequiredService(contextType);
                         await context.Database.MigrateAsync();
                     }
-                    catch
-                    {
-                        // Logging here soon
-                    }
                 }
+            }
+            catch (SqlException ex)
+            {
+                logger.LogCritical(ex, "Sql exception was thrown.");
             }
         }
         

@@ -8,6 +8,7 @@ using Fathcore.Extensions;
 using Fathcore.Infrastructures;
 using Fathcore.Localization.Resources;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Localization;
@@ -40,49 +41,48 @@ namespace Fathcore.Filters
         {
             try
             {
-                bool ensureSkip = context.ActionDescriptor.FilterDescriptors
-                    .Where(prop => prop.Filter.GetType()
-                    .Equals(typeof(ApiWrapperAttribute)))
-                    .Select(prop => (ApiWrapperAttribute)prop.Filter)
-                    .Any(prop => prop.Skip);
+                bool ensureSkip = false;           
+                
+                var controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+                if (controllerActionDescriptor != null)
+                {
+                    var actionAttribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(ApiWrapperAttribute), true).LastOrDefault();
+                    if (actionAttribute is ApiWrapperAttribute apiWrapperAttribute)
+                    {
+                        ensureSkip = apiWrapperAttribute.Skip;
+                    }
+                }
 
-                if (ensureSkip)
+                if (ensureSkip || IsSwagger(context.HttpContext))
                 {
                     await next();
                 }
                 else
                 {
-                    if (IsSwagger(context.HttpContext))
+                    using (MemoryStream responseBody = new MemoryStream())
                     {
+                        Stream originalBodyStream = context.HttpContext.Response.Body;
+                        context.HttpContext.Response.Body = responseBody;
+
                         await next();
-                    }
-                    else
-                    {
-                        using (MemoryStream responseBody = new MemoryStream())
+
+                        if (context.HttpContext.Response.StatusCode != (int)HttpStatusCode.NoContent)
                         {
-                            Stream originalBodyStream = context.HttpContext.Response.Body;
-                            context.HttpContext.Response.Body = responseBody;
-
-                            await next();
-
-                            if (context.HttpContext.Response.StatusCode != (int)HttpStatusCode.NoContent)
+                            context.HttpContext.Response.ContentType = "application/json";
+                            if (context.HttpContext.Response.StatusCode.ToString().Substring(0, 1) == ((int)HttpStatusCode.OK).ToString().Substring(0, 1))
                             {
-                                context.HttpContext.Response.ContentType = "application/json";
-                                if (context.HttpContext.Response.StatusCode.ToString().Substring(0, 1) == ((int)HttpStatusCode.OK).ToString().Substring(0, 1))
-                                {
-                                    string body = await FormatResponse(context.HttpContext.Response.Body);
-                                    await HandleSuccessRequestAsync(context.HttpContext, body, context.HttpContext.Response.StatusCode);
-                                }
-                                else
-                                {
-                                    string body = await FormatResponse(context.HttpContext.Response.Body);
-                                    await HandleNotSuccessRequestAsync(context.HttpContext, body, context.HttpContext.Response.StatusCode);
-                                }
+                                string body = await FormatResponse(context.HttpContext.Response.Body);
+                                await HandleSuccessRequestAsync(context.HttpContext, body, context.HttpContext.Response.StatusCode);
                             }
-
-                            responseBody.Seek(0, SeekOrigin.Begin);
-                            await responseBody.CopyToAsync(originalBodyStream);
+                            else
+                            {
+                                string body = await FormatResponse(context.HttpContext.Response.Body);
+                                await HandleNotSuccessRequestAsync(context.HttpContext, body, context.HttpContext.Response.StatusCode);
+                            }
                         }
+
+                        responseBody.Seek(0, SeekOrigin.Begin);
+                        await responseBody.CopyToAsync(originalBodyStream);
                     }
                 }
             }

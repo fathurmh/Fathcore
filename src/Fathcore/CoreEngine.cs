@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -47,6 +48,11 @@ namespace Fathcore
         /// Get http context accessor
         /// </summary>
         public virtual IHttpContextAccessor HttpContextAccessor => ServiceProvider.GetService<IHttpContextAccessor>() ?? _httpContextAccessor;
+        
+        /// <summary>
+        /// Get http context
+        /// </summary>
+        public virtual HttpContext HttpContext => HttpContextAccessor.HttpContext;
 
         /// <summary>
         /// Get current principal
@@ -97,6 +103,7 @@ namespace Fathcore
                     .Where(type => type.GetInterfaces().Contains(typeof(IDependencyRegistrar))).ToList()
                     .ForEach(registrar => ResolveUnregistered(registrar));
 
+            _serviceCollection.AddLogging();
             _serviceCollection.AddHttpContextAccessor();
             _serviceCollection.AddLocalization();
             _serviceCollection.AddResponseCaching();
