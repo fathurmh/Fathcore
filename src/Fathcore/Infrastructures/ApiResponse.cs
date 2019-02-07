@@ -13,19 +13,6 @@ namespace Fathcore.Infrastructures
     public class ApiResponse<TModel>
     {
         /// <summary>
-        /// Gets the api response version
-        /// </summary>
-        [DataMember]
-        public string Version
-        {
-            get
-            {
-                return Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + '.' +
-                       Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the api response status code
         /// </summary>
         [DataMember]
@@ -41,13 +28,13 @@ namespace Fathcore.Infrastructures
         /// Gets or sets the api response message
         /// </summary>
         [DataMember]
-        public List<string> Message { get; set; }
+        public string Message { get; set; }
 
         /// <summary>
         /// Gets or sets the api response exception
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
-        public ApiError ResponseException { get; set; }
+        public ResponseException ResponseException { get; set; }
 
         /// <summary>
         /// Gets or sets the api response result
@@ -56,7 +43,7 @@ namespace Fathcore.Infrastructures
         public TModel Result { get; set; }
 
         [JsonConstructor]
-        public ApiResponse(int statusCode, TModel result, List<string> message = null, ApiError apiError = null)
+        public ApiResponse(int statusCode, TModel result, string message, ResponseException apiError = null)
         {
             StatusCode = statusCode;
             IsSuccess = apiError == null;

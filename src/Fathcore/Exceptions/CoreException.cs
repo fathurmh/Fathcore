@@ -10,9 +10,15 @@ namespace Fathcore.Exceptions
     public class CoreException : Exception
     {
         /// <summary>
-        /// Gets or sets the api exception status code
+        /// Gets or sets the core exception status code
         /// </summary>
         public int StatusCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the core exception error type
+        /// </summary>
+        /// <value></value>
+        public string ErrorType { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the Exception class
@@ -50,6 +56,18 @@ namespace Fathcore.Exceptions
         }
 
         /// <summary>
+        /// Initializes a new instance of the Exception class with a specified error message
+        /// </summary>
+        /// <param name="messageFormat">The exception message format</param>
+        /// <param name="args">The exception message arguments</param>
+        /// <returns>Returns a core exception</returns>
+        public CoreException(string messageFormat, params object[] args)
+            : base(string.Format(messageFormat, args))
+        {
+            StatusCode = (int)HttpStatusCode.OK;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the Exception class with serialized data
         /// </summary>
         /// <param name="info">The SerializationInfo that holds the serialized object data about the exception being thrown</param>
@@ -73,6 +91,33 @@ namespace Fathcore.Exceptions
             : base(message, innerException)
         {
             StatusCode = statusCode;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Exception class with a specified error message and a reference to the inner exception that is the cause of this exception
+        /// </summary>
+        /// <param name="messageFormat">The exception message format</param>
+        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified</param>
+        /// <param name="statusCode">The exception http status code</param>
+        /// <param name="args">The exception message arguments</param>
+        /// <returns>Returns a core exception</returns>
+        public CoreException(string messageFormat, Exception innerException, int statusCode = (int)HttpStatusCode.OK, params object[] args)
+            : base(string.Format(messageFormat, args), innerException)
+        {
+            StatusCode = statusCode;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Exception class with a specified error message and a reference to the inner exception that is the cause of this exception
+        /// </summary>
+        /// <param name="messageFormat">The exception message format</param>
+        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified</param>
+        /// <param name="args">The exception message arguments</param>
+        /// <returns>Returns a core exception</returns>
+        public CoreException(string messageFormat, Exception innerException, params object[] args)
+            : base(string.Format(messageFormat, args), innerException)
+        {
+            StatusCode = (int)HttpStatusCode.OK;
         }
     }
 }

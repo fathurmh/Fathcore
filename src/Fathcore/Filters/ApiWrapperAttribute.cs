@@ -103,11 +103,8 @@ namespace Fathcore.Filters
         {
             string bodyText;
             string jsonString;
+            string displayMessage = _stringLocalizer[ApiResponseMessage.Success];
             ApiResponse<object> apiResponse;
-            List<string> apiMessage = new List<string>();
-
-            string responseMessage = _stringLocalizer[ApiResponseMessage.Success];
-            apiMessage.Add(responseMessage);
 
             if (!body.ToString().IsValidJson())
             {
@@ -127,12 +124,12 @@ namespace Fathcore.Filters
 
                 if (apiResponse.Result == null)
                 {
-                    apiResponse = new ApiResponse<object>(code, bodyContent, apiMessage, null);
+                    apiResponse = new ApiResponse<object>(code, bodyContent, displayMessage);
                 }
             }
             else
             {
-                apiResponse = new ApiResponse<object>(code, bodyContent, apiMessage, null);
+                apiResponse = new ApiResponse<object>(code, bodyContent, displayMessage);
             }
 
             jsonString = JsonConvert.SerializeObject(apiResponse);
@@ -150,34 +147,26 @@ namespace Fathcore.Filters
         private Task HandleNotSuccessRequestAsync(HttpContext context, object body, int code)
         {
             string bodyText;
-            string responseMessage;
+            string displayMessage;
             string jsonString;
-            ApiError apiError;
+            ResponseException responseException;
             ApiResponse<object> apiResponse;
             List<string> apiMessage = new List<string>();
 
-            if (!body.ToString().IsValidJson())
-            {
-                bodyText = JsonConvert.SerializeObject(body);
-            }
-            else
-            {
-                bodyText = body.ToString();
-            }
-
             if (code == (int)HttpStatusCode.NotFound)
             {
-                responseMessage = _stringLocalizer[ApiResponseMessage.NotFound];
-                apiError = new ApiError(responseMessage);
+                displayMessage = _stringLocalizer[ApiResponseMessage.NotFound];
+                responseException = new ResponseException(displayMessage, ErrorTypes.ResourceNotFound);
             }
             else if (code == (int)HttpStatusCode.Unauthorized || code == (int)HttpStatusCode.Forbidden)
             {
-                responseMessage = _stringLocalizer[ApiResponseMessage.Unauthorized];
-                apiMessage.Add(responseMessage);
-                apiError = new ApiError(_stringLocalizer[ApiResponseMessage.ContactSupport]);
+                displayMessage = _stringLocalizer[ApiResponseMessage.Unauthorized];
+                responseException = new ResponseException(displayMessage, ErrorTypes.UnauthorizedAccess);
             }
             else if (code == (int)HttpStatusCode.BadRequest)
             {
+                bodyText = body.ToString().IsValidJson() ? body.ToString() : JsonConvert.SerializeObject(body);
+                
                 ModelValidation modelValidation = JsonConvert.DeserializeObject<ModelValidation>(bodyText);
                 ModelStateDictionary modelState = new ModelStateDictionary();
                 foreach (var item in modelValidation.Errors)
@@ -185,19 +174,16 @@ namespace Fathcore.Filters
                     modelState.AddModelError(item.Key, string.Join(" ", item.Value.ToArray()));
                 }
 
-                responseMessage = _stringLocalizer[ApiResponseMessage.ValidationError];
-                apiMessage.Add(responseMessage);
-                apiError = new ApiError(modelState, modelValidation.Message);
+                displayMessage = _stringLocalizer[ApiResponseMessage.ValidationError];
+                responseException = new ResponseException(modelState, modelValidation.Message);
             }
             else
             {
-                responseMessage = _stringLocalizer[ApiResponseMessage.ContactSupport];
-                apiError = new ApiError(responseMessage);
+                displayMessage = _stringLocalizer[ApiResponseMessage.ContactSupport];
+                responseException = new ResponseException(displayMessage, ErrorTypes.SystemError);
             }
 
-            responseMessage = _stringLocalizer[ApiResponseMessage.Failure];
-            apiMessage.Add(responseMessage);
-            apiResponse = new ApiResponse<object>(code, null, apiMessage, apiError);
+            apiResponse = new ApiResponse<object>(code, null, displayMessage, responseException);
             jsonString = JsonConvert.SerializeObject(apiResponse);
 
             context.Response.StatusCode = code;

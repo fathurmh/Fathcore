@@ -32,35 +32,28 @@ namespace Fathcore.Filters
         {
             await base.OnExceptionAsync(context);
 
-            ApiError apiError;
+            ResponseException apiError;
             ApiResponse<object> apiResponse;
             List<string> apiMessage = new List<string>();
-            int code = 0;
-            string responseMessage = string.Empty;
+            int code;
+            string displayMessage;
 
             if (context.Exception is ApiException apiException)
             {
-                apiError = new ApiError(apiException.Message)
+                apiError = new ResponseException(apiException.Message, ErrorTypes.ApiError)
                 {
-                    ValidationErrors = apiException.Errors,
-                    ReferenceErrorCode = apiException.ReferenceErrorCode,
-                    ReferenceDocumentLink = apiException.ReferenceDocumentLink
+                    ValidationErrors = apiException.Errors
                 };
                 code = apiException.StatusCode;
-
             }
             else if (context.Exception is UnauthorizedAccessException unauthorizedException)
             {
-                responseMessage = _stringLocalizer[ApiResponseMessage.Unauthorized];
-                apiError = new ApiError(responseMessage)
-                {
-                    Details = unauthorizedException.Message,
-                };
+                apiError = new ResponseException(unauthorizedException.Message, ErrorTypes.UnauthorizedAccess, unauthorizedException.InnerException.Message);
                 code = (int)HttpStatusCode.Unauthorized;
             }
             else if (context.Exception is CoreException coreException)
             {
-                apiError = new ApiError(coreException.Message);
+                apiError = new ResponseException(coreException.Message, coreException.ErrorType, coreException.InnerException.Message);
                 code = coreException.StatusCode;
             }
             else
@@ -73,17 +66,12 @@ namespace Fathcore.Filters
                 string stack = context.Exception.StackTrace;
 #endif
 
-                apiError = new ApiError(msg)
-                {
-                    Details = stack
-                };
+                apiError = new ResponseException(msg, ErrorTypes.SystemError, stack);
                 code = (int)HttpStatusCode.InternalServerError;
-
             }
 
-            responseMessage = _stringLocalizer[ApiResponseMessage.Exception];
-            apiMessage.Add(responseMessage);
-            apiResponse = new ApiResponse<object>(code, null, apiMessage, apiError);
+            displayMessage = _stringLocalizer[ApiResponseMessage.Exception];
+            apiResponse = new ApiResponse<object>(code, null, displayMessage, apiError);
 
             context.HttpContext.Response.StatusCode = code;
             context.Result = new JsonResult(apiResponse);
