@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+
+  <PropertyGroup Condition="'$(CopyrightNetFoundation)' != ''">
+    <Copyright>$(CopyrightNetFoundation)</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <StrongNameKeyId>Fathcore</StrongNameKeyId>
+    <PackageTags>Fathcore</PackageTags>
+    <Product>Fathcore</Product>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>latest</LangVersion>
+    <DebugType>portable</DebugType>
+    <PackageLicenseUrl Condition="'$(PackageLicenseExpression)' == ''">https://raw.githubusercontent.com/fathurmh/Fathcore/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageProjectUrl>https://github.com/fathurmh/Fathcore</PackageProjectUrl>
+  </PropertyGroup>
+</Project>

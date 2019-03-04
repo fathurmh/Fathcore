@@ -1,62 +1,52 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
-MinimumVisualStudioVersion = 15.0.26124.0
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{923729C0-224C-4569-AFE1-3D47AAEEC418}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EA96AC3B-130F-4415-9D22-0074ECF8880F}"
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5B01D93-FAD9-4728-B512-60E3D5001267}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet.Config = NuGet.Config
-		README.md = README.md
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9D7E8A6F-7E7C-4E19-A5CF-9B596CB717F7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3BBB3586-A33F-4828-8E9D-B5B6D98E61D5}"
+	ProjectSection(SolutionItems) = preProject
+		Fathcore.ruleset = Fathcore.ruleset
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathcore", "src\Fathcore\Fathcore.csproj", "{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathcore", "src\Fathcore\Fathcore.csproj", "{0EAE2471-4E62-400B-903E-F740E5339317}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathcore.Tests", "tests\Fathcore.Tests\Fathcore.Tests.csproj", "{73455A4A-FD16-4FAF-B00E-AA618E2D404F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D75D4422-F704-4979-BC82-4DC67C03C354}"
+	ProjectSection(SolutionItems) = preProject
+		Fathcore.ruleset = Fathcore.ruleset
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathcore.Tests", "test\Fathcore.Tests\Fathcore.Tests.csproj", "{3F95838E-C530-451C-A31E-6AB50EF7B1FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EAE2471-4E62-400B-903E-F740E5339317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EAE2471-4E62-400B-903E-F740E5339317}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EAE2471-4E62-400B-903E-F740E5339317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EAE2471-4E62-400B-903E-F740E5339317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F95838E-C530-451C-A31E-6AB50EF7B1FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F95838E-C530-451C-A31E-6AB50EF7B1FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F95838E-C530-451C-A31E-6AB50EF7B1FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F95838E-C530-451C-A31E-6AB50EF7B1FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Debug|x64.Build.0 = Debug|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Debug|x86.Build.0 = Debug|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Release|x64.ActiveCfg = Release|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Release|x64.Build.0 = Release|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Release|x86.ActiveCfg = Release|Any CPU
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F}.Release|x86.Build.0 = Release|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Debug|x64.Build.0 = Debug|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Debug|x86.Build.0 = Debug|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Release|x64.ActiveCfg = Release|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Release|x64.Build.0 = Release|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Release|x86.ActiveCfg = Release|Any CPU
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F}.Release|x86.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3C420C6E-6783-4A53-A6B9-66F44C3E6C4F} = {923729C0-224C-4569-AFE1-3D47AAEEC418}
-		{73455A4A-FD16-4FAF-B00E-AA618E2D404F} = {9D7E8A6F-7E7C-4E19-A5CF-9B596CB717F7}
+		{0EAE2471-4E62-400B-903E-F740E5339317} = {3BBB3586-A33F-4828-8E9D-B5B6D98E61D5}
+		{3F95838E-C530-451C-A31E-6AB50EF7B1FF} = {D75D4422-F704-4979-BC82-4DC67C03C354}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {930AED4A-F442-4097-A006-658DE62982CC}
 	EndGlobalSection
 EndGlobal
