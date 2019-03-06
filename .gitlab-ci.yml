@@ -1,0 +1,45 @@
+image: microsoft/dotnet:latest
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - dotnet restore
+    - dotnet build
+  artifacts:
+    name: "$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
+    paths:
+      - "artifacts/bin"
+      - "artifacts/obj"
+    expire_in: 1d
+
+test:
+  stage: test
+  script:
+    - dotnet test
+  dependencies:
+    - build
+  artifacts:
+    name: "$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
+    paths:
+      - "artifacts/bin"
+      - "artifacts/obj"
+    expire_in: 1d
+
+deploy:
+  stage: deploy
+  script:
+    - dotnet pack -c Release
+  dependencies:
+    - test
+  when: manual
+  artifacts:
+    name: "$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
+    paths:
+      - "artifacts/packages/Release"
+    expire_in: 1d
+    when: on_success

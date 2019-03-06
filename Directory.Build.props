@@ -8,14 +8,26 @@
   </PropertyGroup>
   
   <PropertyGroup>
+    <Authors>Fathurahman Ma'ruf Hudoarma</Authors>
     <StrongNameKeyId>Fathcore</StrongNameKeyId>
     <PackageTags>Fathcore</PackageTags>
     <Product>Fathcore</Product>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Description>Fathcore</Description>
     <LangVersion>latest</LangVersion>
     <DebugType>portable</DebugType>
     <PackageLicenseUrl Condition="'$(PackageLicenseExpression)' == ''">https://raw.githubusercontent.com/fathurmh/Fathcore/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl></PackageIconUrl>
     <PackageProjectUrl>https://github.com/fathurmh/Fathcore</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/fathurmh/Fathcore</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <NoWarn>$(NoWarn);CS1591;NU5125</NoWarn>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <SignAssembly>false</SignAssembly>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 </Project>
