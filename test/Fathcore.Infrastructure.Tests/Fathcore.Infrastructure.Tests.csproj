@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Fathcore.Extensions.Tests</AssemblyName>
+    <AssemblyName>Fathcore.Infrastructure.Tests</AssemblyName>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Fathcore.Extensions\Fathcore.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

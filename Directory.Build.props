@@ -13,21 +13,25 @@
     <PackageTags>Fathcore</PackageTags>
     <Product>Fathcore</Product>
     <Description>Fathcore</Description>
-    <RootNamespace>Fathcore</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <NoWarn>$(NoWarn);CS1591;NU5125</NoWarn>
     <DebugType>portable</DebugType>
-    <PackageLicenseUrl Condition="'$(PackageLicenseExpression)' == ''">https://raw.githubusercontent.com/fathurmh/Fathcore/master/LICENSE</PackageLicenseUrl>
-    <PackageIconUrl></PackageIconUrl>
-    <PackageProjectUrl>https://github.com/fathurmh/Fathcore</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/fathurmh/Fathcore</RepositoryUrl>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <SignAssembly>false</SignAssembly>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageProjectUrl>https://github.com/fathurmh/Fathcore</PackageProjectUrl>
+    <PackageLicenseUrl Condition="'$(PackageLicenseExpression)' == ''">https://raw.githubusercontent.com/fathurmh/Fathcore/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <NoWarn>$(NoWarn);CS1591;NU5125</NoWarn>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <SignAssembly>false</SignAssembly>
+    <RepositoryUrl>https://github.com/fathurmh/Fathcore</RepositoryUrl>
+    <PackageIconUrl></PackageIconUrl>
   </PropertyGroup>
 </Project>
