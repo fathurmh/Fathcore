@@ -15,7 +15,7 @@ build:
     paths:
       - "artifacts/bin"
       - "artifacts/obj"
-    expire_in: 1d
+    expire_in: 20 minutes
 
 test:
   stage: test
@@ -28,7 +28,7 @@ test:
     paths:
       - "artifacts/bin"
       - "artifacts/obj"
-    expire_in: 1d
+    expire_in: 20 minutes
 
 deploy:
   stage: deploy
@@ -40,6 +40,6 @@ deploy:
   artifacts:
     name: "$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
     paths:
-      - "artifacts/packages/Release"
+      - "artifacts/packages/Release/Shipping"
     expire_in: 1d
     when: on_success

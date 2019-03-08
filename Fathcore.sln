@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.421
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28705.295
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5B01D93-FAD9-4728-B512-60E3D5001267}"
 	ProjectSection(SolutionItems) = preProject
@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathcore.EntityFramework.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathcore.Extensions", "src\Fathcore.Extensions\Fathcore.Extensions.csproj", "{C1C96638-97BD-4121-B19F-BD6465CDB01D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathcore.Extensions.Tests", "test\Fathcore.Extensions.Tests\Fathcore.Extensions.Tests.csproj", "{2C4023F7-854C-4701-95E7-003D776D02F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathcore.Extensions.Tests", "test\Fathcore.Extensions.Tests\Fathcore.Extensions.Tests.csproj", "{2C4023F7-854C-4701-95E7-003D776D02F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

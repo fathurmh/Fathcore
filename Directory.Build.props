@@ -13,6 +13,7 @@
     <PackageTags>Fathcore</PackageTags>
     <Product>Fathcore</Product>
     <Description>Fathcore</Description>
+    <RootNamespace>Fathcore</RootNamespace>
     <LangVersion>latest</LangVersion>
     <DebugType>portable</DebugType>
     <PackageLicenseUrl Condition="'$(PackageLicenseExpression)' == ''">https://raw.githubusercontent.com/fathurmh/Fathcore/master/LICENSE</PackageLicenseUrl>
@@ -28,6 +29,5 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <SignAssembly>false</SignAssembly>
-    <IsPackable>true</IsPackable>
   </PropertyGroup>
 </Project>

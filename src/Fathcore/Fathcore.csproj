@@ -1,7 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>Fathcore</AssemblyName>
+    <IsPackable>true</IsPackable>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fathcore.EntityFramework\Fathcore.EntityFramework.csproj" />
+    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" />
+  </ItemGroup>
 
 </Project>
