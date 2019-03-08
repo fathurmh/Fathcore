@@ -3,7 +3,7 @@
     /// <summary>
     /// Concurrentable entity interface.
     /// </summary>
-    public partial interface IConcurrentable
+    public interface IConcurrentable
     {
         /// <summary>
         /// Gets or sets the entity row version.

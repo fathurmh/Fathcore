@@ -12,7 +12,7 @@ namespace Fathcore.EntityFramework
     /// Represents the generic repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
-    public partial class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         private IDbContext _context;
         private DbSet<TEntity> _entities;

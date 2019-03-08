@@ -5,7 +5,7 @@ namespace Fathcore.EntityFramework.Configuration
     /// <summary>
     /// Represents database context model mapping configuration.
     /// </summary>
-    public partial interface IMappingConfiguration
+    public interface IMappingConfiguration
     {
         /// <summary>
         /// Apply this mapping configuration.

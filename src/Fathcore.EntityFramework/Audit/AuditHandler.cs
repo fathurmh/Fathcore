@@ -12,7 +12,7 @@ namespace Fathcore.EntityFramework.Audit
     /// <summary>
     /// Represents an audit handler.
     /// </summary>
-    public partial class AuditHandler : IAuditHandler
+    public class AuditHandler : IAuditHandler
     {
         private readonly IPrincipal _principal;
 

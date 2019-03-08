@@ -5,7 +5,7 @@ namespace Fathcore.EntityFramework.Audit
     /// <summary>
     /// Represents an audit handler.
     /// </summary>
-    public partial interface IAuditHandler
+    public interface IAuditHandler
     {
         /// <summary>
         /// Applies any audit entries for the context to the database.

@@ -10,7 +10,7 @@ namespace Fathcore.EntityFramework
     /// <summary>
     /// Represents database context.
     /// </summary>
-    public partial interface IDbContext : IDisposable
+    public interface IDbContext : IDisposable
     {
         /// <summary>
         /// Provides access to information and operations for entity instances this context is tracking.

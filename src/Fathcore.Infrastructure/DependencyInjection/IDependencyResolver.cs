@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Fathcore.Infrastructure.DependencyInjection
 {
-    public partial interface IDependencyResolver
+    public interface IDependencyResolver
     {
         /// <summary>
         /// Resolve dependency.

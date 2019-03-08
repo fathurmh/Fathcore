@@ -16,7 +16,7 @@ namespace Fathcore.EntityFramework
     /// <summary>
     /// A BaseDbContext instance represents a session with the database and can be used to query and save instances of your entities.
     /// </summary>
-    public abstract partial class BaseDbContext : DbContext, IDbContext
+    public abstract class BaseDbContext : DbContext, IDbContext
     {
         /// <summary>
         /// Gets or sets an audit handler.

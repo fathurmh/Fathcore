@@ -13,7 +13,7 @@ namespace Fathcore.EntityFramework
     /// <summary>
     /// Db context extensions.
     /// </summary>
-    public static partial class DbContextExtensions
+    public static class DbContextExtensions
     {
         /// <summary>
         /// Execute commands from the SQL script against the context database

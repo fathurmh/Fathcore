@@ -5,7 +5,7 @@ namespace Fathcore.EntityFramework.Audit
     /// <summary>
     /// Auditable entity interface.
     /// </summary>
-    public partial interface IAuditable
+    public interface IAuditable
     {
         /// <summary>
         /// Gets or sets the entity created by.

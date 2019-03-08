@@ -7,7 +7,7 @@ namespace Fathcore.EntityFramework.Configuration
     /// Represents base query type mapping configuration.
     /// </summary>
     /// <typeparam name="TQuery">The query type being configured.</typeparam>
-    public abstract partial class QueryTypeConfiguration<TQuery> : IMappingConfiguration, IQueryTypeConfiguration<TQuery> where TQuery : class
+    public abstract class QueryTypeConfiguration<TQuery> : IMappingConfiguration, IQueryTypeConfiguration<TQuery> where TQuery : class
     {
         /// <summary>
         /// Post configures the query type.

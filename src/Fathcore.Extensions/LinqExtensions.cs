@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fathcore.Extensions
 {
-    public static partial class LinqExtensions
+    public static class LinqExtensions
     {
         /// <summary>
         /// Performs the specified action on each element of the <see cref="List{T}"/>.

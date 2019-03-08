@@ -7,7 +7,7 @@ namespace Fathcore.Extensions
     /// <summary>
     /// Extension methods for adding services to an <see cref="IServiceCollection"/>.
     /// </summary>
-    public static partial class ServiceCollectionExtensions
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds an <see cref="IAuditHandler"/> service with an implementation type specified in TImplementation

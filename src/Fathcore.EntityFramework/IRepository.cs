@@ -11,7 +11,7 @@ namespace Fathcore.EntityFramework
     /// Represents the generic repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
-    public partial interface IRepository<TEntity> where TEntity : BaseEntity
+    public interface IRepository<TEntity> where TEntity : BaseEntity
     {
         /// <summary>
         /// Returns a new repository where the change tracker will keep track of changes for all entities that are returned.

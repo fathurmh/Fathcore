@@ -9,7 +9,7 @@ namespace Fathcore.EntityFramework.Configuration
     /// Represents base entity mapping configuration.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity being configured.</typeparam>
-    public abstract partial class EntityTypeConfiguration<TEntity> : IMappingConfiguration, IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity
+    public abstract class EntityTypeConfiguration<TEntity> : IMappingConfiguration, IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity
     {
         /// <summary>
         /// Post configures the entity.

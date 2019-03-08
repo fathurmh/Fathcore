@@ -6,7 +6,7 @@ namespace Fathcore.Infrastructure
     /// Provides a singleton list for a certain type.
     /// </summary>
     /// <typeparam name="T">The type of list to store.</typeparam>
-    public sealed partial class SingletonList<T> : Singleton<IList<T>>
+    public sealed class SingletonList<T> : Singleton<IList<T>>
     {
         static SingletonList()
         {

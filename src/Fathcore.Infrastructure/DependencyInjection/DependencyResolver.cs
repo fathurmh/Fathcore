@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 [assembly: InternalsVisibleTo("Fathcore.Infrastructure.Tests")]
 namespace Fathcore.Infrastructure.DependencyInjection
 {
-    internal partial class DependencyResolver : IDependencyResolver
+    public class DependencyResolver : IDependencyResolver
     {
         private readonly IServiceProvider _serviceProvider;
 
