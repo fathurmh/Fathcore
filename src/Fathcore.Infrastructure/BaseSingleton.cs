@@ -6,7 +6,7 @@ namespace Fathcore.Infrastructure
     /// <summary>
     /// Provides access to all "singletons" stored by <see cref="Singleton{T}"/>.
     /// </summary>
-    public class BaseSingleton
+    public abstract partial class BaseSingleton
     {
         static BaseSingleton()
         {

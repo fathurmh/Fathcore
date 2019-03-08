@@ -4,5 +4,9 @@
     <AssemblyName>Fathcore.Infrastructure</AssemblyName>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" />
+  </ItemGroup>
   
 </Project>

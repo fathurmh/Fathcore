@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" />
   </ItemGroup>
 

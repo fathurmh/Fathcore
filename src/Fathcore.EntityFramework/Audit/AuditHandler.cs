@@ -16,7 +16,7 @@ namespace Fathcore.EntityFramework.Audit
     {
         private readonly IPrincipal _principal;
 
-        public AuditHandler(IHttpContextAccessor httpContextAccessor = default)
+        public AuditHandler(IHttpContextAccessor httpContextAccessor)
         {
             _principal = httpContextAccessor?.HttpContext?.User ?? new GenericPrincipal(new GenericIdentity("Anonymous"), null);
         }
