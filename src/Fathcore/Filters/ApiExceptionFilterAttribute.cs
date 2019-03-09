@@ -53,7 +53,7 @@ namespace Fathcore.Filters
             }
             else if (context.Exception is CoreException coreException)
             {
-                apiError = new ResponseException(coreException.Message, coreException.ErrorType, coreException.InnerException.Message);
+                apiError = new ResponseException(coreException.Message, coreException.ErrorType);
                 code = coreException.StatusCode;
             }
             else

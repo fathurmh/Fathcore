@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Runtime.Serialization;
+using Fathcore.Infrastructures;
 
 namespace Fathcore.Exceptions
 {
@@ -18,7 +19,7 @@ namespace Fathcore.Exceptions
         /// Gets or sets the core exception error type
         /// </summary>
         /// <value></value>
-        public string ErrorType { get; set; }
+        public string ErrorType { get; set; } = ErrorTypes.SystemError;
 
         /// <summary>
         /// Initializes a new instance of the Exception class

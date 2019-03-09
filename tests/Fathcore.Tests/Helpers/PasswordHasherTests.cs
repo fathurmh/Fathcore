@@ -1,7 +1,5 @@
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
-using Fathcore.Abstractions;
 using Fathcore.Helpers;
 using Fathcore.Helpers.Abstractions;
 using Fathcore.Providers;
@@ -23,7 +21,7 @@ namespace Fathcore.Tests.Helpers
                 _validationHelpersMock
                     .Setup(prop => prop.ThrowIfNull(null, null))
                     .Throws(new ArgumentException());
-                
+
                 return _validationHelpersMock.Object;
             }
         }
@@ -34,11 +32,11 @@ namespace Fathcore.Tests.Helpers
                 var _hostingEnvironmentMock = new Mock<IHostingEnvironment>();
                 _hostingEnvironmentMock
                     .Setup(prop => prop.ContentRootPath)
-                    .Returns("D:\\Personal\\Dev\\fmh-codebase\\Presentation\\CodeBase.Web.Api");
+                    .Returns(AppDomain.CurrentDomain.BaseDirectory);
                 _hostingEnvironmentMock
                     .Setup(prop => prop.WebRootPath)
-                    .Returns("D:\\Personal\\Dev\\fmh-codebase\\Presentation\\CodeBase.Web.Api");
-                
+                    .Returns(AppDomain.CurrentDomain.BaseDirectory);
+
                 return new CoreFileProvider(_hostingEnvironmentMock.Object);
             }
         }
@@ -66,7 +64,7 @@ namespace Fathcore.Tests.Helpers
 
             string hashedPassword = passwordHasher.HashPassword(plainPassword);
             var result = passwordHasher.VerifyHashedPassword(plainPassword, hashedPassword);
-            
+
             Assert.Equal(PasswordVerificationStatus.Success, result);
         }
 
@@ -80,7 +78,7 @@ namespace Fathcore.Tests.Helpers
 
             string hashedPassword = plainPassword;
             var result = passwordHasher.VerifyHashedPassword(plainPassword, hashedPassword);
-            
+
             Assert.Equal(PasswordVerificationStatus.SuccessRehashNeeded, result);
         }
 
@@ -94,7 +92,7 @@ namespace Fathcore.Tests.Helpers
 
             string hashedPassword = passwordHasher.HashPassword("Password Verification Status Will Failed");
             var result = passwordHasher.VerifyHashedPassword(plainPassword, hashedPassword);
-            
+
             Assert.Equal(PasswordVerificationStatus.Failed, result);
         }
 
@@ -129,7 +127,7 @@ namespace Fathcore.Tests.Helpers
             var decrypted = passwordHasher.Decrypt(encrypted);
             var decrypted1 = passwordHasher.Decrypt(encrypted1);
             var decrypted2 = passwordHasher.Decrypt(encrypted2);
-            
+
             Assert.NotEqual(encrypted, encrypted1);
             Assert.NotEqual(encrypted1, encrypted2);
 
@@ -150,7 +148,7 @@ namespace Fathcore.Tests.Helpers
 
             var areSame = passwordHasher.VerifyEncyptedData(encrypted, encrypted1);
             var areSame1 = passwordHasher.VerifyEncyptedData(encrypted1, encrypted2);
-            
+
             Assert.NotEqual(encrypted, encrypted1);
             Assert.NotEqual(encrypted1, encrypted2);
 

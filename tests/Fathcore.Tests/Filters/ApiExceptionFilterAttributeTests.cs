@@ -6,7 +6,6 @@ using Fathcore.Exceptions;
 using Fathcore.Filters;
 using Fathcore.Infrastructures;
 using Fathcore.Localization.Resources;
-using Fathcore.Tests;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
@@ -26,9 +25,9 @@ namespace Fathcore.Tests.Filters
             var result = (exceptionContext.Result as JsonResult).Value as ApiResponse<object>;
 
             Assert.Equal(httpStatusCode, result.StatusCode);
-            Assert.Equal(exceptionMessage, result.ResponseException.ExceptionMessage);
+            Assert.Equal(exceptionMessage, result.ResponseException.ErrorMessage);
         }
-        
+
         public static IEnumerable<object[]> ExceptionData()
         {
             return new List<object[]>
