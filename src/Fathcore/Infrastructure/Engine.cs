@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fathcore.DependencyInjection;
+using Fathcore.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -47,7 +48,7 @@ namespace Fathcore.Infrastructure
         /// <summary>
         /// Populating service collection to DI container.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="services">The <see cref="IServiceCollection"/> to populate the service to.</param>
         /// <param name="action">An <see cref="Action"/> to configure the provided <see cref="EngineOptions"/>.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public IEngine Populate(IServiceCollection services, Action<EngineOptions> action = default)
@@ -58,9 +59,7 @@ namespace Fathcore.Infrastructure
             action?.Invoke(engineOptions);
 
             services.AddSingleton(typeof(IDependencyResolver), engineOptions.DependencyResolverType);
-
-            services.AddSingleton(typeof(IServiceCollection), services);
-            services.AddSingleton(prop => (ServiceCollection)prop.GetService<IServiceCollection>());
+            services.AddSingleton(typeof(IServiceCollection), services).AsSelf();
 
             _serviceProvider = services.BuildServiceProvider();
 

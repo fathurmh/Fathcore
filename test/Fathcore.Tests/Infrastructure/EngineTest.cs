@@ -137,7 +137,7 @@ namespace Fathcore.Tests.Infrastructure
             Assert.NotNull(instance);
         }
 
-        class DependencyRegistrarSingletonTest : IDependencyRegistrar
+        private class DependencyRegistrarSingletonTest : IDependencyRegistrar
         {
             public IServiceCollection Register(IServiceCollection services)
             {
@@ -145,7 +145,7 @@ namespace Fathcore.Tests.Infrastructure
             }
         }
 
-        class DependencyRegistrarScopedTest : IDependencyRegistrar
+        private class DependencyRegistrarScopedTest : IDependencyRegistrar
         {
             public IServiceCollection Register(IServiceCollection services)
             {
@@ -153,7 +153,7 @@ namespace Fathcore.Tests.Infrastructure
             }
         }
 
-        class DependencyRegistrarTransientTest : IDependencyRegistrar
+        private class DependencyRegistrarTransientTest : IDependencyRegistrar
         {
             public IServiceCollection Register(IServiceCollection services)
             {
