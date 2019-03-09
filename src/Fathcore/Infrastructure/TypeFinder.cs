@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -171,19 +172,81 @@ namespace Fathcore.Infrastructure
         /// <returns>Type collection.</returns>
         public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
+            var result = FindAllClasses(assemblies, onlyConcreteClasses)
+                .Where(type => assignTypeFrom.IsAssignableFrom(type) || (assignTypeFrom.IsGenericTypeDefinition && DoesTypeImplementOpenGeneric(type, assignTypeFrom)));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Find classes which have specified attribute.
+        /// </summary>
+        /// <typeparam name="T">Attribute type.</typeparam>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Type collection.</returns>
+        public IEnumerable<Type> FindClassesWithAttribute<T>(bool onlyConcreteClasses = true) where T : Attribute
+        {
+            return FindClassesWithAttribute(typeof(T), onlyConcreteClasses);
+        }
+
+        /// <summary>
+        /// Find classes which have specified attribute.
+        /// </summary>
+        /// <param name="attributeType">Attribute type</param>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Type collection.</returns>
+        public IEnumerable<Type> FindClassesWithAttribute(Type attributeType, bool onlyConcreteClasses = true)
+        {
+            return FindClassesWithAttribute(attributeType, GetAssemblies(), onlyConcreteClasses);
+        }
+
+        /// <summary>
+        /// Find classes which have specified attribute.
+        /// </summary>
+        /// <typeparam name="T">Type.</typeparam>
+        /// <param name="assemblies">Assemblies.</param>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Type collection.</returns>
+        public IEnumerable<Type> FindClassesWithAttribute<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        {
+            return FindClassesWithAttribute(typeof(T), assemblies, onlyConcreteClasses);
+        }
+
+        /// <summary>
+        /// Find classes which have specified attribute.
+        /// </summary>
+        /// <param name="attributeType">Attribute type</param>
+        /// <param name="assemblies">Assemblies.</param>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Result.</returns>
+        public IEnumerable<Type> FindClassesWithAttribute(Type attributeType, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        {
+            var result = FindAllClasses(assemblies, onlyConcreteClasses)
+                .Where(type => type.GetCustomAttributes().Any(attr => attr.GetType() == attributeType));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Find all classes.
+        /// </summary>
+        /// <param name="assemblies">Assemblies.</param>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Type collection.</returns>
+        public IEnumerable<Type> FindAllClasses(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        {
             var result = new List<Type>();
             try
             {
-                foreach (Assembly a in assemblies)
+                foreach (Assembly assembly in assemblies)
                 {
                     Type[] types = null;
                     try
                     {
-                        types = a.GetTypes();
+                        types = assembly.GetTypes();
                     }
                     catch
                     {
-                        //Entity Framework 6 doesn't allow getting types (throws an exception)
                         if (!_ignoreReflectionErrors)
                         {
                             throw;
@@ -193,24 +256,21 @@ namespace Fathcore.Infrastructure
                     if (types == null)
                         continue;
 
-                    foreach (Type t in types)
+                    foreach (Type type in types)
                     {
-                        if (!assignTypeFrom.IsAssignableFrom(t) && (!assignTypeFrom.IsGenericTypeDefinition || !DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
-                            continue;
-
-                        if (t.IsInterface)
+                        if (type.IsInterface)
                             continue;
 
                         if (onlyConcreteClasses)
                         {
-                            if (t.IsClass && !t.IsAbstract)
+                            if (type.IsClass && !type.IsAbstract)
                             {
-                                result.Add(t);
+                                result.Add(type);
                             }
                         }
                         else
                         {
-                            result.Add(t);
+                            result.Add(type);
                         }
                     }
                 }

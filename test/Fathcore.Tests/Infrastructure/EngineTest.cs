@@ -8,7 +8,7 @@ namespace Fathcore.Tests.Infrastructure
     public class EngineTest
     {
         [Fact]
-        public void Should_Populate_Service_Collection()
+        public void Should_Populate_Service_Collection_Using_DependencyRegistrar()
         {
             var services = new ServiceCollection();
             var engine = new Fathcore.Infrastructure.Engine();
@@ -23,6 +23,22 @@ namespace Fathcore.Tests.Infrastructure
                 services.FirstOrDefault(prop => prop.ImplementationType == typeof(DependencyRegistrarScopedTest)).Lifetime);
             Assert.Equal(ServiceLifetime.Transient,
                 services.FirstOrDefault(prop => prop.ImplementationType == typeof(DependencyRegistrarTransientTest)).Lifetime);
+        }
+        [Fact]
+        public void Should_Populate_Service_Collection_Using_Attribute()
+        {
+            var services = new ServiceCollection();
+            var engine = new Fathcore.Infrastructure.Engine();
+
+            engine.Populate(services);
+
+            Assert.True(services.Count >= 3);
+            Assert.Equal(ServiceLifetime.Singleton,
+                services.FirstOrDefault(prop => prop.ImplementationType == typeof(AttributeSingletonTest)).Lifetime);
+            Assert.Equal(ServiceLifetime.Scoped,
+                services.FirstOrDefault(prop => prop.ImplementationType == typeof(AttributeScopedTest)).Lifetime);
+            Assert.Equal(ServiceLifetime.Transient,
+                services.FirstOrDefault(prop => prop.ImplementationType == typeof(AttributeTransientTest)).Lifetime);
         }
 
         [Fact]
@@ -159,6 +175,21 @@ namespace Fathcore.Tests.Infrastructure
             {
                 return services.AddTransient<IDependencyRegistrar, DependencyRegistrarTransientTest>();
             }
+        }
+
+        [RegisterService(Lifetime.Singleton)]
+        private class AttributeSingletonTest
+        {
+        }
+
+        [RegisterService(Lifetime.Scoped)]
+        private class AttributeScopedTest
+        {
+        }
+
+        [RegisterService(Lifetime.Transient)]
+        private class AttributeTransientTest
+        {
         }
     }
 }

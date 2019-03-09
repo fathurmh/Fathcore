@@ -54,6 +54,7 @@ namespace Fathcore.Infrastructure
         public IEngine Populate(IServiceCollection services, Action<EngineOptions> action = default)
         {
             ActivateDependencyRegistrar(services);
+            ActivateAttributeRegistrar(services);
 
             var engineOptions = new EngineOptions();
             action?.Invoke(engineOptions);
@@ -151,6 +152,36 @@ namespace Fathcore.Infrastructure
 
             foreach (var dependencyRegistrar in dependencyRegistrars)
                 dependencyRegistrar.Register(services);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Activate attributed dependency registrar for adding services to an <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        private IEngine ActivateAttributeRegistrar(IServiceCollection services)
+        {
+            var typeFinder = new TypeFinder();
+            var registrar = new DependencyAttributeRegistrar();
+
+            var types = typeFinder.FindClassesWithAttribute<RegisterServiceAttribute>();
+
+            foreach (var type in types)
+            {
+                var attribute = type.GetCustomAttribute<RegisterServiceAttribute>();
+                var interfaces = type.GetInterfaces();
+
+                if (!interfaces.Any())
+                {
+                    registrar.RegisterAsSelf(services, type, attribute);
+                }
+                else
+                {
+                    registrar.RegisterAsImplemented(services, type, interfaces, attribute);
+                }
+            }
 
             return this;
         }

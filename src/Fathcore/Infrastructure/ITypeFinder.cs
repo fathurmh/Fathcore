@@ -44,6 +44,48 @@ namespace Fathcore.Infrastructure
         IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true);
 
         /// <summary>
+        /// Find classes which have specified attribute.
+        /// </summary>
+        /// <typeparam name="T">Attribute type.</typeparam>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Type collection.</returns>
+        IEnumerable<Type> FindClassesWithAttribute<T>(bool onlyConcreteClasses = true) where T : Attribute;
+
+        /// <summary>
+        /// Find classes which have specified attribute.
+        /// </summary>
+        /// <param name="attributeType">Attribute type</param>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Type collection.</returns>
+        IEnumerable<Type> FindClassesWithAttribute(Type attributeType, bool onlyConcreteClasses = true);
+
+        /// <summary>
+        /// Find classes which have specified attribute.
+        /// </summary>
+        /// <typeparam name="T">Type.</typeparam>
+        /// <param name="assemblies">Assemblies.</param>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Type collection.</returns>
+        IEnumerable<Type> FindClassesWithAttribute<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true);
+
+        /// <summary>
+        /// Find classes which have specified attribute.
+        /// </summary>
+        /// <param name="attributeType">Attribute type</param>
+        /// <param name="assemblies">Assemblies.</param>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Result.</returns>
+        IEnumerable<Type> FindClassesWithAttribute(Type attributeType, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true);
+
+        /// <summary>
+        /// Find all classes.
+        /// </summary>
+        /// <param name="assemblies">Assemblies.</param>
+        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
+        /// <returns>Type collection.</returns>
+        IEnumerable<Type> FindAllClasses(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true);
+
+        /// <summary>
         /// Gets the assemblies related to the current implementation.
         /// </summary>
         /// <returns>A list of assemblies.</returns>
