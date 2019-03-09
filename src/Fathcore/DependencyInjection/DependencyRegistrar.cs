@@ -17,6 +17,9 @@ namespace Fathcore.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public IServiceCollection Register(IServiceCollection services)
         {
+            services.AddLogging();
+            services.AddHttpContextAccessor();
+
             services.AddSingleton<ITypeFinder, TypeFinder>();
 
             return services;

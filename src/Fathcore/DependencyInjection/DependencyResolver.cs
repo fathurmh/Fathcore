@@ -29,7 +29,7 @@ namespace Fathcore.DependencyInjection
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                return _serviceProvider.GetRequiredService(type);
+                return _serviceProvider.GetService(type);
             }
         }
 

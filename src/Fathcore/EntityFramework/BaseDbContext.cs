@@ -30,6 +30,7 @@ namespace Fathcore.EntityFramework
         /// <param name="options">The options for this context.</param>
         public BaseDbContext(DbContextOptions options) : base(options)
         {
+            AuditHandler = Engine.Current.Resolve<IAuditHandler>();
         }
 
         /// <summary>
