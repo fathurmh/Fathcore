@@ -10,7 +10,7 @@ steps:
 
 - script: |
     dotnet tool install --global coverlet.console
-    coverlet ./tests/Fathcore.Tests/bin/Debug/netcoreapp2.2/Fathcore.Tests.dll --target "dotnet" --targetargs "test --no-build" --exclude "[xunit*]*" --format cobertura
+    coverlet ./tests/Fathcore.Tests/bin/Debug/netcoreapp2.2/Fathcore.Tests.dll --target "dotnet" --targetargs "test --no-build" --exclude "[xunit*]*" --output ./artifacts/TestResults/ --format cobertura
   displayName: 'test with coverage'
 
 - task: PublishCodeCoverageResults@1
