@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Fathcore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fathcore
 {
@@ -28,20 +29,20 @@ namespace Fathcore
             Singleton<IEngine>.Instance = engine;
         }
 
-        ///// <summary>
-        ///// Gets the singleton engine used to access services.
-        ///// </summary>
-        //public static IEngine Current
-        //{
-        //    get
-        //    {
-        //        if (Singleton<IEngine>.Instance == null)
-        //        {
-        //            Create().Populate(new ServiceCollection());
-        //        }
+        /// <summary>
+        /// Gets the singleton engine used to access services.
+        /// </summary>
+        public static IEngine Current
+        {
+            get
+            {
+                if (Singleton<IEngine>.Instance == null)
+                {
+                    Create().Populate(new ServiceCollection());
+                }
 
-        //        return Singleton<IEngine>.Instance;
-        //    }
-        //}
+                return Singleton<IEngine>.Instance;
+            }
+        }
     }
 }

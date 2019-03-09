@@ -11,9 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fathcore.EntityFramework\Fathcore.EntityFramework.csproj" />
     <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" />
-    <ProjectReference Include="..\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
