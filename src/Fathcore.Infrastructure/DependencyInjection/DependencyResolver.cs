@@ -37,9 +37,19 @@ namespace Fathcore.Infrastructure.DependencyInjection
         /// <returns>Resolved service.</returns>
         public virtual T Resolve<T>() where T : class
         {
+            return (T)Resolve(typeof(T));
+        }
+
+        /// <summary>
+        /// Resolve dependencies.
+        /// </summary>
+        /// <param name="type">Type of resolved service.</param>
+        /// <returns>Collection of resolved services.</returns>
+        public virtual IEnumerable<object> ResolveAll(Type type)
+        {
             using (var scope = _serviceProvider.CreateScope())
             {
-                return (T)_serviceProvider.GetRequiredService(typeof(T));
+                return _serviceProvider.GetServices(type);
             }
         }
 
@@ -50,10 +60,7 @@ namespace Fathcore.Infrastructure.DependencyInjection
         /// <returns>Collection of resolved services.</returns>
         public virtual IEnumerable<T> ResolveAll<T>()
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                return (IEnumerable<T>)_serviceProvider.GetServices(typeof(T));
-            }
+            return (IEnumerable<T>)ResolveAll(typeof(T));
         }
 
         /// <summary>

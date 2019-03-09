@@ -25,6 +25,118 @@ namespace Fathcore.Infrastructure.Tests
                 services.FirstOrDefault(prop => prop.ImplementationType == typeof(DependencyRegistrarTransientTest)).Lifetime);
         }
 
+        [Fact]
+        public void Can_Resolve_Service()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services, p => p.UseDependencyResolver<DependencyResolver>());
+            var instance = engine.Resolve<IServiceCollection>();
+
+            Assert.NotNull(instance);
+        }
+
+        [Fact]
+        public void Can_Resolve_Service_Implementation()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services, p => p.UseDependencyResolver(typeof(DependencyResolver)));
+            var instance = engine.Resolve<ServiceCollection>();
+
+            Assert.NotNull(instance);
+        }
+
+        [Fact]
+        public void Can_Resolve_Service_2()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services);
+            var instance = engine.Resolve(typeof(ServiceCollection));
+
+            Assert.NotNull(instance);
+        }
+
+        [Fact]
+        public void Can_Resolve_Service_Implementation_2()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services);
+            var instance = engine.Resolve(typeof(ServiceCollection));
+
+            Assert.NotNull(instance);
+        }
+
+        [Fact]
+        public void Can_Resolve_All_Services()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services);
+            var instances = engine.ResolveAll<IServiceCollection>();
+
+            Assert.NotNull(instances);
+            Assert.True(instances.Count() > 0);
+        }
+
+        [Fact]
+        public void Can_Resolve_All_Service_Implementations()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services);
+            var instances = engine.ResolveAll<ServiceCollection>();
+
+            Assert.NotNull(instances);
+            Assert.True(instances.Count() > 0);
+        }
+
+        [Fact]
+        public void Can_Resolve_All_Services_2()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services);
+            var instances = engine.ResolveAll(typeof(IServiceCollection));
+
+            Assert.NotNull(instances);
+            Assert.True(instances.Count() > 0);
+        }
+
+        [Fact]
+        public void Can_Resolve_All_Service_Implementations_2()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services);
+            var instances = engine.ResolveAll(typeof(ServiceCollection));
+
+            Assert.NotNull(instances);
+            Assert.True(instances.Count() > 0);
+        }
+
+        [Fact]
+        public void Can_Resolve_Unregistered()
+        {
+            var services = new ServiceCollection();
+            var engine = new Engine();
+
+            engine.Populate(services);
+            var instance = engine.ResolveUnregistered(typeof(ServiceCollection));
+
+            Assert.NotNull(instance);
+        }
+
         class DependencyRegistrarSingletonTest : IDependencyRegistrar
         {
             public IServiceCollection Register(IServiceCollection services)

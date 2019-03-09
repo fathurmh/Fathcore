@@ -16,7 +16,6 @@ namespace Fathcore.Infrastructure.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public IServiceCollection Register(IServiceCollection services)
         {
-            services.AddSingleton<IDependencyResolver, DependencyResolver>();
             services.AddSingleton<ITypeFinder, TypeFinder>();
 
             return services;

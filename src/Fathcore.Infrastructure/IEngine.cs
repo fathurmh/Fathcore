@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fathcore.Infrastructure
 {
@@ -12,7 +14,43 @@ namespace Fathcore.Infrastructure
         /// Populating service collection to DI container.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="action">An <see cref="Action"/> to configure the provided <see cref="EngineOptions"/>.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        IEngine Populate(IServiceCollection services);
+        IEngine Populate(IServiceCollection services, Action<EngineOptions> action);
+
+        /// <summary>
+        /// Resolve dependency.
+        /// </summary>
+        /// <param name="type">Type of resolved service.</param>
+        /// <returns>Resolved service.</returns>
+        object Resolve(Type type);
+
+        /// <summary>
+        /// Resolve dependency.
+        /// </summary>
+        /// <typeparam name="T">Type of resolved service.</typeparam>
+        /// <returns>Resolved service.</returns>
+        T Resolve<T>() where T : class;
+
+        /// <summary>
+        /// Resolve dependencies.
+        /// </summary>
+        /// <param name="type">Type of resolved service.</param>
+        /// <returns>Collection of resolved services.</returns>
+        IEnumerable<object> ResolveAll(Type type);
+
+        /// <summary>
+        /// Resolve dependencies.
+        /// </summary>
+        /// <typeparam name="T">Type of resolved services.</typeparam>
+        /// <returns>Collection of resolved services.</returns>
+        IEnumerable<T> ResolveAll<T>();
+
+        /// <summary>
+        /// Resolve unregistered service.
+        /// </summary>
+        /// <param name="type">Type of service.</param>
+        /// <returns>Resolved service.</returns>
+        object ResolveUnregistered(Type type);
     }
 }

@@ -22,6 +22,13 @@ namespace Fathcore.Infrastructure.DependencyInjection
         /// <summary>
         /// Resolve dependencies.
         /// </summary>
+        /// <param name="type">Type of resolved service.</param>
+        /// <returns>Collection of resolved services.</returns>
+        IEnumerable<object> ResolveAll(Type type);
+
+        /// <summary>
+        /// Resolve dependencies.
+        /// </summary>
         /// <typeparam name="T">Type of resolved services.</typeparam>
         /// <returns>Collection of resolved services.</returns>
         IEnumerable<T> ResolveAll<T>();
