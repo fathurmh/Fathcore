@@ -8,7 +8,7 @@ steps:
 - script: dotnet test
   displayName: 'test'
 
-- script: test.cmd
+- script: \test.cmd
   displayName: 'test with coverage'
 
 - task: PublishCodeCoverageResults@1
