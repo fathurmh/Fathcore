@@ -1,3 +1,0 @@
-dotnet sonarscanner begin /k:"fathurmh_Fathcore" /d:sonar.organization="fathurmh-github" /d:sonar.host.url=https://sonarcloud.io /d:sonar.login="19329fe39e4e4985b44633549b77b40bbd63bacd" /d:sonar.cs.opencover.reportsPaths="./artifacts/TestResults/coverage.opencover.xml" /d:sonar.coverage.exclusions="**Test*.cs"
-dotnet build
-dotnet sonarscanner end /d:sonar.login="19329fe39e4e4985b44633549b77b40bbd63bacd"

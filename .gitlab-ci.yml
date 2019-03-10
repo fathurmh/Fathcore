@@ -4,11 +4,14 @@ stages:
   - build
   - test
   - deploy
+  
+before_script:
+  - dotnet restore
+  - which coverlet || dotnet tool install --global coverlet.console
 
 build:
   stage: build
   script:
-    - dotnet restore
     - dotnet build
   artifacts:
     name: "$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
@@ -21,6 +24,8 @@ test:
   stage: test
   script:
     - dotnet test
+    - coverlet ./artifacts/bin/Fathcore.Tests/Debug/netcoreapp2.2/Fathcore.Tests.dll --target "dotnet" --targetargs "test --no-build" --exclude "[xunit*]*" --output ./artifacts/TestResults/ --format lcov --format opencover --format cobertura
+    - coverlet ./artifacts/bin/Fathcore.Extensions.Tests/Debug/netcoreapp2.2/Fathcore.Extensions.Tests.dll --target "dotnet" --targetargs "test --no-build" --exclude "[xunit*]*" --merge-with "./artifacts/TestResults/coverage.json" --output ./artifacts/TestResults/ --format lcov --format opencover --format cobertura
   dependencies:
     - build
   artifacts:
@@ -28,7 +33,17 @@ test:
     paths:
       - "artifacts/bin"
       - "artifacts/obj"
+      - "artifacts/TestResults/"
     expire_in: 20 minutes
+    
+deploy:coverage:
+  stage: deploy
+  script:
+    - curl -s https://codecov.io/bash > codecov
+    - chmod +x codecov
+    - ./codecov -f "coverage.opencover.xml" -t $CODECOV_TOKEN
+  dependencies:
+    - test
 
 deploy:
   stage: deploy

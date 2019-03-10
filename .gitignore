@@ -344,3 +344,6 @@ ASALocalRun/
 
 # Sonar Qube
 .sonarqube/
+
+# Codecov.io
+codecov
