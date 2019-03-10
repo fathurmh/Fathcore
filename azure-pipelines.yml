@@ -1,17 +1,18 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
-trigger:
-- master
-
 pool:
-  vmImage: 'Ubuntu-16.04'
-
-variables:
-  buildConfiguration: 'Release'
+  vmImage: 'Ubuntu 16.04'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- script: dotnet build
+  displayName: 'build'
+  
+- script: dotnet test
+  displayName: 'test'
+
+- script: test.cmd
+  displayName: 'test with coverage'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'publish coverage results'
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/artifacts/TestResults/coverage.cobertura.xml'
