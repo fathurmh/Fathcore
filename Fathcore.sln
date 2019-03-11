@@ -8,16 +8,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		Fathcore.ruleset = Fathcore.ruleset
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3BBB3586-A33F-4828-8E9D-B5B6D98E61D5}"
 	ProjectSection(SolutionItems) = preProject
-		Fathcore.ruleset = Fathcore.ruleset
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D75D4422-F704-4979-BC82-4DC67C03C354}"
 	ProjectSection(SolutionItems) = preProject
-		Fathcore.ruleset = Fathcore.ruleset
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathcore", "src\Fathcore\Fathcore.csproj", "{0EAE2471-4E62-400B-903E-F740E5339317}"

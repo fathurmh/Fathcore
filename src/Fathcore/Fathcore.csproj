@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <AssemblyName>Fathcore</AssemblyName>
-    <IsPackable>true</IsPackable>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 

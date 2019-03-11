@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+
+  <PropertyGroup Condition="'$(IsUnitTestProject)' == ''">
+    <IsUnitTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">True</IsUnitTestProject>
+  </PropertyGroup>
+
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+  <Import
+    Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), AspNetCoreSettings.props))\AspNetCoreSettings.props"
+    Condition=" '$(CI)' != 'true' AND '$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), AspNetCoreSettings.props))' != '' " />
 
   <PropertyGroup Condition="'$(CopyrightNetFoundation)' != ''">
     <Copyright>$(CopyrightNetFoundation)</Copyright>
@@ -34,4 +42,5 @@
     <RepositoryUrl>https://github.com/fathurmh/Fathcore</RepositoryUrl>
     <PackageIconUrl></PackageIconUrl>
   </PropertyGroup>
+  
 </Project>

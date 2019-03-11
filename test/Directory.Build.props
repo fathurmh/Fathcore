@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <Import Project="..\Directory.Build.props" />
+  
+  <PropertyGroup>
+    <StandardTestTfms>netcoreapp2.2</StandardTestTfms>
+    <StandardTestTfms Condition="'$(DeveloperBuild)' != 'True'">net461;$(StandardTestTfms)</StandardTestTfms>
+  </PropertyGroup>
+
+</Project>
