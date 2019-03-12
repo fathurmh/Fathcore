@@ -20,6 +20,8 @@ build:
 
 test:
   stage: test
+  before_script:
+    - chmod +x test.cmd
   script:
     - ./test.cmd
   dependencies:
