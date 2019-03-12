@@ -20,10 +20,9 @@ build:
 
 test:
   stage: test
-  before_script:
-    - chmod +x test.cmd
   script:
-    - ./test.cmd
+    - dotnet test ./test/Fathcore.Tests/Fathcore.Tests.csproj --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$PSScriptRoot/artifacts/TestResults/ /p:Exclude="[xunit*]*%2c[*.Tests?]*"
+    - dotnet test ./test/Fathcore.Extensions.Tests/Fathcore.Extensions.Tests.csproj --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$PSScriptRoot/artifacts/TestResults/ /p:Exclude="[xunit*]*%2c[*.Tests?]*" /p:MergeWith=./artifacts/TestResults/coverage.json
   dependencies:
     - build
   artifacts:
