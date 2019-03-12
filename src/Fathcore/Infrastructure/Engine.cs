@@ -29,7 +29,12 @@ namespace Fathcore.Infrastructure
             {
                 try
                 {
-                    _dependencyResolver = ServiceProvider.GetRequiredService<IDependencyResolver>();
+                    _dependencyResolver = ServiceProvider.GetService<IDependencyResolver>();
+                    if (_dependencyResolver == null)
+                    {
+                        _dependencyResolver = (IDependencyResolver)ResolveUnregistered(typeof(DependencyResolver));
+                    }
+                    
                     return _dependencyResolver;
                 }
                 catch (Exception ex)

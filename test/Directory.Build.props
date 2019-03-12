@@ -5,7 +5,7 @@
   
   <PropertyGroup>
     <StandardTestTfms>netcoreapp2.2</StandardTestTfms>
-    <StandardTestTfms Condition="'$(DeveloperBuild)' != 'True'">net461;$(StandardTestTfms)</StandardTestTfms>
+    <StandardTestTfms Condition="'$(DeveloperBuild)' != 'True'">$(StandardTestTfms)</StandardTestTfms>
   </PropertyGroup>
 
 </Project>
