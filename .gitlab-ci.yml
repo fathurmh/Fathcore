@@ -21,6 +21,7 @@ build:
 
 test:
   stage: test
+  image: philippheuer/docker-gitlab-powershell
   script:
     - powershell -ExecutionPolicy ByPass -NoProfile -command "& """%~dp0test.ps1""" %*"
   dependencies:
