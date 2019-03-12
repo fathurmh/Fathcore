@@ -20,9 +20,8 @@ build:
 
 test:
   stage: test
-  image: philippheuer/docker-gitlab-powershell
   script:
-    - powershell -File test.ps1
+    - ./test.cmd
   dependencies:
     - build
   artifacts:
