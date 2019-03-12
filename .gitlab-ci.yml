@@ -22,7 +22,7 @@ test:
   stage: test
   image: philippheuer/docker-gitlab-powershell
   script:
-    - powershell -noprofile -noninteractive -executionpolicy Bypass -command test.ps1
+    - powershell -File test.ps1
   dependencies:
     - build
   artifacts:
