@@ -18,6 +18,11 @@ namespace Fathcore.Infrastructure
         private IHttpContextAccessor HttpContextAccessor => _serviceProvider.GetService<IHttpContextAccessor>();
         private IServiceProvider ServiceProvider => HttpContextAccessor?.HttpContext?.RequestServices ?? _serviceProvider;
 
+        public Engine()
+        {
+            _serviceProvider = new ServiceCollection().BuildServiceProvider();
+        }
+
         /// <summary>
         /// Populating service collection to DI container.
         /// </summary>
@@ -31,7 +36,6 @@ namespace Fathcore.Infrastructure
             services.AddSingleton(typeof(IServiceCollection), services).AsSelf();
 
             _serviceProvider = services.BuildServiceProvider();
-
             return this;
         }
 
