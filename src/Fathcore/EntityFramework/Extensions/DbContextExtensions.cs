@@ -40,9 +40,6 @@ namespace Fathcore.EntityFramework.Extensions
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            if (!File.Exists(filePath))
-                return;
-
             context.ExecuteSqlScript(File.ReadAllText(filePath));
         }
 
