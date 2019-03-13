@@ -47,7 +47,7 @@ namespace Fathcore.Tests.Infrastructure
             var services = new ServiceCollection();
             var engine = new Fathcore.Infrastructure.Engine();
 
-            engine.Populate(services, p => p.UseDependencyResolver<DependencyResolver>());
+            engine.Populate(services);
             var instance = engine.Resolve<IServiceCollection>();
 
             Assert.NotNull(instance);
@@ -59,7 +59,7 @@ namespace Fathcore.Tests.Infrastructure
             var services = new ServiceCollection();
             var engine = new Fathcore.Infrastructure.Engine();
 
-            engine.Populate(services, p => p.UseDependencyResolver(typeof(DependencyResolver)));
+            engine.Populate(services);
             var instance = engine.Resolve<ServiceCollection>();
 
             Assert.NotNull(instance);

@@ -16,33 +16,11 @@ namespace Fathcore.Infrastructure
     {
         private IServiceProvider _serviceProvider;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IDependencyResolver _dependencyResolver;
 
         private IHttpContextAccessor HttpContextAccessor
             => _serviceProvider.GetService<IHttpContextAccessor>() ?? _httpContextAccessor;
         private IServiceProvider ServiceProvider
             => HttpContextAccessor?.HttpContext?.RequestServices ?? _serviceProvider;
-
-        private IDependencyResolver DependencyResolver
-        {
-            get
-            {
-                try
-                {
-                    _dependencyResolver = ServiceProvider.GetService<IDependencyResolver>();
-                    if (_dependencyResolver == null)
-                    {
-                        _dependencyResolver = (IDependencyResolver)ResolveUnregistered(typeof(DependencyResolver));
-                    }
-                    
-                    return _dependencyResolver;
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException($"Consider using {"Resolver"} at startup.", ex);
-                }
-            }
-        }
 
         public Engine()
         {
@@ -54,17 +32,12 @@ namespace Fathcore.Infrastructure
         /// Populating service collection to DI container.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to populate the service to.</param>
-        /// <param name="action">An <see cref="Action"/> to configure the provided <see cref="EngineOptions"/>.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public IEngine Populate(IServiceCollection services, Action<EngineOptions> action = default)
+        public IEngine Populate(IServiceCollection services)
         {
             ActivateDependencyRegistrar(services);
             ActivateAttributeRegistrar(services);
 
-            var engineOptions = new EngineOptions();
-            action?.Invoke(engineOptions);
-
-            services.AddSingleton(typeof(IDependencyResolver), engineOptions.DependencyResolverType);
             services.AddSingleton(typeof(IServiceCollection), services).AsSelf();
 
             _serviceProvider = services.BuildServiceProvider();
@@ -79,7 +52,10 @@ namespace Fathcore.Infrastructure
         /// <returns>Resolved service.</returns>
         public object Resolve(Type type)
         {
-            return DependencyResolver.Resolve(type);
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                return ServiceProvider.GetService(type);
+            }
         }
 
         /// <summary>
@@ -89,7 +65,7 @@ namespace Fathcore.Infrastructure
         /// <returns>Resolved service.</returns>
         public T Resolve<T>() where T : class
         {
-            return DependencyResolver.Resolve<T>();
+            return (T)Resolve(typeof(T));
         }
 
         /// <summary>
@@ -99,7 +75,10 @@ namespace Fathcore.Infrastructure
         /// <returns>Collection of resolved services.</returns>
         public IEnumerable<object> ResolveAll(Type type)
         {
-            return DependencyResolver.ResolveAll(type);
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                return ServiceProvider.GetServices(type);
+            }
         }
 
         /// <summary>
@@ -109,7 +88,7 @@ namespace Fathcore.Infrastructure
         /// <returns>Collection of resolved services.</returns>
         public IEnumerable<T> ResolveAll<T>()
         {
-            return DependencyResolver.ResolveAll<T>();
+            return (IEnumerable<T>)ResolveAll(typeof(T));
         }
 
         /// <summary>

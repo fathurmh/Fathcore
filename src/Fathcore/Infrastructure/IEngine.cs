@@ -14,9 +14,8 @@ namespace Fathcore.Infrastructure
         /// Populating service collection to DI container.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to populate the service to.</param>
-        /// <param name="action">An <see cref="Action"/> to configure the provided <see cref="EngineOptions"/>.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        IEngine Populate(IServiceCollection services, Action<EngineOptions> action = default);
+        IEngine Populate(IServiceCollection services);
 
         /// <summary>
         /// Resolve dependency.

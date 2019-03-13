@@ -17,5 +17,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Fathcore\Fathcore.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="DependencyInjection\" />
+  </ItemGroup>
 
 </Project>
