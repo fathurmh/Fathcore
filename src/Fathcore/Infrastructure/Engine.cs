@@ -15,18 +15,8 @@ namespace Fathcore.Infrastructure
     public sealed class Engine : IEngine
     {
         private IServiceProvider _serviceProvider;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        private IHttpContextAccessor HttpContextAccessor
-            => _serviceProvider.GetService<IHttpContextAccessor>() ?? _httpContextAccessor;
-        private IServiceProvider ServiceProvider
-            => HttpContextAccessor?.HttpContext?.RequestServices ?? _serviceProvider;
-
-        public Engine()
-        {
-            _serviceProvider = new ServiceCollection().BuildServiceProvider();
-            _httpContextAccessor = _serviceProvider.GetService<IHttpContextAccessor>();
-        }
+        private IHttpContextAccessor HttpContextAccessor => _serviceProvider.GetService<IHttpContextAccessor>();
+        private IServiceProvider ServiceProvider => HttpContextAccessor?.HttpContext?.RequestServices ?? _serviceProvider;
 
         /// <summary>
         /// Populating service collection to DI container.
@@ -52,10 +42,7 @@ namespace Fathcore.Infrastructure
         /// <returns>Resolved service.</returns>
         public object Resolve(Type type)
         {
-            using (var scope = ServiceProvider.CreateScope())
-            {
-                return ServiceProvider.GetService(type);
-            }
+            return ServiceProvider.GetService(type);
         }
 
         /// <summary>
@@ -75,10 +62,7 @@ namespace Fathcore.Infrastructure
         /// <returns>Collection of resolved services.</returns>
         public IEnumerable<object> ResolveAll(Type type)
         {
-            using (var scope = ServiceProvider.CreateScope())
-            {
-                return ServiceProvider.GetServices(type);
-            }
+            return ServiceProvider.GetServices(type);
         }
 
         /// <summary>

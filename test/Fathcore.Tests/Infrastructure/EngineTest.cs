@@ -1,141 +1,64 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Fathcore.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Xunit;
 
 namespace Fathcore.Infrastructure
 {
     public class EngineTest
     {
+        private IServiceCollection ServiceDescriptors { get; } = new ServiceCollection();
+        private IEngine Engine { get; } = new Engine();
+
         [Fact]
-        public void Should_Populate_Service_Collection_Using_DependencyRegistrar()
+        public void Should_Populate_Service_Collection()
         {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
+            Engine.Populate(ServiceDescriptors);
 
-            engine.Populate(services);
-
-            Assert.True(services.Count >= 3);
-            Assert.Contains(services, prop => prop.ServiceType.FullName.Contains(nameof(IDependencyRegistrar)));
-            Assert.Equal(ServiceLifetime.Singleton,
-                services.FirstOrDefault(prop => prop.ImplementationType == typeof(DependencyRegistrarSingletonTest)).Lifetime);
-            Assert.Equal(ServiceLifetime.Scoped,
-                services.FirstOrDefault(prop => prop.ImplementationType == typeof(DependencyRegistrarScopedTest)).Lifetime);
-            Assert.Equal(ServiceLifetime.Transient,
-                services.FirstOrDefault(prop => prop.ImplementationType == typeof(DependencyRegistrarTransientTest)).Lifetime);
-        }
-        [Fact]
-        public void Should_Populate_Service_Collection_Using_Attribute()
-        {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
-
-            engine.Populate(services);
-
-            Assert.True(services.Count >= 3);
-            Assert.Equal(ServiceLifetime.Singleton,
-                services.FirstOrDefault(prop => prop.ImplementationType == typeof(AttributeSingletonTest)).Lifetime);
-            Assert.Equal(ServiceLifetime.Scoped,
-                services.FirstOrDefault(prop => prop.ImplementationType == typeof(AttributeScopedTest)).Lifetime);
-            Assert.Equal(ServiceLifetime.Transient,
-                services.FirstOrDefault(prop => prop.ImplementationType == typeof(AttributeTransientTest)).Lifetime);
+            Assert.Contains(ServiceDescriptors, prop => prop.ServiceType.FullName.Contains(nameof(IServiceCollection)));
+            Assert.Contains(ServiceDescriptors, prop => prop.ServiceType.FullName.Contains(nameof(ServiceCollection)));
         }
 
         [Fact]
-        public void Can_Resolve_Service()
+        public void Can_Resolve_Service_By_Service_Type()
         {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
+            Engine.Populate(ServiceDescriptors);
 
-            engine.Populate(services);
-            var instance = engine.Resolve<IServiceCollection>();
+            var instance = Engine.Resolve<IServiceCollection>();
 
             Assert.NotNull(instance);
         }
 
         [Fact]
-        public void Can_Resolve_Service_Implementation()
+        public void Can_Resolve_Service_By_Implementation_Type()
         {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
+            Engine.Populate(ServiceDescriptors);
 
-            engine.Populate(services);
-            var instance = engine.Resolve<ServiceCollection>();
+            var instance = Engine.Resolve<ServiceCollection>();
 
             Assert.NotNull(instance);
         }
 
         [Fact]
-        public void Can_Resolve_Service_2()
+        public void Can_Resolve_All_Services_By_Service_Type()
         {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
+            Engine.Populate(ServiceDescriptors);
 
-            engine.Populate(services);
-            var instance = engine.Resolve(typeof(ServiceCollection));
-
-            Assert.NotNull(instance);
-        }
-
-        [Fact]
-        public void Can_Resolve_Service_Implementation_2()
-        {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
-
-            engine.Populate(services);
-            var instance = engine.Resolve(typeof(ServiceCollection));
-
-            Assert.NotNull(instance);
-        }
-
-        [Fact]
-        public void Can_Resolve_All_Services()
-        {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
-
-            engine.Populate(services);
-            var instances = engine.ResolveAll<IServiceCollection>();
+            var instances = Engine.ResolveAll<IServiceCollection>();
 
             Assert.NotNull(instances);
             Assert.True(instances.Count() > 0);
         }
 
         [Fact]
-        public void Can_Resolve_All_Service_Implementations()
+        public void Can_Resolve_All_Services_By_Implementation_Type()
         {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
+            Engine.Populate(ServiceDescriptors);
 
-            engine.Populate(services);
-            var instances = engine.ResolveAll<ServiceCollection>();
-
-            Assert.NotNull(instances);
-            Assert.True(instances.Count() > 0);
-        }
-
-        [Fact]
-        public void Can_Resolve_All_Services_2()
-        {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
-
-            engine.Populate(services);
-            var instances = engine.ResolveAll(typeof(IServiceCollection));
-
-            Assert.NotNull(instances);
-            Assert.True(instances.Count() > 0);
-        }
-
-        [Fact]
-        public void Can_Resolve_All_Service_Implementations_2()
-        {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
-
-            engine.Populate(services);
-            var instances = engine.ResolveAll(typeof(ServiceCollection));
+            var instances = Engine.ResolveAll<ServiceCollection>();
 
             Assert.NotNull(instances);
             Assert.True(instances.Count() > 0);
@@ -144,11 +67,63 @@ namespace Fathcore.Infrastructure
         [Fact]
         public void Can_Resolve_Unregistered()
         {
-            var services = new ServiceCollection();
-            var engine = new Fathcore.Infrastructure.Engine();
+            Engine.Populate(ServiceDescriptors);
 
-            engine.Populate(services);
-            var instance = engine.ResolveUnregistered(typeof(ServiceCollection));
+            var instance = Engine.ResolveUnregistered(typeof(ServiceCollection));
+
+            Assert.NotNull(instance);
+        }
+
+        [Fact]
+        public void Can_Not_Resolve_Unregistered_When_Parameter_Service_Not_Registered()
+        {
+            Engine.Populate(ServiceDescriptors);
+
+            Assert.Throws<Exception>(() => Engine.ResolveUnregistered(typeof(UnregisteredService)));
+        }
+
+        [Fact]
+        public void Can_Resolve_Service_By_Service_Type_When_HttpContextAccessor_Exists()
+        {
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            ServiceDescriptors.AddSingleton(ServiceDescriptors);
+            context.RequestServices = ServiceDescriptors.BuildServiceProvider();
+            mockHttpContextAccessor.Setup(_ => _.HttpContext).Returns(context);
+            ServiceDescriptors.AddSingleton(mockHttpContextAccessor.Object);
+            Engine.Populate(ServiceDescriptors);
+
+            var instance = Engine.Resolve<IServiceCollection>();
+
+            Assert.NotNull(instance);
+        }
+
+        [Fact]
+        public void Can_Resolve_Service_By_Service_Type_When_HttpContextAccessor_Exists_But_HttpContext_Doesnt()
+        {
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            context = null;
+            mockHttpContextAccessor.Setup(_ => _.HttpContext).Returns(context);
+            ServiceDescriptors.AddSingleton(mockHttpContextAccessor.Object);
+            Engine.Populate(ServiceDescriptors);
+
+            var instance = Engine.Resolve<IServiceCollection>();
+
+            Assert.NotNull(instance);
+        }
+
+        [Fact]
+        public void Can_Resolve_Service_By_Service_Type_When_HttpContextAccessor_Exists_But_RequestServices_Not()
+        {
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            context.RequestServices = null;
+            mockHttpContextAccessor.Setup(_ => _.HttpContext).Returns(context);
+            ServiceDescriptors.AddSingleton(mockHttpContextAccessor.Object);
+            Engine.Populate(ServiceDescriptors);
+
+            var instance = Engine.Resolve<IServiceCollection>();
 
             Assert.NotNull(instance);
         }
@@ -156,40 +131,27 @@ namespace Fathcore.Infrastructure
         private class DependencyRegistrarSingletonTest : IDependencyRegistrar
         {
             public IServiceCollection Register(IServiceCollection services)
-            {
-                return services.AddSingleton<IDependencyRegistrar, DependencyRegistrarSingletonTest>();
-            }
-        }
-
-        private class DependencyRegistrarScopedTest : IDependencyRegistrar
-        {
-            public IServiceCollection Register(IServiceCollection services)
-            {
-                return services.AddScoped<IDependencyRegistrar, DependencyRegistrarScopedTest>();
-            }
-        }
-
-        private class DependencyRegistrarTransientTest : IDependencyRegistrar
-        {
-            public IServiceCollection Register(IServiceCollection services)
-            {
-                return services.AddTransient<IDependencyRegistrar, DependencyRegistrarTransientTest>();
-            }
+                => services.AddSingleton<IDependencyRegistrar, DependencyRegistrarSingletonTest>();
         }
 
         [RegisterService(Lifetime.Singleton)]
-        private class AttributeSingletonTest
-        {
-        }
+        private class SelfServiceTest { }
 
-        [RegisterService(Lifetime.Scoped)]
-        private class AttributeScopedTest
-        {
-        }
+        private interface IImplementedServiceTest { }
 
-        [RegisterService(Lifetime.Transient)]
-        private class AttributeTransientTest
+        [RegisterService(Lifetime.Singleton)]
+        private class ImplementedServiceTest : IImplementedServiceTest { }
+
+        private interface IUnregisteredService { }
+
+        private class UnregisteredService
         {
+            private readonly IUnregisteredService _unregisteredService;
+
+            public UnregisteredService(IUnregisteredService unregisteredService)
+            {
+                _unregisteredService = unregisteredService;
+            }
         }
     }
 }
