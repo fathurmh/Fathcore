@@ -20,15 +20,8 @@ namespace Fathcore.Extensions
         /// <returns></returns>
         public static T SetPropertyValue<T, TValue>(this T target, Expression<Func<T, TValue>> memberExpression, TValue value)
         {
-            var memberSelectorExpression = memberExpression.Body as MemberExpression;
-            if (memberSelectorExpression != null)
-            {
-                var property = memberSelectorExpression.Member as PropertyInfo;
-                if (property != null)
-                {
-                    property.SetValue(target, value, null);
-                }
-            }
+            if (memberExpression.Body is MemberExpression memberSelectorExpression && memberSelectorExpression.Member is PropertyInfo property && property.CanWrite)
+                property.SetValue(target, value, null);
 
             return target;
         }

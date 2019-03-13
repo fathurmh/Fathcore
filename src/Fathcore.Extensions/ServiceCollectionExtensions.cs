@@ -35,15 +35,15 @@ namespace Fathcore.Extensions
                     if (lastRegistration.ImplementationFactory != null)
                     {
                         services.Add(new ServiceDescriptor(
-                            lastRegistration.ImplementationType,
+                            implementationType,
                             lastRegistration.ImplementationFactory,
                             lastRegistration.Lifetime));
                     }
                     else
                     {
                         services.Add(new ServiceDescriptor(
-                            lastRegistration.ImplementationType,
-                            lastRegistration.ImplementationType,
+                            implementationType,
+                            implementationType,
                             lastRegistration.Lifetime));
                     }
 
