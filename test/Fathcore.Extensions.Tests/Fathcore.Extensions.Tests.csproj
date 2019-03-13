@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup>
     <AssemblyName>Fathcore.Extensions.Tests</AssemblyName>
+    <RootNamespace>Fathcore.Extensions</RootNamespace>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
@@ -13,9 +14,9 @@
     <PackageReference Include="Microsoft.AspNetCore.All" />
     <PackageReference Include="Moq" Version="4.10.1" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Fathcore.Extensions\Fathcore.Extensions.csproj" />
   </ItemGroup>
 
-  </Project>
+</Project>

@@ -12,7 +12,7 @@ namespace Fathcore.Infrastructure
     /// <summary>
     /// Represents an engine that can serve as a portal for the various services.
     /// </summary>
-    internal sealed class Engine : IEngine
+    public sealed class Engine : IEngine
     {
         private IServiceProvider _serviceProvider;
         private readonly IHttpContextAccessor _httpContextAccessor;

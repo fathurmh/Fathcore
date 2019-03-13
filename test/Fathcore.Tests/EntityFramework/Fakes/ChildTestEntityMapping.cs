@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Fathcore.Tests.EntityFramework.Fakes
+namespace Fathcore.EntityFramework.Fakes
 {
     internal class ChildTestEntityMapping : EntityTypeConfiguration<ChildTestEntity>
     {

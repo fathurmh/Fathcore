@@ -1,8 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using Fathcore.Infrastructure;
+﻿using Fathcore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: InternalsVisibleTo("Fathcore.Infrastructure.Tests")]
 namespace Fathcore.DependencyInjection
 {
     /// <summary>

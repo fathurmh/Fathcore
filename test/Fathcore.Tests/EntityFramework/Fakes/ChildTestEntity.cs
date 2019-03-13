@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Fathcore.EntityFramework;
 using Fathcore.EntityFramework.Audit;
 
-namespace Fathcore.Tests.EntityFramework.Fakes
+namespace Fathcore.EntityFramework.Fakes
 {
     internal class ChildTestEntity : BaseEntity, IAuditable, ISoftDeletable, IConcurrentable
     {

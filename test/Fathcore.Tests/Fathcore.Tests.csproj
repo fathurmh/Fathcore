@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Fathcore.Tests</AssemblyName>
+    <RootNamespace>Fathcore</RootNamespace>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
@@ -13,13 +14,9 @@
     <PackageReference Include="Microsoft.AspNetCore.All" />
     <PackageReference Include="Moq" Version="4.10.1" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Fathcore\Fathcore.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="DependencyInjection\" />
   </ItemGroup>
 
 </Project>

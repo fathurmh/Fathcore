@@ -1,8 +1,7 @@
 ﻿using System.Linq;
-using Fathcore.EntityFramework;
 using Xunit;
 
-namespace Fathcore.Tests.EntityFramework
+namespace Fathcore.EntityFramework
 {
     public class BaseEntityTest
     {

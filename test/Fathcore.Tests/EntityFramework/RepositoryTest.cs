@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Fathcore.EntityFramework;
-using Fathcore.Tests.EntityFramework.Fakes;
+using Fathcore.EntityFramework.Fakes;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace Fathcore.Tests.EntityFramework
+namespace Fathcore.EntityFramework
 {
     public class RepositoryTest
     {

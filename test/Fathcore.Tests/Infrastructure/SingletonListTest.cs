@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Fathcore.Infrastructure;
 using Xunit;
 
-namespace Fathcore.Tests.Infrastructure
+namespace Fathcore.Infrastructure
 {
-    public class SingletonListTest
+    public class SingletonListTest : List<SingletonListTest>, IList<SingletonListTest>
     {
         [Fact]
         public void SingletonList_Is_Created_By_Default()

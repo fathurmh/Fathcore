@@ -2,7 +2,6 @@
 using Fathcore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: InternalsVisibleTo("Fathcore.Tests")]
 namespace Fathcore
 {
     /// <summary>

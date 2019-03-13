@@ -1,4 +1,4 @@
-﻿namespace Fathcore.Tests.EntityFramework.Fakes
+﻿namespace Fathcore.EntityFramework.Fakes
 {
     internal class StringQueryType
     {

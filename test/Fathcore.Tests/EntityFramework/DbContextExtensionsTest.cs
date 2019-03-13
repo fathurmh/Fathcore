@@ -3,12 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.Extensions;
-using Fathcore.Tests.EntityFramework.Fakes;
+using Fathcore.EntityFramework.Fakes;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace Fathcore.Tests.EntityFramework
+namespace Fathcore.EntityFramework
 {
     public class DbContextExtensionsTest
     {

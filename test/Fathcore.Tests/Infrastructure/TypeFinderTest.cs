@@ -1,8 +1,7 @@
 ﻿using System.Linq;
-using Fathcore.Infrastructure;
 using Xunit;
 
-namespace Fathcore.Tests.Infrastructure
+namespace Fathcore.Infrastructure
 {
     public class TypeFinderTest
     {

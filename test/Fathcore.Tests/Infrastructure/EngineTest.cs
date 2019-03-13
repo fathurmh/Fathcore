@@ -3,7 +3,7 @@ using Fathcore.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Fathcore.Tests.Infrastructure
+namespace Fathcore.Infrastructure
 {
     public class EngineTest
     {

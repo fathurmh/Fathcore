@@ -1,11 +1,10 @@
-﻿using Fathcore.EntityFramework.Configuration;
-using Fathcore.Tests.EntityFramework.Fakes;
+﻿using Fathcore.EntityFramework.Fakes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Xunit;
 
-namespace Fathcore.Tests.EntityFramework.Configuration
+namespace Fathcore.EntityFramework.Configuration
 {
     public class QueryTypeConfigurationTest
     {

@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Fathcore.EntityFramework.Audit;
-using Fathcore.Tests.EntityFramework.Fakes;
+using Fathcore.EntityFramework.Fakes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace Fathcore.Tests.EntityFramework.Audit
+namespace Fathcore.EntityFramework.Audit
 {
     public class AuditHandlerTest
     {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Fathcore.EntityFramework;
 using Fathcore.EntityFramework.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace Fathcore.Tests.EntityFramework.Fakes
+namespace Fathcore.EntityFramework.Fakes
 {
     internal class TestDbContext : BaseDbContext
     {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fathcore.EntityFramework;
 using Fathcore.EntityFramework.Audit;
 
-namespace Fathcore.Tests.EntityFramework.Fakes
+namespace Fathcore.EntityFramework.Fakes
 {
     internal class TestEntity : BaseEntity, IAuditable, ISoftDeletable, IConcurrentable
     {
