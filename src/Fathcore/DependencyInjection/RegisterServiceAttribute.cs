@@ -6,7 +6,7 @@ namespace Fathcore.DependencyInjection
     /// Represents the register service attributes.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class RegisterServiceAttribute : Attribute
+    public sealed class RegisterServiceAttribute : Attribute
     {
         /// <summary>
         /// The lifetime of the service.

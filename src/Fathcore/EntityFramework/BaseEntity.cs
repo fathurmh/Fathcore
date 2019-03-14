@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets or sets the entity identifier.
         /// </summary>
-        public virtual long Id { get; set; }
+        public long Id { get; set; }
     }
 }

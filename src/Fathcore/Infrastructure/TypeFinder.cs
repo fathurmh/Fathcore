@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Fathcore.Infrastructure
 {
@@ -135,7 +137,7 @@ namespace Fathcore.Infrastructure
         /// <typeparam name="T">Type.</typeparam>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
         {
             return FindClassesOfType(typeof(T), onlyConcreteClasses);
         }
@@ -146,7 +148,7 @@ namespace Fathcore.Infrastructure
         /// <param name="assignTypeFrom">Assign type from.</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
         {
             return FindClassesOfType(assignTypeFrom, GetAssemblies(), onlyConcreteClasses);
         }
@@ -158,7 +160,7 @@ namespace Fathcore.Infrastructure
         /// <param name="assemblies">Assemblies.</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
             return FindClassesOfType(typeof(T), assemblies, onlyConcreteClasses);
         }
@@ -170,7 +172,7 @@ namespace Fathcore.Infrastructure
         /// <param name="assemblies">Assemblies.</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
             var result = FindAllClasses(assemblies, onlyConcreteClasses)
                 .Where(type => assignTypeFrom.IsAssignableFrom(type) || (assignTypeFrom.IsGenericTypeDefinition && DoesTypeImplementOpenGeneric(type, assignTypeFrom)));
@@ -184,7 +186,7 @@ namespace Fathcore.Infrastructure
         /// <typeparam name="T">Attribute type.</typeparam>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public IEnumerable<Type> FindClassesWithAttribute<T>(bool onlyConcreteClasses = true) where T : Attribute
+        public virtual IEnumerable<Type> FindClassesWithAttribute<T>(bool onlyConcreteClasses = true) where T : Attribute
         {
             return FindClassesWithAttribute(typeof(T), onlyConcreteClasses);
         }
@@ -195,7 +197,7 @@ namespace Fathcore.Infrastructure
         /// <param name="attributeType">Attribute type</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public IEnumerable<Type> FindClassesWithAttribute(Type attributeType, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesWithAttribute(Type attributeType, bool onlyConcreteClasses = true)
         {
             return FindClassesWithAttribute(attributeType, GetAssemblies(), onlyConcreteClasses);
         }
@@ -207,7 +209,7 @@ namespace Fathcore.Infrastructure
         /// <param name="assemblies">Assemblies.</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public IEnumerable<Type> FindClassesWithAttribute<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesWithAttribute<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
             return FindClassesWithAttribute(typeof(T), assemblies, onlyConcreteClasses);
         }
@@ -219,7 +221,7 @@ namespace Fathcore.Infrastructure
         /// <param name="assemblies">Assemblies.</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Result.</returns>
-        public IEnumerable<Type> FindClassesWithAttribute(Type attributeType, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesWithAttribute(Type attributeType, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
             var result = FindAllClasses(assemblies, onlyConcreteClasses)
                 .Where(type => type.GetCustomAttributes().Any(attr => attr.GetType() == attributeType));
@@ -233,12 +235,15 @@ namespace Fathcore.Infrastructure
         /// <param name="assemblies">Assemblies.</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public IEnumerable<Type> FindAllClasses(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindAllClasses(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
             var result = new List<Type>();
             try
             {
-                foreach (Assembly assembly in assemblies)
+                var partitioner = Partitioner.Create(assemblies, EnumerablePartitionerOptions.NoBuffering);
+                var parallelOption = new ParallelOptions { MaxDegreeOfParallelism = 2 };
+
+                Parallel.ForEach(partitioner, parallelOption, assembly =>
                 {
                     Type[] types = null;
                     try
@@ -248,18 +253,17 @@ namespace Fathcore.Infrastructure
                     catch
                     {
                         if (!_ignoreReflectionErrors)
-                        {
                             throw;
-                        }
                     }
 
                     if (types == null)
-                        continue;
+                        return;
 
-                    foreach (Type type in types)
+                    var nestedPartitioner = Partitioner.Create(types, EnumerablePartitionerOptions.NoBuffering);
+                    Parallel.ForEach(nestedPartitioner, parallelOption, type =>
                     {
                         if (type.IsInterface)
-                            continue;
+                            return;
 
                         if (onlyConcreteClasses)
                         {
@@ -272,8 +276,8 @@ namespace Fathcore.Infrastructure
                         {
                             result.Add(type);
                         }
-                    }
-                }
+                    });
+                });
             }
             catch (ReflectionTypeLoadException ex)
             {

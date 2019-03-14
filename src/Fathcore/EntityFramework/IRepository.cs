@@ -33,14 +33,7 @@ namespace Fathcore.EntityFramework
         /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
         /// </summary>
         /// <value>A new query where the result set will be tracked by the context.</value>
-        IQueryable<TEntity> TableTracking { get; }
-
-        /// <summary>
-        /// Returns a new query where the change tracker will not track any of the entities that are returned. If the entity instances are modified, this will not be detected by the change tracker and <see cref="DbContext.SaveChanges()"/> will not persist those changes to the database.
-        /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
-        /// </summary>
-        /// <returns>A new query where the result set will not be tracked by the context.</returns>
-        IQueryable<TEntity> TableNoTracking { get; }
+        IQueryable<TEntity> Table { get; }
 
         /// <summary>
         /// Returns a new query where the query ignoring the filters and change tracker will not track any of the entities that are returned. If the entity instances are modified, this will not be detected by the change tracker and <see cref="DbContext.SaveChanges()"/> will not persist those changes to the database.

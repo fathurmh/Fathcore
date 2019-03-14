@@ -106,7 +106,7 @@ namespace Fathcore.EntityFramework
         /// <param name="sql">The raw SQL query.</param>
         /// <param name="parameters">The values to be assigned to parameters.</param>
         /// <returns>Returns an IQueryable representing the raw SQL query.</returns>
-        public IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
+        public virtual IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
         {
             return Set<TEntity>().FromSql(CreateSqlWithParameters(sql, parameters), parameters);
         }
@@ -119,7 +119,7 @@ namespace Fathcore.EntityFramework
         /// <param name="timeout">The timeout to use for command. Note that the command timeout is distinct from the connection timeout, which is commonly set on the database connection string.</param>
         /// <param name="parameters">Parameters to use with the SQL.</param>
         /// <returns>Returns the number of rows affected.</returns>
-        public int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction, int? timeout, params object[] parameters)
+        public virtual int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction, int? timeout, params object[] parameters)
         {
             var previousTimeout = Database.GetCommandTimeout();
             Database.SetCommandTimeout(timeout);
@@ -147,7 +147,7 @@ namespace Fathcore.EntityFramework
         /// Generate a script to create all tables for the current model.
         /// </summary>
         /// <returns>Returns a SQL script.</returns>
-        public string GenerateCreateScript()
+        public virtual string GenerateCreateScript()
         {
             return Database.GenerateCreateScript();
         }
@@ -158,7 +158,7 @@ namespace Fathcore.EntityFramework
         /// <typeparam name="TQuery">Query type.</typeparam>
         /// <param name="sql">The raw SQL query.</param>
         /// <returns>Returns an IQueryable representing the raw SQL query.</returns>
-        public IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class
+        public virtual IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class
         {
             return Query<TQuery>().FromSql(sql);
         }

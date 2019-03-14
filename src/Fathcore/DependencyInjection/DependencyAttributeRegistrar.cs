@@ -6,7 +6,7 @@ namespace Fathcore.DependencyInjection
     /// <summary>
     /// Represents dependency attribute registrar.
     /// </summary>
-    internal class DependencyAttributeRegistrar : IDependencyAttributeRegistrar
+    internal sealed class DependencyAttributeRegistrar : IDependencyAttributeRegistrar
     {
         /// <summary>
         /// Register services to an <see cref="IServiceCollection"/> as interface implemented.

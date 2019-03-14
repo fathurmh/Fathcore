@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fathcore.EntityFramework.Configuration
 {
-    internal class SqliteTimestampConverter : ValueConverter<byte[], string>
+    public sealed class SqliteTimestampConverter : ValueConverter<byte[], string>
     {
         public SqliteTimestampConverter() : base(
             v => v == null ? null : ToDb(v),

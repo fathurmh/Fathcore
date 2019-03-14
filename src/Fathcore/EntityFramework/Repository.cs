@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.Extensions;
-using Fathcore.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fathcore.EntityFramework
@@ -15,8 +14,8 @@ namespace Fathcore.EntityFramework
     /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
-        private IDbContext _context;
-        private DbSet<TEntity> _entities;
+        private readonly IDbContext _context;
+        private readonly DbSet<TEntity> _entities;
 
         /// <summary>
         /// Gets or sets the tracking behavior for LINQ queries run against the context. Disabling change tracking is useful for read-only scenarios because it avoids the overhead of setting up change tracking for each entity instance.
@@ -28,10 +27,18 @@ namespace Fathcore.EntityFramework
         /// <summary>
         /// Returns a new query where the change tracker will keep track of changes for all entities that are returned.
         /// Any modification to the entity instances will be detected and persisted to the database during <see cref="DbContext.SaveChanges()"/>.
-        /// The default tracking behavior for queries can be controlled by <see cref="TrackingBehavior"/>.
+        /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
         /// </summary>
-        /// <value>A new query where the result set will be tracked by the context.</value>
-        private IQueryable<TEntity> Table => TrackingBehavior == QueryTrackingBehavior.TrackAll ? TableTracking : TableNoTracking;
+        /// <returns>A new query where the result set will be tracked by the context.</returns>
+        private IQueryable<TEntity> TableTracking => _entities.AsTracking();
+
+        /// <summary>
+        /// Returns a new query where the change tracker will not track any of the entities that are returned. If the entity instances are modified, this will not be detected by the change tracker and <see cref="DbContext.SaveChanges()"/> will not persist those changes to the database.
+        /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
+        /// </summary>
+        /// <returns>A new query where the result set will not be tracked by the context.</returns>
+
+        private IQueryable<TEntity> TableNoTracking => _entities.AsNoTracking();
 
         /// <summary>
         /// Returns a new repository where the change tracker will keep track of changes for all entities that are returned.
@@ -60,16 +67,8 @@ namespace Fathcore.EntityFramework
         /// Any modification to the entity instances will be detected and persisted to the database during <see cref="DbContext.SaveChanges()"/>.
         /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
         /// </summary>
-        /// <returns>A new query where the result set will be tracked by the context.</returns>
-        public IQueryable<TEntity> TableTracking => _entities.AsTracking();
-
-        /// <summary>
-        /// Returns a new query where the change tracker will not track any of the entities that are returned. If the entity instances are modified, this will not be detected by the change tracker and <see cref="DbContext.SaveChanges()"/> will not persist those changes to the database.
-        /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
-        /// </summary>
-        /// <returns>A new query where the result set will not be tracked by the context.</returns>
-
-        public IQueryable<TEntity> TableNoTracking => _entities.AsNoTracking();
+        /// <value>A new query where the result set will be tracked by the context.</value>
+        public IQueryable<TEntity> Table => TrackingBehavior == QueryTrackingBehavior.TrackAll ? TableTracking : TableNoTracking;
 
         /// <summary>
         /// Returns a new query where the query ignoring the filters and change tracker will not track any of the entities that are returned. If the entity instances are modified, this will not be detected by the change tracker and <see cref="DbContext.SaveChanges()"/> will not persist those changes to the database.
@@ -94,7 +93,7 @@ namespace Fathcore.EntityFramework
         /// If no entity is found, then zero collection is returned.
         /// </summary>
         /// <returns>The entities found, or zero collection.</returns>
-        public IEnumerable<TEntity> SelectList()
+        public virtual IEnumerable<TEntity> SelectList()
         {
             return Table.ToList();
         }
@@ -105,7 +104,7 @@ namespace Fathcore.EntityFramework
         /// If no entity is found, then zero collection is returned.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
-        public async Task<IEnumerable<TEntity>> SelectListAsync()
+        public virtual async Task<IEnumerable<TEntity>> SelectListAsync()
         {
             return await Table.ToListAsync();
         }
@@ -118,7 +117,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public IEnumerable<TEntity> SelectList(params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual IEnumerable<TEntity> SelectList(params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             return Table.Include(navigationProperties).ToList();
         }
@@ -131,7 +130,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
-        public async Task<IEnumerable<TEntity>> SelectListAsync(params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual async Task<IEnumerable<TEntity>> SelectListAsync(params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             return await Table.Include(navigationProperties).ToListAsync();
         }
@@ -144,7 +143,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public IEnumerable<TEntity> SelectList(params string[] navigationProperties)
+        public virtual IEnumerable<TEntity> SelectList(params string[] navigationProperties)
         {
             return Table.Include(navigationProperties).ToList();
         }
@@ -157,7 +156,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
-        public async Task<IEnumerable<TEntity>> SelectListAsync(params string[] navigationProperties)
+        public virtual async Task<IEnumerable<TEntity>> SelectListAsync(params string[] navigationProperties)
         {
             return await Table.Include(navigationProperties).ToListAsync();
         }
@@ -169,7 +168,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate)
+        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate)
         {
             return Table.Where(predicate).ToList();
         }
@@ -181,7 +180,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await Table.Where(predicate).ToListAsync();
         }
@@ -195,7 +194,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).ToList();
         }
@@ -209,7 +208,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             return await Table.Where(predicate).Include(navigationProperties).ToListAsync();
         }
@@ -223,7 +222,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
+        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).ToList();
         }
@@ -237,7 +236,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
+        public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
         {
             return await Table.Where(predicate).Include(navigationProperties).ToListAsync();
         }
@@ -249,7 +248,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
-        public TEntity Select(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate)
         {
             return Table.Where(predicate).FirstOrDefault();
         }
@@ -261,7 +260,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>A task that represents the asynchronous operation. The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
-        public async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await Table.Where(predicate).FirstOrDefaultAsync();
         }
@@ -275,7 +274,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
-        public TEntity Select(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).FirstOrDefault();
         }
@@ -289,7 +288,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>A task that represents the asynchronous operation. The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
-        public async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             return await Table.Where(predicate).Include(navigationProperties).FirstOrDefaultAsync();
         }
@@ -303,7 +302,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
-        public TEntity Select(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
+        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).FirstOrDefault();
         }
@@ -317,7 +316,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>A task that represents the asynchronous operation. The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
-        public async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
+        public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
         {
             return await Table.Where(predicate).Include(navigationProperties).FirstOrDefaultAsync();
         }
@@ -329,7 +328,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
         /// <returns>The entity found, or null.</returns>
-        public TEntity Select(params object[] keyValues)
+        public virtual TEntity Select(params object[] keyValues)
         {
             if (keyValues == null)
             {
@@ -350,7 +349,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
         /// <returns>A task that represents the asynchronous operation. The entity found, or null.</returns>
-        public async Task<TEntity> SelectAsync(params object[] keyValues)
+        public virtual async Task<TEntity> SelectAsync(params object[] keyValues)
         {
             if (keyValues == null)
             {
@@ -370,7 +369,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entity">The entity to insert.</param>
         /// <returns>Returns the entity being tracked by this entry.</returns>
-        public TEntity Insert(TEntity entity)
+        public virtual TEntity Insert(TEntity entity)
         {
             if (entity == null)
             {
@@ -386,7 +385,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entity">The entity to insert.</param>
         /// <returns>A task that represents the asynchronous operation. Returns the entity being tracked by this entry.</returns>
-        public async Task<TEntity> InsertAsync(TEntity entity)
+        public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
             if (entity == null)
             {
@@ -402,7 +401,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entities">The entities to insert.</param>
         /// <returns>Returns the entities being tracked by this entry.</returns>
-        public IEnumerable<TEntity> Insert(IEnumerable<TEntity> entities)
+        public virtual IEnumerable<TEntity> Insert(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
             {
@@ -419,7 +418,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entities">The entities to insert.</param>
         /// <returns>A task that represents the asynchronous operation. Returns the entities being tracked by this entry.</returns>
-        public async Task<IEnumerable<TEntity>> InsertAsync(IEnumerable<TEntity> entities)
+        public virtual async Task<IEnumerable<TEntity>> InsertAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
             {
@@ -436,7 +435,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entity">The entity to update.</param>
         /// <returns>Returns the entity being tracked by this entry.</returns>
-        public TEntity Update(TEntity entity)
+        public virtual TEntity Update(TEntity entity)
         {
             if (entity == null)
             {
@@ -454,7 +453,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entity">The entity to update.</param>
         /// <returns>A task that represents the asynchronous operation. Returns the entity being tracked by this entry.</returns>
-        public Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual Task<TEntity> UpdateAsync(TEntity entity)
         {
             if (entity == null)
             {
@@ -472,7 +471,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entities">The entities to update.</param>
         /// <returns>Returns the entities being tracked by this entry.</returns>
-        public IEnumerable<TEntity> Update(IEnumerable<TEntity> entities)
+        public virtual IEnumerable<TEntity> Update(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
             {
@@ -489,7 +488,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entities">The entities to update.</param>
         /// <returns>A task that represents the asynchronous operation. Returns the entities being tracked by this entry.</returns>
-        public async Task<IEnumerable<TEntity>> UpdateAsync(IEnumerable<TEntity> entities)
+        public virtual async Task<IEnumerable<TEntity>> UpdateAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
             {
@@ -504,7 +503,7 @@ namespace Fathcore.EntityFramework
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
         /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
-        public void Delete(params object[] keyValues)
+        public virtual void Delete(params object[] keyValues)
         {
             if (keyValues == null)
             {
@@ -519,7 +518,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task DeleteAsync(params object[] keyValues)
+        public virtual async Task DeleteAsync(params object[] keyValues)
         {
             if (keyValues == null)
             {
@@ -533,7 +532,7 @@ namespace Fathcore.EntityFramework
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
         /// <param name="entity">The entity to delete.</param>
-        public void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
             if (entity == null)
             {
@@ -548,7 +547,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entity">The entity to delete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task DeleteAsync(TEntity entity)
+        public virtual async Task DeleteAsync(TEntity entity)
         {
             if (entity == null)
             {
@@ -562,7 +561,7 @@ namespace Fathcore.EntityFramework
         /// Begins tracking the given entity in the EntityState.Deleted state such that they will be removed from the database when SaveChanges is called.
         /// </summary>
         /// <param name="entities">The entities to delete.</param>
-        public void Delete(IEnumerable<TEntity> entities)
+        public virtual void Delete(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
             {
@@ -577,7 +576,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entities">The entities to delete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task DeleteAsync(IEnumerable<TEntity> entities)
+        public virtual async Task DeleteAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
             {
@@ -591,7 +590,7 @@ namespace Fathcore.EntityFramework
         /// Saves all changes made in this context to the database.
         /// </summary>
         /// <returns>The number of state entries written to the database.</returns>
-        public int SaveChanges()
+        public virtual int SaveChanges()
         {
             try
             {
@@ -612,7 +611,7 @@ namespace Fathcore.EntityFramework
         /// Asynchronously saves all changes made in this context to the database.
         /// </summary>
         /// <returns>A task that represents the asynchronous save operation. The task result contains the number of state entries written to the database.</returns>
-        public async Task<int> SaveChangesAsync()
+        public virtual async Task<int> SaveChangesAsync()
         {
             try
             {
