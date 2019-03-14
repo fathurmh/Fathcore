@@ -93,9 +93,6 @@ namespace Fathcore.EntityFramework
                 throw new ArgumentNullException(nameof(entity));
 
             EntityEntry<TEntity> entityEntry = Entry(entity);
-            if (entityEntry == null)
-                return;
-
             entityEntry.State = EntityState.Detached;
         }
 
@@ -115,17 +112,17 @@ namespace Fathcore.EntityFramework
         /// Executes the given SQL against the database.
         /// </summary>
         /// <param name="sql">The SQL to execute.</param>
-        /// <param name="doNotEnsureTransaction">true - the transaction creation is not ensured; false - the transaction creation is ensured.</param>
+        /// <param name="ensureTransaction">true - the transaction creation is not ensured; false - the transaction creation is ensured.</param>
         /// <param name="timeout">The timeout to use for command. Note that the command timeout is distinct from the connection timeout, which is commonly set on the database connection string.</param>
         /// <param name="parameters">Parameters to use with the SQL.</param>
         /// <returns>Returns the number of rows affected.</returns>
-        public virtual int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction, int? timeout, params object[] parameters)
+        public virtual int ExecuteSqlCommand(RawSqlString sql, bool ensureTransaction, int? timeout, params object[] parameters)
         {
             var previousTimeout = Database.GetCommandTimeout();
             Database.SetCommandTimeout(timeout);
 
             var result = 0;
-            if (!doNotEnsureTransaction)
+            if (ensureTransaction)
             {
                 using (IDbContextTransaction transaction = Database.BeginTransaction())
                 {

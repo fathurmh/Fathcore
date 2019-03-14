@@ -37,11 +37,11 @@ namespace Fathcore.EntityFramework
         /// Executes the given SQL against the database.
         /// </summary>
         /// <param name="sql">The SQL to execute.</param>
-        /// <param name="doNotEnsureTransaction">true - the transaction creation is not ensured; false - the transaction creation is ensured.</param>
+        /// <param name="ensureTransaction">true - the transaction creation is not ensured; false - the transaction creation is ensured.</param>
         /// <param name="timeout">The timeout to use for command. Note that the command timeout is distinct from the connection timeout, which is commonly set on the database connection string.</param>
         /// <param name="parameters">Parameters to use with the SQL.</param>
         /// <returns>Returns the number of rows affected.</returns>
-        int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters);
+        int ExecuteSqlCommand(RawSqlString sql, bool ensureTransaction = true, int? timeout = default, params object[] parameters);
 
         /// <summary>
         /// Generate a script to create all tables for the current model.
