@@ -66,7 +66,7 @@ namespace Fathcore.Infrastructure
         /// <param name="assemblies">Assemblies.</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        IEnumerable<Type> FindClassesWithAttribute<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true);
+        IEnumerable<Type> FindClassesWithAttribute<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true) where T : Attribute;
 
         /// <summary>
         /// Find classes which have specified attribute.

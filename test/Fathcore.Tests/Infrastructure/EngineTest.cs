@@ -128,6 +128,22 @@ namespace Fathcore.Infrastructure
             Assert.NotNull(instance);
         }
 
+        [Theory]
+        [InlineData(typeof(SelfServiceTest), typeof(SelfServiceTest))]
+        [InlineData(typeof(IImplementedServiceTest), typeof(ImplementedServiceTest))]
+        public void Should_Activate_Dependency_Attribute_Registrar(Type serviceType, Type implementedType)
+        {
+            var typeFinder = new TypeFinder();
+            typeFinder.AssemblyNames.Add("Fathcore.Tests");
+
+            var engine = new Engine().With(typeFinder);
+            engine.Populate(ServiceDescriptors);
+
+            var instance = engine.Resolve(serviceType);
+
+            Assert.Equal(implementedType, instance.GetType());
+        }
+
         private class DependencyRegistrarSingletonTest : IDependencyRegistrar
         {
             public IServiceCollection Register(IServiceCollection services)

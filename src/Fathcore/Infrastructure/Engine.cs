@@ -14,14 +14,13 @@ namespace Fathcore.Infrastructure
     /// </summary>
     public sealed class Engine : IEngine
     {
-        private IServiceProvider _serviceProvider;
+        private IServiceProvider _serviceProvider = new ServiceCollection().BuildServiceProvider();
+        private ITypeFinder _typeFinder = new TypeFinder();
         private IHttpContextAccessor HttpContextAccessor => _serviceProvider.GetService<IHttpContextAccessor>();
         private IServiceProvider ServiceProvider => HttpContextAccessor?.HttpContext?.RequestServices ?? _serviceProvider;
+        private ITypeFinder TypeFinder => ServiceProvider.GetService<ITypeFinder>() ?? _typeFinder;
 
-        public Engine()
-        {
-            _serviceProvider = new ServiceCollection().BuildServiceProvider();
-        }
+        public Engine() { }
 
         /// <summary>
         /// Populating service collection to DI container.
@@ -33,6 +32,7 @@ namespace Fathcore.Infrastructure
             ActivateDependencyRegistrar(services);
             ActivateAttributeRegistrar(services);
 
+            services.AddSingleton(typeof(ITypeFinder), TypeFinder).AsSelf();
             services.AddSingleton(typeof(IServiceCollection), services).AsSelf();
 
             _serviceProvider = services.BuildServiceProvider();
@@ -117,8 +117,7 @@ namespace Fathcore.Infrastructure
         /// <returns>A reference to this instance after the operation has completed.</returns>
         private IEngine ActivateDependencyRegistrar(IServiceCollection services)
         {
-            var typeFinder = new TypeFinder();
-            var dependencyRegistrarTypes = typeFinder.FindClassesOfType<IDependencyRegistrar>();
+            var dependencyRegistrarTypes = TypeFinder.FindClassesOfType<IDependencyRegistrar>();
             var dependencyRegistrars = dependencyRegistrarTypes
                 .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar));
 
@@ -135,10 +134,9 @@ namespace Fathcore.Infrastructure
         /// <returns>A reference to this instance after the operation has completed.</returns>
         private IEngine ActivateAttributeRegistrar(IServiceCollection services)
         {
-            var typeFinder = new TypeFinder();
             var registrar = new DependencyAttributeRegistrar();
 
-            var types = typeFinder.FindClassesWithAttribute<RegisterServiceAttribute>();
+            var types = TypeFinder.FindClassesWithAttribute<RegisterServiceAttribute>();
 
             foreach (var type in types)
             {
@@ -154,6 +152,14 @@ namespace Fathcore.Infrastructure
                     registrar.RegisterAsImplemented(services, type, interfaces, attribute);
                 }
             }
+
+            return this;
+        }
+
+        public IEngine With(TypeFinder typeFinder = null)
+        {
+            if (typeFinder != null)
+                _typeFinder = typeFinder;
 
             return this;
         }

@@ -1,5 +1,4 @@
-﻿using Fathcore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Fathcore.DependencyInjection
 {
@@ -15,8 +14,6 @@ namespace Fathcore.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public IServiceCollection Register(IServiceCollection services)
         {
-            services.AddSingleton<ITypeFinder, TypeFinder>();
-
             return services;
         }
     }

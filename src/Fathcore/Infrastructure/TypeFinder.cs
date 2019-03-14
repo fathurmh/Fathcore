@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -32,7 +31,7 @@ namespace Fathcore.Infrastructure
         /// <summary>
         /// Gets the pattern for dlls that we know don't need to be investigated.
         /// </summary>
-        public string AssemblySkipLoadingPattern { get; set; } = "^System|^mscorlib|^Microsoft|^AjaxControlToolkit|^Antlr3|^Autofac|^AutoMapper|^Castle|^ComponentArt|^CppCodeProvider|^DotNetOpenAuth|^EntityFramework|^EPPlus|^FluentValidation|^ImageResizer|^itextsharp|^log4net|^MaxMind|^MbUnit|^MiniProfiler|^Mono.Math|^MvcContrib|^Newtonsoft|^NHibernate|^nunit|^Org.Mentalis|^PerlRegex|^QuickGraph|^Recaptcha|^Remotion|^RestSharp|^Rhino|^Telerik|^Iesi|^TestDriven|^TestFu|^UserAgentStringLibrary|^VJSharpCodeProvider|^WebActivator|^WebDev|^WebGrease";
+        public string AssemblySkipLoadingPattern { get; set; } = "^System|^mscorlib|^Microsoft|^Newtonsoft|^SQLitePCLRaw|^xunit|^Remotion|^StackExchange|^MessagePack|^Moq|^Castle|^*.Tests";
 
         /// <summary>
         /// Gets or sets the pattern for dll that will be investigated.
@@ -50,12 +49,9 @@ namespace Fathcore.Infrastructure
         /// <param name="assemblies"></param>
         private void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
         {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies().Distinct())
             {
                 if (!Matches(assembly.FullName))
-                    continue;
-
-                if (addedAssemblyNames.Contains(assembly.FullName))
                     continue;
 
                 assemblies.Add(assembly);
@@ -209,7 +205,7 @@ namespace Fathcore.Infrastructure
         /// <param name="assemblies">Assemblies.</param>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes.</param>
         /// <returns>Type collection.</returns>
-        public virtual IEnumerable<Type> FindClassesWithAttribute<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesWithAttribute<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true) where T : Attribute
         {
             return FindClassesWithAttribute(typeof(T), assemblies, onlyConcreteClasses);
         }
@@ -279,16 +275,9 @@ namespace Fathcore.Infrastructure
                     });
                 });
             }
-            catch (ReflectionTypeLoadException ex)
+            catch
             {
-                var msg = string.Empty;
-                foreach (Exception e in ex.LoaderExceptions)
-                    msg += e.Message + Environment.NewLine;
-
-                var fail = new Exception(msg, ex);
-                Debug.WriteLine(fail.Message, fail);
-
-                throw fail;
+                throw;
             }
 
             return result;
