@@ -14,18 +14,18 @@ namespace Fathcore.EntityFramework.Configuration
         [Fact]
         public void Derived_Entity_From_BaseEntity_Should_Configured()
         {
-            var configuration = new TestEntityMapping();
+            var configuration = new AuthorEntityMapping();
             var modelBuilder = new ModelBuilder(new ConventionSet());
 
             var mappingConfiguration = (IMappingConfiguration)configuration;
             mappingConfiguration.ApplyConfiguration(modelBuilder);
 
-            IMutableEntityType entityType = modelBuilder.Model.FindEntityType(typeof(TestEntity));
+            IMutableEntityType entityType = modelBuilder.Model.FindEntityType(typeof(AuthorEntity));
 
             IMutableKey key = entityType.GetKeys().Single();
             IMutableProperty keyInfo = key.Properties.Single();
 
-            Assert.Equal(nameof(TestEntity.Id), keyInfo.Name);
+            Assert.Equal(nameof(AuthorEntity.Id), keyInfo.Name);
             Assert.True(keyInfo.IsPrimaryKey());
             Assert.True(keyInfo.IsKey());
         }
@@ -33,16 +33,16 @@ namespace Fathcore.EntityFramework.Configuration
         [Fact]
         public void Derived_Entity_From_BaseEntity_And_Implements_IAuditable_Should_Configured()
         {
-            var configuration = new TestEntityMapping();
+            var configuration = new AuthorEntityMapping();
             var modelBuilder = new ModelBuilder(new ConventionSet());
 
             var mappingConfiguration = (IMappingConfiguration)configuration;
             mappingConfiguration.ApplyConfiguration(modelBuilder);
 
-            IMutableEntityType entityType = modelBuilder.Model.FindEntityType(typeof(TestEntity));
+            IMutableEntityType entityType = modelBuilder.Model.FindEntityType(typeof(AuthorEntity));
 
             IEnumerable<IMutableProperty> entityProperties = entityType.GetProperties();
-            PropertyInfo[] clrProperties = typeof(TestEntity).GetProperties();
+            PropertyInfo[] clrProperties = typeof(AuthorEntity).GetProperties();
 
             Assert.Equal(9, entityProperties.Count());
             Assert.Contains(entityProperties, p => clrProperties.Any(q => p.Name == q.Name));
@@ -51,16 +51,16 @@ namespace Fathcore.EntityFramework.Configuration
         [Fact]
         public void Derived_Entity_From_BaseEntity_And_Implements_ISoftDeletable_Should_Configured()
         {
-            var configuration = new TestEntityMapping();
+            var configuration = new AuthorEntityMapping();
             var modelBuilder = new ModelBuilder(new ConventionSet());
 
             var mappingConfiguration = (IMappingConfiguration)configuration;
             mappingConfiguration.ApplyConfiguration(modelBuilder);
 
-            IMutableEntityType entityType = modelBuilder.Model.FindEntityType(typeof(TestEntity));
+            IMutableEntityType entityType = modelBuilder.Model.FindEntityType(typeof(AuthorEntity));
 
             IEnumerable<IMutableProperty> entityProperties = entityType.GetProperties();
-            PropertyInfo[] clrProperties = typeof(TestEntity).GetProperties();
+            PropertyInfo[] clrProperties = typeof(AuthorEntity).GetProperties();
 
             Assert.Equal(9, entityProperties.Count());
             Assert.Contains(entityProperties, p => clrProperties.Any(q => p.Name == q.Name));
@@ -69,16 +69,16 @@ namespace Fathcore.EntityFramework.Configuration
         [Fact]
         public void Derived_Entity_From_BaseEntity_And_Implements_IConcurrentable_Should_Configured()
         {
-            var configuration = new TestEntityMapping();
+            var configuration = new AuthorEntityMapping();
             var modelBuilder = new ModelBuilder(new ConventionSet());
 
             var mappingConfiguration = (IMappingConfiguration)configuration;
             mappingConfiguration.ApplyConfiguration(modelBuilder);
 
-            IMutableEntityType entityType = modelBuilder.Model.FindEntityType(typeof(TestEntity));
+            IMutableEntityType entityType = modelBuilder.Model.FindEntityType(typeof(AuthorEntity));
 
             IEnumerable<IMutableProperty> entityProperties = entityType.GetProperties();
-            PropertyInfo[] clrProperties = typeof(TestEntity).GetProperties();
+            PropertyInfo[] clrProperties = typeof(AuthorEntity).GetProperties();
 
             Assert.Equal(9, entityProperties.Count());
             Assert.Contains(entityProperties, p => clrProperties.Any(q => p.Name == q.Name));

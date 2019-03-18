@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +24,13 @@ namespace Fathcore.EntityFramework
         /// <typeparam name="TEntity">The type of entity is not being tracked.</typeparam>
         /// <param name="entity">The entity is not being tracked by the context.</param>
         void Detach<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Detach entities are being tracked by a context.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity is not being tracked.</typeparam>
+        /// <param name="entities">The entities are not being tracked by the context.</param>
+        void DetachRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
 
         /// <summary>
         /// Creates a LINQ query for the entity based on a raw SQL query.

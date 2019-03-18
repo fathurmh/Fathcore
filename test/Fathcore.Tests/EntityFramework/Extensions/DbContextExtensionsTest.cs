@@ -17,19 +17,20 @@ namespace Fathcore.EntityFramework.Extensions
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 context.ExecuteSqlScript(context.GenerateCreateScript());
                 var result = context
                     .QueryFromSql<StringQueryType>("SELECT name as Value FROM sqlite_master WHERE type='table'")
                     .Select(p => p.Value).ToList();
 
-                Assert.Contains("TestEntity", result);
-                Assert.Contains("ChildTestEntity", result);
+                Assert.Contains(nameof(AuthorEntity), result);
+                Assert.Contains(nameof(BookEntity), result);
+                Assert.Contains(nameof(TitleEntity), result);
             }
         }
 
@@ -39,16 +40,17 @@ namespace Fathcore.EntityFramework.Extensions
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 var script = $"GO{Environment.NewLine}" +
                     $"{context.GenerateCreateScript()}{Environment.NewLine}" +
-                    $"DROP TABLE \"TestEntity\";{Environment.NewLine}" +
-                    $"DROP TABLE \"ChildTestEntity\";{Environment.NewLine}" +
+                    $"DROP TABLE {nameof(AuthorEntity)};{Environment.NewLine}" +
+                    $"DROP TABLE {nameof(BookEntity)};{Environment.NewLine}" +
+                    $"DROP TABLE {nameof(TitleEntity)};{Environment.NewLine}" +
                     $"GO 5{Environment.NewLine}" +
                     $"{context.GenerateCreateScript()}";
                 context.ExecuteSqlScript(script);
@@ -56,8 +58,9 @@ namespace Fathcore.EntityFramework.Extensions
                     .QueryFromSql<StringQueryType>("SELECT name as Value FROM sqlite_master WHERE type='table'")
                     .Select(p => p.Value).ToList();
 
-                Assert.Contains("TestEntity", result);
-                Assert.Contains("ChildTestEntity", result);
+                Assert.Contains(nameof(AuthorEntity), result);
+                Assert.Contains(nameof(BookEntity), result);
+                Assert.Contains(nameof(TitleEntity), result);
             }
         }
 
@@ -67,11 +70,11 @@ namespace Fathcore.EntityFramework.Extensions
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 Assert.Throws<ArgumentNullException>(() => ((IDbContext)null).ExecuteSqlScript(context.GenerateCreateScript()));
             }
@@ -83,11 +86,11 @@ namespace Fathcore.EntityFramework.Extensions
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "script.sql");
                 File.WriteAllText(filePath, context.GenerateCreateScript());
@@ -97,8 +100,9 @@ namespace Fathcore.EntityFramework.Extensions
                     .QueryFromSql<StringQueryType>("SELECT name as Value FROM sqlite_master WHERE type='table'")
                     .Select(p => p.Value).ToList();
 
-                Assert.Contains("TestEntity", result);
-                Assert.Contains("ChildTestEntity", result);
+                Assert.Contains(nameof(AuthorEntity), result);
+                Assert.Contains(nameof(BookEntity), result);
+                Assert.Contains(nameof(TitleEntity), result);
             }
         }
 
@@ -108,11 +112,11 @@ namespace Fathcore.EntityFramework.Extensions
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "script.sql");
                 File.WriteAllText(filePath, context.GenerateCreateScript());
@@ -126,11 +130,11 @@ namespace Fathcore.EntityFramework.Extensions
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "scripts.sql");
                 Assert.Throws<FileNotFoundException>(() => context.ExecuteSqlScriptFromFile(filePath));
@@ -140,30 +144,30 @@ namespace Fathcore.EntityFramework.Extensions
         [Fact]
         public void Should_Get_Current_Entries()
         {
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseInMemoryDatabase(databaseName: "Should_Get_Current_Entries")
                 .Options;
 
-            var testEntity = new TestEntity().GenerateData();
+            var authors = FakeEntityGenerator.Authors;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
-                context.AddRange(testEntity);
+                context.AddRange(authors);
 
                 var result = context.GetCurrentEntries().ToList();
 
-                Assert.Equal(30, result.Count);
+                Assert.Equal(authors.Count + authors.Sum(p => p.Books.Count * 2), result.Count);
             }
         }
 
         [Fact]
         public void Should_Not_Get_Current_Entries_When_Context_Null()
         {
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseInMemoryDatabase(databaseName: "Should_Get_Current_Entries")
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 Assert.Throws<ArgumentNullException>(() => ((IDbContext)null).GetCurrentEntries());
             }
@@ -172,41 +176,41 @@ namespace Fathcore.EntityFramework.Extensions
         [Fact]
         public void Should_Rollback_Entity_Changes()
         {
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseInMemoryDatabase(databaseName: "Should_Rollback_Entity_Changes")
                 .Options;
 
-            var testEntity = new TestEntity().GenerateData().First();
+            var author = FakeEntityGenerator.Authors.First();
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
-                context.Add(testEntity);
+                context.Add(author);
                 context.SaveChanges();
             }
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
-                var entity = context.Set<TestEntity>().Find(testEntity.Id);
-                entity.TestField = "Modified";
+                var entity = context.Set<AuthorEntity>().Find(author.Id);
+                entity.Name = "Modified";
                 context.Update(entity);
                 context.RollbackEntityChanges(new DbUpdateException("DbUpdateException", new Exception()));
             }
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
-                var result = context.Set<TestEntity>().Include(prop => prop.ChildTestEntities).First(prop => prop.Id == testEntity.Id);
-                Assert.NotEqual("Modified", result.TestField);
+                var result = context.Set<AuthorEntity>().Include(prop => prop.Books).First(prop => prop.Id == author.Id);
+                Assert.NotEqual("Modified", result.Name);
             }
         }
 
         [Fact]
         public void Should_Not_Rollback_Entity_Changes_When_Context_Null()
         {
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseInMemoryDatabase(databaseName: "Should_Rollback_Entity_Changes")
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 var result = ((IDbContext)null).RollbackEntityChanges(new DbUpdateException("DbUpdateException", new Exception()));
                 Assert.Contains(nameof(ArgumentNullException), result);
@@ -218,41 +222,41 @@ namespace Fathcore.EntityFramework.Extensions
         [Fact]
         public async Task Should_Asynchronously_Rollback_Entity_Changes()
         {
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseInMemoryDatabase(databaseName: "Should_Asynchronously_Rollback_Entity_Changes")
                 .Options;
 
-            var testEntity = new TestEntity().GenerateData().First();
+            var author = FakeEntityGenerator.Authors.First();
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
-                await context.AddAsync(testEntity);
+                await context.AddAsync(author);
                 await context.SaveChangesAsync();
             }
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
-                var entity = context.Set<TestEntity>().Find(testEntity.Id);
-                entity.TestField = "Modified";
+                var entity = context.Set<AuthorEntity>().Find(author.Id);
+                entity.Name = "Modified";
                 context.Update(entity);
                 await context.RollbackEntityChangesAsync(new DbUpdateException("DbUpdateException", new Exception()));
             }
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
-                var result = await context.Set<TestEntity>().Include(prop => prop.ChildTestEntities).FirstAsync(prop => prop.Id == testEntity.Id);
-                Assert.NotEqual("Modified", result.TestField);
+                var result = await context.Set<AuthorEntity>().Include(prop => prop.Books).FirstAsync(prop => prop.Id == author.Id);
+                Assert.NotEqual("Modified", result.Name);
             }
         }
 
         [Fact]
         public async Task Should_Not_Asynchronously_Rollback_Entity_Changes_When_Context_Null()
         {
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseInMemoryDatabase(databaseName: "Should_Asynchronously_Rollback_Entity_Changes")
                 .Options;
 
-            using (var context = new TestDbContext(options))
+            using (var context = new FakeDbContext(options))
             {
                 var result = await ((IDbContext)null).RollbackEntityChangesAsync(new DbUpdateException("DbUpdateException", new Exception()));
                 Assert.Contains(nameof(ArgumentNullException), result);

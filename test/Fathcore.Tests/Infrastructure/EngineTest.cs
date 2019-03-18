@@ -20,6 +20,8 @@ namespace Fathcore.Infrastructure
 
             Assert.Contains(ServiceDescriptors, prop => prop.ServiceType.FullName.Contains(nameof(IServiceCollection)));
             Assert.Contains(ServiceDescriptors, prop => prop.ServiceType.FullName.Contains(nameof(ServiceCollection)));
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -30,6 +32,8 @@ namespace Fathcore.Infrastructure
             var instance = Engine.Resolve<IServiceCollection>();
 
             Assert.NotNull(instance);
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -40,6 +44,8 @@ namespace Fathcore.Infrastructure
             var instance = Engine.Resolve<ServiceCollection>();
 
             Assert.NotNull(instance);
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -51,6 +57,8 @@ namespace Fathcore.Infrastructure
 
             Assert.NotNull(instances);
             Assert.True(instances.Count() > 0);
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -62,6 +70,8 @@ namespace Fathcore.Infrastructure
 
             Assert.NotNull(instances);
             Assert.True(instances.Count() > 0);
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -72,6 +82,8 @@ namespace Fathcore.Infrastructure
             var instance = Engine.ResolveUnregistered(typeof(ServiceCollection));
 
             Assert.NotNull(instance);
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -80,6 +92,8 @@ namespace Fathcore.Infrastructure
             Engine.Populate(ServiceDescriptors);
 
             Assert.Throws<Exception>(() => Engine.ResolveUnregistered(typeof(UnregisteredService)));
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -96,6 +110,8 @@ namespace Fathcore.Infrastructure
             var instance = Engine.Resolve<IServiceCollection>();
 
             Assert.NotNull(instance);
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -111,6 +127,8 @@ namespace Fathcore.Infrastructure
             var instance = Engine.Resolve<IServiceCollection>();
 
             Assert.NotNull(instance);
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Fact]
@@ -126,6 +144,8 @@ namespace Fathcore.Infrastructure
             var instance = Engine.Resolve<IServiceCollection>();
 
             Assert.NotNull(instance);
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         [Theory]
@@ -142,6 +162,8 @@ namespace Fathcore.Infrastructure
             var instance = engine.Resolve(serviceType);
 
             Assert.Equal(implementedType, instance.GetType());
+
+            Fathcore.Engine.Replace(new Engine());
         }
 
         private class DependencyRegistrarSingletonTest : IDependencyRegistrar

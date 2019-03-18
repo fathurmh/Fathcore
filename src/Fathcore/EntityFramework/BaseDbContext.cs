@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -97,6 +98,20 @@ namespace Fathcore.EntityFramework
         }
 
         /// <summary>
+        /// Detach entities are being tracked by a context.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity is not being tracked.</typeparam>
+        /// <param name="entities">The entities are not being tracked by the context.</param>
+        public void DetachRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            foreach (var entity in entities)
+                Detach(entity);
+        }
+
+        /// <summary>
         /// Creates a LINQ query for the entity based on a raw SQL query.
         /// </summary>
         /// <typeparam name="TEntity">Entity type.</typeparam>
@@ -175,10 +190,15 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public new virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public new virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            AuditHandler?.HandleAsync(this);
-            return base.SaveChangesAsync(cancellationToken);
+            var auditingTask = AuditHandler?.HandleAsync(this);
+            if (auditingTask != null)
+            {
+                await Task.WhenAll(auditingTask);
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>

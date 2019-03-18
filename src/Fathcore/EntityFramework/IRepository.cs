@@ -227,18 +227,18 @@ namespace Fathcore.EntityFramework
         /// Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned.
         /// If no entity is found, then null is returned.
         /// </summary>
-        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
         /// <returns>The entity found, or null.</returns>
-        TEntity Select(params object[] keyValues);
+        TEntity Select(object keyValue);
 
         /// <summary>
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned.
         /// If no entity is found, then null is returned.
         /// </summary>
-        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
         /// <returns>A task that represents the asynchronous operation. The entity found, or null.</returns>
-        Task<TEntity> SelectAsync(params object[] keyValues);
+        Task<TEntity> SelectAsync(object keyValue);
 
         /// <summary>
         /// Begins tracking the given entity, and any other reachable entities that are not already being tracked,
@@ -307,15 +307,15 @@ namespace Fathcore.EntityFramework
         /// <summary>
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
-        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
-        void Delete(params object[] keyValues);
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
+        void Delete(object keyValue);
 
         /// <summary>
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
-        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task DeleteAsync(params object[] keyValues);
+        Task DeleteAsync(object keyValue);
 
         /// <summary>
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.

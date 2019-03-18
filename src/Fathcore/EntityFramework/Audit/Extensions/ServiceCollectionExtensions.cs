@@ -1,4 +1,5 @@
 ﻿using System;
+using Fathcore.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fathcore.EntityFramework.Audit.Extensions
@@ -18,7 +19,7 @@ namespace Fathcore.EntityFramework.Audit.Extensions
         public static IServiceCollection AddAuditHandler<TImplementation>(this IServiceCollection services)
             where TImplementation : class, IAuditHandler
         {
-            services.AddScoped<IAuditHandler, TImplementation>();
+            services.AddScoped<IAuditHandler, TImplementation>().AsSelf();
             return services;
         }
 
@@ -32,10 +33,10 @@ namespace Fathcore.EntityFramework.Audit.Extensions
         public static IServiceCollection AddAuditHandler(this IServiceCollection services, Type implementationType)
         {
             var serviceType = typeof(IAuditHandler);
-            if (!(serviceType.IsAssignableFrom(implementationType) || implementationType.IsClass))
+            if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IAuditHandler)}.");
 
-            services.AddScoped(serviceType, implementationType);
+            services.AddScoped(serviceType, implementationType).AsSelf();
             return services;
         }
     }

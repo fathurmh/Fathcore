@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Fathcore.EntityFramework
 {
@@ -326,16 +327,38 @@ namespace Fathcore.EntityFramework
         /// Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned.
         /// If no entity is found, then null is returned.
         /// </summary>
-        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
         /// <returns>The entity found, or null.</returns>
-        public virtual TEntity Select(params object[] keyValues)
+        public virtual TEntity Select(object keyValue)
         {
-            if (keyValues == null)
+            if (keyValue == null)
+                throw new ArgumentNullException(nameof(keyValue));
+
+            IEnumerable<INavigation> navigationProperties = default;
+            TEntity entity = default;
+
+            if (_context is DbContext dbContext)
+                navigationProperties = dbContext.Model.FindEntityType(typeof(TEntity)).GetNavigations();
+
+            if (navigationProperties == null)
             {
-                throw new ArgumentNullException(nameof(keyValues));
+                entity = _entities.Find(keyValue);
+            }
+            else
+            {
+                var navigationPropertyNames = new List<string>();
+
+                foreach (INavigation navigationProperty in navigationProperties)
+                {
+                    if (navigationPropertyNames.Contains(navigationProperty.Name))
+                        continue;
+
+                    navigationPropertyNames.Add(navigationProperty.Name);
+                }
+
+                entity = Select(prop => prop.Id.Equals(keyValue), navigationPropertyNames.ToArray());
             }
 
-            var entity = _entities.Find(keyValues);
             if (TrackingBehavior == QueryTrackingBehavior.NoTracking)
                 _context.Detach(entity);
 
@@ -347,16 +370,38 @@ namespace Fathcore.EntityFramework
         /// Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned.
         /// If no entity is found, then null is returned.
         /// </summary>
-        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
         /// <returns>A task that represents the asynchronous operation. The entity found, or null.</returns>
-        public virtual async Task<TEntity> SelectAsync(params object[] keyValues)
+        public virtual async Task<TEntity> SelectAsync(object keyValue)
         {
-            if (keyValues == null)
+            if (keyValue == null)
+                throw new ArgumentNullException(nameof(keyValue));
+
+            IEnumerable<INavigation> navigationProperties = default;
+            TEntity entity = default;
+
+            if (_context is DbContext dbContext)
+                navigationProperties = dbContext.Model.FindEntityType(typeof(TEntity)).GetNavigations();
+
+            if (navigationProperties == null)
             {
-                throw new ArgumentNullException(nameof(keyValues));
+                entity = await _entities.FindAsync(keyValue);
+            }
+            else
+            {
+                var navigationPropertyNames = new List<string>();
+
+                foreach (INavigation navigationProperty in navigationProperties)
+                {
+                    if (navigationPropertyNames.Contains(navigationProperty.Name))
+                        continue;
+
+                    navigationPropertyNames.Add(navigationProperty.Name);
+                }
+
+                entity = await SelectAsync(prop => prop.Id.Equals(keyValue), navigationPropertyNames.ToArray());
             }
 
-            var entity = await _entities.FindAsync(keyValues);
             if (TrackingBehavior == QueryTrackingBehavior.NoTracking)
                 _context.Detach(entity);
 
@@ -372,11 +417,11 @@ namespace Fathcore.EntityFramework
         public virtual TEntity Insert(TEntity entity)
         {
             if (entity == null)
-            {
                 throw new ArgumentNullException(nameof(entity));
-            }
 
-            return _entities.Add(entity).Entity;
+            entity = _entities.Add(entity).Entity;
+
+            return entity;
         }
 
         /// <summary>
@@ -388,11 +433,11 @@ namespace Fathcore.EntityFramework
         public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
             if (entity == null)
-            {
                 throw new ArgumentNullException(nameof(entity));
-            }
 
-            return (await _entities.AddAsync(entity)).Entity;
+            entity = (await _entities.AddAsync(entity)).Entity;
+
+            return entity;
         }
 
         /// <summary>
@@ -404,11 +449,10 @@ namespace Fathcore.EntityFramework
         public virtual IEnumerable<TEntity> Insert(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
-            {
                 throw new ArgumentNullException(nameof(entities));
-            }
 
             _entities.AddRange(entities);
+
             return entities;
         }
 
@@ -421,11 +465,10 @@ namespace Fathcore.EntityFramework
         public virtual async Task<IEnumerable<TEntity>> InsertAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
-            {
                 throw new ArgumentNullException(nameof(entities));
-            }
 
             await _entities.AddRangeAsync(entities);
+
             return entities;
         }
 
@@ -438,9 +481,7 @@ namespace Fathcore.EntityFramework
         public virtual TEntity Update(TEntity entity)
         {
             if (entity == null)
-            {
                 throw new ArgumentNullException(nameof(entity));
-            }
 
             entity = _entities.Update(entity).Entity;
 
@@ -456,9 +497,7 @@ namespace Fathcore.EntityFramework
         public virtual Task<TEntity> UpdateAsync(TEntity entity)
         {
             if (entity == null)
-            {
                 throw new ArgumentNullException(nameof(entity));
-            }
 
             entity = _entities.Update(entity).Entity;
 
@@ -474,11 +513,10 @@ namespace Fathcore.EntityFramework
         public virtual IEnumerable<TEntity> Update(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
-            {
                 throw new ArgumentNullException(nameof(entities));
-            }
 
             _entities.UpdateRange(entities);
+
             return entities;
         }
 
@@ -488,44 +526,41 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="entities">The entities to update.</param>
         /// <returns>A task that represents the asynchronous operation. Returns the entities being tracked by this entry.</returns>
-        public virtual async Task<IEnumerable<TEntity>> UpdateAsync(IEnumerable<TEntity> entities)
+        public virtual Task<IEnumerable<TEntity>> UpdateAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
-            {
                 throw new ArgumentNullException(nameof(entities));
-            }
 
-            await Task.Run(() => _entities.UpdateRange(entities));
-            return await Task.FromResult(entities);
+            _entities.UpdateRange(entities);
+
+            return Task.FromResult(entities);
         }
 
         /// <summary>
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
-        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
-        public virtual void Delete(params object[] keyValues)
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
+        public virtual void Delete(object keyValue)
         {
-            if (keyValues == null)
-            {
-                throw new ArgumentNullException(nameof(keyValues));
-            }
+            if (keyValue == null)
+                throw new ArgumentNullException(nameof(keyValue));
 
-            _entities.Remove(Select(keyValues));
+            var entity = Select(keyValue);
+            _entities.Remove(entity);
         }
 
         /// <summary>
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
-        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public virtual async Task DeleteAsync(params object[] keyValues)
+        public virtual async Task DeleteAsync(object keyValue)
         {
-            if (keyValues == null)
-            {
-                throw new ArgumentNullException(nameof(keyValues));
-            }
+            if (keyValue == null)
+                throw new ArgumentNullException(nameof(keyValue));
 
-            await Task.FromResult(_entities.Remove(await SelectAsync(keyValues)));
+            var entity = await SelectAsync(keyValue);
+            _entities.Remove(entity);
         }
 
         /// <summary>
@@ -535,9 +570,7 @@ namespace Fathcore.EntityFramework
         public virtual void Delete(TEntity entity)
         {
             if (entity == null)
-            {
                 throw new ArgumentNullException(nameof(entity));
-            }
 
             _entities.Remove(entity);
         }
@@ -550,11 +583,9 @@ namespace Fathcore.EntityFramework
         public virtual async Task DeleteAsync(TEntity entity)
         {
             if (entity == null)
-            {
                 throw new ArgumentNullException(nameof(entity));
-            }
 
-            await Task.FromResult(_entities.Remove(entity));
+            await Task.Run(() => _entities.Remove(entity));
         }
 
         /// <summary>
@@ -564,9 +595,7 @@ namespace Fathcore.EntityFramework
         public virtual void Delete(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
-            {
                 throw new ArgumentNullException(nameof(entities));
-            }
 
             _entities.RemoveRange(entities);
         }
@@ -579,9 +608,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task DeleteAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null || entities.Count() == 0)
-            {
                 throw new ArgumentNullException(nameof(entities));
-            }
 
             await Task.Run(() => _entities.RemoveRange(entities));
         }
@@ -594,7 +621,15 @@ namespace Fathcore.EntityFramework
         {
             try
             {
-                return _context.SaveChanges();
+                var count = _context.SaveChanges();
+
+                if (TrackingBehavior == QueryTrackingBehavior.NoTracking)
+                {
+                    var currentEntries = _context.ChangeTracker.Entries<TEntity>().ToList();
+                    _context.DetachRange(currentEntries.Select(p => p.Entity));
+                }
+
+                return count;
             }
             catch (DbUpdateException exception)
             {
@@ -615,7 +650,15 @@ namespace Fathcore.EntityFramework
         {
             try
             {
-                return await _context.SaveChangesAsync();
+                var count = await _context.SaveChangesAsync();
+
+                if (TrackingBehavior == QueryTrackingBehavior.NoTracking)
+                {
+                    var currentEntries = _context.ChangeTracker.Entries<TEntity>().ToList();
+                    _context.DetachRange(currentEntries.Select(p => p.Entity));
+                }
+
+                return count;
             }
             catch (DbUpdateException exception)
             {

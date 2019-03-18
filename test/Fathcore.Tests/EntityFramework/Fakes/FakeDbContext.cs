@@ -5,16 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fathcore.EntityFramework.Fakes
 {
-    internal class TestDbContext : BaseDbContext
+    internal class FakeDbContext : BaseDbContext
     {
-        public TestDbContext(DbContextOptions options) : base(options) { }
+        public FakeDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var types = new List<Type>()
             {
-                typeof(TestEntityMapping),
-                typeof(ChildTestEntityMapping),
+                typeof(AuthorEntityMapping),
+                typeof(BookEntityMapping),
+                typeof(TitleEntityMapping),
                 typeof(StringQueryTypeMapping)
             };
 

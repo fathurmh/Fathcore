@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using Fathcore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Fathcore
 {
@@ -38,7 +37,7 @@ namespace Fathcore
             {
                 if (Singleton<IEngine>.Instance == null)
                 {
-                    Create().Populate(new ServiceCollection());
+                    Create();
                 }
 
                 return Singleton<IEngine>.Instance;

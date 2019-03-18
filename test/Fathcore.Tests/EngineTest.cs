@@ -13,6 +13,8 @@ namespace Fathcore
             Assert.Null(Singleton<IEngine>.Instance);
             Assert.Equal(Engine.Current, Singleton<IEngine>.Instance);
             Assert.NotNull(Singleton<IEngine>.Instance);
+
+            Engine.Replace(new Infrastructure.Engine());
         }
 
         [Fact]
@@ -25,6 +27,8 @@ namespace Fathcore
             Assert.Equal(engine, BaseSingleton.AllSingletons[typeof(IEngine)]);
             Assert.Equal(engine, Engine.Current);
             Assert.Equal(Engine.Current, Singleton<IEngine>.Instance);
+
+            Engine.Replace(new Infrastructure.Engine());
         }
 
         [Fact]
@@ -38,6 +42,8 @@ namespace Fathcore
             Engine.Replace(newEngine);
 
             Assert.Equal(Engine.Current, newEngine);
+
+            Engine.Replace(new Infrastructure.Engine());
         }
     }
 }
