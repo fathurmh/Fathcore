@@ -1,4 +1,4 @@
-﻿using Fathcore.EntityTag;
+﻿using Fathcore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fathcore.Extensions.DependencyInjection

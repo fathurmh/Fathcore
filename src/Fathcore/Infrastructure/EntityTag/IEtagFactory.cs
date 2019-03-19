@@ -1,4 +1,4 @@
-﻿namespace Fathcore.EntityTag
+﻿namespace Fathcore.Infrastructure
 {
     public interface IEtagFactory
     {

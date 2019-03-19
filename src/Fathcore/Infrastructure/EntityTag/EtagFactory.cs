@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
-namespace Fathcore.EntityTag
+namespace Fathcore.Infrastructure
 {
     /// <summary>
     /// Represents ETag factory.
