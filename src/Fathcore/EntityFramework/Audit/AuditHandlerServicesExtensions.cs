@@ -19,7 +19,9 @@ namespace Fathcore.Extensions.DependencyInjection
         public static IServiceCollection AddAuditHandler<TImplementation>(this IServiceCollection services)
             where TImplementation : class, IAuditHandler
         {
-            services.AddScoped<IAuditHandler, TImplementation>().AsSelf();
+            services.AddScoped<TImplementation>();
+            services.AddScoped<IAuditHandler>(provider => provider.GetRequiredService<TImplementation>());
+
             return services;
         }
 
@@ -36,7 +38,9 @@ namespace Fathcore.Extensions.DependencyInjection
             if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IAuditHandler)}.");
 
-            services.AddScoped(serviceType, implementationType).AsSelf();
+            services.AddScoped(implementationType);
+            services.AddScoped<IAuditHandler>(provider => (IAuditHandler)provider.GetRequiredService(implementationType));
+
             return services;
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Text;
 
-namespace Fathcore.Infrastructure
+namespace Fathcore
 {
     /// <summary>
     /// Represents a file provider.

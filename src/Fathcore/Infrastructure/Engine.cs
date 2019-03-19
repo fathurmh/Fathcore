@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fathcore.DependencyInjection;
-using Fathcore.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,8 +31,10 @@ namespace Fathcore.Infrastructure
             ActivateDependencyRegistrar(services);
             ActivateAttributeRegistrar(services);
 
-            services.AddSingleton(typeof(ITypeFinder), TypeFinder).AsSelf();
-            services.AddSingleton(typeof(IServiceCollection), services).AsSelf();
+            services.AddSingleton(typeof(ITypeFinder), TypeFinder);
+            services.AddSingleton<TypeFinder>(provider => (TypeFinder)provider.GetRequiredService<ITypeFinder>());
+            services.AddSingleton(typeof(IServiceCollection), services);
+            services.AddSingleton<ServiceCollection>(provider => (ServiceCollection)provider.GetRequiredService<IServiceCollection>());
 
             _serviceProvider = services.BuildServiceProvider();
             return this;

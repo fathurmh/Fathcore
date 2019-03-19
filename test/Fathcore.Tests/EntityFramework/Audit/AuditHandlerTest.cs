@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Fathcore.EntityFramework.Fakes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
@@ -29,11 +28,6 @@ namespace Fathcore.EntityFramework.Audit
 
                 return _httpContextAccessor;
             }
-        }
-
-        public AuditHandlerTest()
-        {
-            Engine.Current.Populate(new ServiceCollection());
         }
 
         [Fact]
@@ -527,7 +521,13 @@ namespace Fathcore.EntityFramework.Audit
 
             var author = FakeEntityGenerator.Authors.First();
 
-            var auditHandler = new AuditHandler(HttpContextAccessor);
+            var mock = new Mock<IHttpContextAccessor>();
+            var httpContext = new DefaultHttpContext
+            {
+                User = new GenericPrincipal(new GenericIdentity("TestIdentity"), null)
+            };
+            mock.Setup(accessor => accessor.HttpContext).Returns(httpContext);
+            var auditHandler = new AuditHandler(mock.Object);
 
             using (var context = new FakeDbContext(options))
             {
