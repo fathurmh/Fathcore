@@ -4,6 +4,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Fathcore.Infrastructure;
 
 namespace Fathcore
 {
@@ -183,6 +186,72 @@ namespace Fathcore
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Executes an async <see cref="Task{T}"/> method which has a void return value synchronously.
+        /// </summary>
+        /// <param name="task"><see cref="Task{T}"/> method to execute.</param>
+        public static void RunSync(Func<Task> task)
+        {
+            var oldSynchronizationContext = SynchronizationContext.Current;
+            var synchronizationContext = new ExclusiveSynchronizationContext();
+
+            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+            synchronizationContext.Post(async _ =>
+            {
+                try
+                {
+                    await task();
+                }
+                catch (Exception e)
+                {
+                    synchronizationContext.InnerException = e;
+                    throw;
+                }
+                finally
+                {
+                    synchronizationContext.EndMessageLoop();
+                }
+            }, null);
+
+            synchronizationContext.BeginMessageLoop();
+            SynchronizationContext.SetSynchronizationContext(oldSynchronizationContext);
+        }
+
+        /// <summary>
+        /// Execute's an async <see cref="Task{T}"/> method which has a T return type synchronously.
+        /// </summary>
+        /// <typeparam name="T">Return Type.</typeparam>
+        /// <param name="task"><see cref="Task{T}"/> method to execute.</param>
+        /// <returns></returns>
+        public static T RunSync<T>(Func<Task<T>> task)
+        {
+            var oldSynchronizationContext = SynchronizationContext.Current;
+            var synchronizationContext = new ExclusiveSynchronizationContext();
+
+            T result = default;
+            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+            synchronizationContext.Post(async _ =>
+            {
+                try
+                {
+                    result = await task();
+                }
+                catch (Exception e)
+                {
+                    synchronizationContext.InnerException = e;
+                    throw;
+                }
+                finally
+                {
+                    synchronizationContext.EndMessageLoop();
+                }
+            }, null);
+
+            synchronizationContext.BeginMessageLoop();
+            SynchronizationContext.SetSynchronizationContext(oldSynchronizationContext);
+            return result;
         }
     }
 }

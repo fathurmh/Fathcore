@@ -15,18 +15,15 @@ namespace Fathcore.Extensions
         /// Performs the specified action on each element of the <see cref="List{T}"/>.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <param name="list">A strongly typed list of objects.</param>
+        /// <param name="source">Source collection.</param>
         /// <param name="func">The <see cref="Func{T, TResult}"/> delegate to perform on each element of the <see cref="List{T}"/>.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static async Task ForEachAsync<T>(this List<T> list, Func<T, Task> func)
+        public static Task ForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> func)
         {
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
 
-            foreach (var value in list)
-            {
-                await func(value);
-            }
+            return Task.WhenAll(source.Select(func));
         }
 
         /// <summary>
