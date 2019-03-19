@@ -1,13 +1,13 @@
 ﻿using System;
-using Fathcore.Extensions;
+using Fathcore.EntityFramework.Audit;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fathcore.EntityFramework.Audit.Extensions
+namespace Fathcore.Extensions.DependencyInjection
 {
     /// <summary>
-    /// Extension methods for adding services to an <see cref="IServiceCollection"/>.
+    /// Extension methods for AuditHandler.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    public static class AuditHandlerServicesExtensions
     {
         /// <summary>
         /// Adds an <see cref="IAuditHandler"/> service with an implementation type specified in TImplementation

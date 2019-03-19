@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Fathcore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

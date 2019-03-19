@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -24,6 +25,40 @@ namespace Fathcore.Extensions
                 property.SetValue(target, value, null);
 
             return target;
+        }
+
+        /// <summary>
+        /// Returns the property value of a specified object and property name.
+        /// </summary>
+        /// <typeparam name="T">Expected type of property value.</typeparam>
+        /// <param name="source">The object whose property value will be returned.</param>
+        /// <param name="propertyName">The string containing the name of the public property to get.</param>
+        /// <returns>The property value of the specified property name.</returns>
+        public static T GetPropertyValue<T>(this object source, string propertyName)
+        {
+            return (T)source.GetPropertyValue(propertyName);
+        }
+
+        /// <summary>
+        /// Returns the property value of a specified object and property name.
+        /// </summary>
+        /// <param name="source">The object whose property value will be returned.</param>
+        /// <param name="propertyName">The string containing the name of the public property to get.</param>
+        /// <returns>The property value of the specified property name.</returns>
+        public static object GetPropertyValue(this object source, string propertyName)
+        {
+            return source.GetType().GetProperty(propertyName).GetValue(source);
+        }
+
+        /// <summary>
+        /// Convert objects as enumerable.
+        /// </summary>
+        /// <param name="source">Items to convert.</param>
+        /// <typeparam name="T">The type of items.</typeparam>
+        /// <returns>IEnumerable object.</returns>
+        public static IEnumerable<T> AsEnumerable<T>(this T source) where T : new()
+        {
+            yield return source;
         }
     }
 }

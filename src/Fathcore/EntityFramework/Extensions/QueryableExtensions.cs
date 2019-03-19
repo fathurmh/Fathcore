@@ -8,7 +8,7 @@ namespace Fathcore.EntityFramework.Extensions
     /// <summary>
     /// Linq extensions.
     /// </summary>
-    public static class LinqExtensions
+    internal static class QueryableExtensions
     {
         /// <summary>
         /// Specifies related entities to include in the query results. The navigation properties to be included is specified starting with the type of entity being queried (TEntity).

@@ -9,7 +9,7 @@ namespace Fathcore.Localization
     /// <summary>
     /// Represents default localization provider.
     /// </summary>
-    public class DefaultLocalizationProvider : RequestCultureProvider
+    public class LocalizationProvider : RequestCultureProvider
     {
         public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {

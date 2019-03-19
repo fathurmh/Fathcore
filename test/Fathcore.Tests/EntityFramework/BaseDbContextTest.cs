@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.Audit;
-using Fathcore.EntityFramework.Audit.Extensions;
 using Fathcore.EntityFramework.Extensions;
 using Fathcore.EntityFramework.Fakes;
+using Fathcore.Extensions.DependencyInjection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

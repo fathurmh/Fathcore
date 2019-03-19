@@ -9,6 +9,8 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.1.3" />
     <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
+    <PackageReference Include="PemUtils" Version="3.0.0.81" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
