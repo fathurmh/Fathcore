@@ -2,7 +2,6 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using Fathcore.DependencyInjection;
 using Fathcore.Extensions;
 using Fathcore.Infrastructure;
 using PemUtils;
@@ -12,7 +11,6 @@ namespace Fathcore.Security.Cryptography
     /// <summary>
     /// Represents RSA encryptor.
     /// </summary>
-    [RegisterService(Lifetime.Singleton)]
     public class EncryptFactory : IEncryptFactory
     {
         private readonly RSA _defaultRsa;

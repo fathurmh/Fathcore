@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
-using Fathcore.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
@@ -14,7 +13,6 @@ namespace Fathcore.Infrastructure
     /// <summary>
     /// IO functions using the on-disk file system.
     /// </summary>
-    [RegisterService(Lifetime.Singleton)]
     public class FileProvider : PhysicalFileProvider, IFileProvider
     {
         public string BaseDirectory { get; }

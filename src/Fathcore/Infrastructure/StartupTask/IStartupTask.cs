@@ -1,4 +1,4 @@
-﻿namespace Fathcore.Infrastructure
+﻿namespace Fathcore.Infrastructure.StartupTask
 {
     /// <summary>
     /// Represents startup task interface.

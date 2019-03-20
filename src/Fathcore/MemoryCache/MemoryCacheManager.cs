@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Fathcore.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 
@@ -13,7 +12,6 @@ namespace Fathcore.MemoryCache
     /// <summary>
     /// Represents a memory cache manager.
     /// </summary>
-    [RegisterService(Lifetime.Singleton)]
     public class MemoryCacheManager : ILocker, IStaticCacheManager
     {
         private readonly IMemoryCache _cache;

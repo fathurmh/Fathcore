@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Fathcore.DependencyInjection;
 using Fathcore.EntityFramework.Extensions;
 using Fathcore.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +13,6 @@ namespace Fathcore.EntityFramework.AuditTrail
     /// <summary>
     /// Represents an audit handler.
     /// </summary>
-    [RegisterService(Lifetime.Scoped)]
     public class AuditHandler : IAuditHandler
     {
         private readonly IPrincipal _principal;

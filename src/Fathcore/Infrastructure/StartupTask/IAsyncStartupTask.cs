@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fathcore.Infrastructure
+namespace Fathcore.Infrastructure.StartupTask
 {
     /// <summary>
     /// Represents startup task interface.

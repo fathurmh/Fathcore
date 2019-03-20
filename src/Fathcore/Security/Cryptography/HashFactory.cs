@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using Fathcore.DependencyInjection;
 using Fathcore.Extensions;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +11,6 @@ namespace Fathcore.Security.Cryptography
     /// <summary>
     /// Represents hash factory.
     /// </summary>
-    [RegisterService(Lifetime.Singleton)]
     public class HashFactory : IHashFactory
     {
         private readonly int _iterCount;

@@ -1,8 +1,9 @@
 ﻿using System;
+using Fathcore.Infrastructure.StartupTask;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Fathcore.Infrastructure.StartupTask
+namespace Fathcore.Extensions.DependencyInjection
 {
     /// <summary>
     /// Extension methods for StartupTask.

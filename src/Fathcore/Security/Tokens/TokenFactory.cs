@@ -2,7 +2,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Fathcore.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Fathcore.Security.Tokens
@@ -10,7 +9,6 @@ namespace Fathcore.Security.Tokens
     /// <summary>
     /// Represents a token factory.
     /// </summary>
-    [RegisterService(Lifetime.Scoped)]
     public class TokenFactory : ITokenFactory
     {
         private SecurityTokenDescriptor _tokenDescriptor;

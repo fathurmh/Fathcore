@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using Fathcore.DependencyInjection;
 using Fathcore.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
@@ -12,7 +11,6 @@ namespace Fathcore.Infrastructure
     /// <summary>
     /// Represents ETag factory.
     /// </summary>
-    [RegisterService(Lifetime.Scoped)]
     public class EtagFactory : IEtagFactory
     {
         private string _currentIfMatchValue;

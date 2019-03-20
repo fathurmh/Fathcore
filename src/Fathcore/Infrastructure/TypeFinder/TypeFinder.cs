@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Fathcore.DependencyInjection;
 
 namespace Fathcore.Infrastructure
 {
@@ -15,7 +14,6 @@ namespace Fathcore.Infrastructure
     /// certain patterns are investigated and an optional list of assemblies
     /// referenced by <see cref="AssemblyNames"/> are always investigated.
     /// </summary>
-    [RegisterService(Lifetime.Singleton)]
     public class TypeFinder : ITypeFinder
     {
         private readonly bool _ignoreReflectionErrors = true;

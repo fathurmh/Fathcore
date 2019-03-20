@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Fathcore.DependencyInjection;
 using Fathcore.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -14,7 +13,6 @@ namespace Fathcore.EntityFramework
     /// Represents the generic repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
-    [RegisterService(Lifetime.Scoped)]
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly IDbContext _context;
