@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -139,6 +140,34 @@ namespace Fathcore.Extensions.Tests
 
             Assert.Single(result);
             Assert.Single(result.Single().Children);
+        }
+
+        [Fact]
+        public void UnFlattenList_Enumerator_Should_Success()
+        {
+            var menus = new List<Menu>
+            {
+                new Menu
+                {
+                    Id = 1, Name = "Parent Name", Children = new List<Menu>
+                    {
+                        new Menu { Id = 2, Name = "Child Name", ParentId = 1 }
+                    }
+                }
+            };
+
+            var flatten = menus.FlattenList(p => p.Children);
+            var result = flatten.UnFlattenList(p => p.Id, p => p.ParentId, p => p.Children);
+
+            var enumerator = result.GetEnumerator();
+
+            var type = enumerator.GetType();
+            var fieldInfo = type.GetField("<>1__state", BindingFlags.Instance | BindingFlags.NonPublic);
+            fieldInfo.SetValue(enumerator, -1);
+
+            enumerator.MoveNext();
+
+            Assert.Null(enumerator.Current);
         }
 
         private Task DoWorkAsync(int number, int multiplier = 1)
