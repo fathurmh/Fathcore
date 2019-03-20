@@ -29,7 +29,7 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddTypeFinder<TImplementation>(this IServiceCollection services)
-            where TImplementation : ITypeFinder
+            where TImplementation : class, ITypeFinder
         {
             services.AddTypeFinder(typeof(TImplementation));
 

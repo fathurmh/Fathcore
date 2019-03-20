@@ -17,7 +17,7 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddStartupTask<TImplementation>(this IServiceCollection services)
-            where TImplementation : IStartupTask
+            where TImplementation : class
         {
             services.AddStartupTask(typeof(TImplementation));
 
@@ -32,12 +32,21 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddStartupTask(this IServiceCollection services, Type implementationType)
         {
-            var serviceType = typeof(IStartupTask);
-            if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
-                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStartupTask)}.");
+            var serviceType = new[] { typeof(IStartupTask), typeof(IAsyncStartupTask) };
+            if (!(serviceType[0].IsAssignableFrom(implementationType) && !serviceType[1].IsAssignableFrom(implementationType)) || !implementationType.IsClass)
+                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStartupTask)} and {nameof(IAsyncStartupTask)}.");
 
-            services.AddSingleton(implementationType);
-            services.AddSingleton(serviceType, provider => provider.GetRequiredService(implementationType));
+            if (serviceType[0].IsAssignableFrom(implementationType))
+            {
+                services.AddSingleton(implementationType);
+                services.AddSingleton(serviceType[0], provider => provider.GetRequiredService(implementationType));
+            }
+
+            if (serviceType[1].IsAssignableFrom(implementationType))
+            {
+                services.AddSingleton(implementationType);
+                services.AddSingleton(serviceType[1], provider => provider.GetRequiredService(implementationType));
+            }
 
             return services;
         }
@@ -49,7 +58,7 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection TryAddStartupTask<TImplementation>(this IServiceCollection services)
-            where TImplementation : class, IStartupTask
+            where TImplementation : class
         {
             services.TryAddStartupTask(typeof(TImplementation));
 
@@ -64,12 +73,21 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection TryAddStartupTask(this IServiceCollection services, Type implementationType)
         {
-            var serviceType = typeof(IStartupTask);
-            if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
-                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStartupTask)}.");
+            var serviceType = new[] { typeof(IStartupTask), typeof(IAsyncStartupTask) };
+            if (!(serviceType[0].IsAssignableFrom(implementationType) && !serviceType[1].IsAssignableFrom(implementationType)) || !implementationType.IsClass)
+                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStartupTask)} and {nameof(IAsyncStartupTask)}.");
 
-            services.TryAddSingleton(implementationType);
-            services.TryAddSingleton(serviceType, provider => provider.GetRequiredService(implementationType));
+            if (serviceType[0].IsAssignableFrom(implementationType))
+            {
+                services.TryAddSingleton(implementationType);
+                services.TryAddSingleton(serviceType[0], provider => provider.GetRequiredService(implementationType));
+            }
+
+            if (serviceType[1].IsAssignableFrom(implementationType))
+            {
+                services.TryAddSingleton(implementationType);
+                services.TryAddSingleton(serviceType[1], provider => provider.GetRequiredService(implementationType));
+            }
 
             return services;
         }

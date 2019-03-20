@@ -29,7 +29,7 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddEtagFactory<TImplementation>(this IServiceCollection services)
-            where TImplementation : IEtagFactory
+            where TImplementation : class, IEtagFactory
         {
             services.AddEtagFactory(typeof(TImplementation));
 

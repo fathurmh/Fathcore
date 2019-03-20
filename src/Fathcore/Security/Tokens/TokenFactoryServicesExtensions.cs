@@ -8,7 +8,7 @@ namespace Fathcore.Extensions.DependencyInjection
     /// <summary>
     /// Extension methods for TokenFactory.
     /// </summary>
-    public static class TokenFactoryServiceExtensions
+    public static class TokenFactoryServicesExtensions
     {
         /// <summary>
         /// Adds an <see cref="ITokenFactory"/> service with default implementation type to the specified <see cref="IServiceCollection"/>.
@@ -29,7 +29,7 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddTokenFactory<TImplementation>(this IServiceCollection services)
-            where TImplementation : ITokenFactory
+            where TImplementation : class, ITokenFactory
         {
             services.AddTokenFactory(typeof(TImplementation));
 

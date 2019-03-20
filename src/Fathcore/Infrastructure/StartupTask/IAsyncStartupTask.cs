@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Fathcore.Infrastructure.StartupTask
 {
     /// <summary>
-    /// Represents startup task interface.
+    /// Represents asynchronous startup task interface.
     /// </summary>
     public interface IAsyncStartupTask
     {

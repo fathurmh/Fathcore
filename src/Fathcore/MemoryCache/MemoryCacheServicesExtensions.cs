@@ -29,7 +29,7 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddScopedMemoryCacheManager<TImplementation>(this IServiceCollection services)
-            where TImplementation : ICacheManager
+            where TImplementation : class, ICacheManager
         {
             services.AddScopedMemoryCacheManager(typeof(TImplementation));
 
@@ -133,7 +133,7 @@ namespace Fathcore.Extensions.DependencyInjection
         public static IServiceCollection AddMemoryCacheManager(this IServiceCollection services, Type implementationType)
         {
             var serviceType = new[] { typeof(IStaticCacheManager), typeof(ILocker) };
-            if (!serviceType[0].IsAssignableFrom(implementationType) || !serviceType[1].IsAssignableFrom(implementationType) || !implementationType.IsClass)
+            if (!(serviceType[0].IsAssignableFrom(implementationType) && serviceType[1].IsAssignableFrom(implementationType)) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStaticCacheManager)} and {nameof(ILocker)}.");
 
             services.AddSingleton(implementationType);
