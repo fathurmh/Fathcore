@@ -1,9 +1,8 @@
 ﻿using System;
-using Fathcore.EntityFramework.Audit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Fathcore.EntityFramework.Configuration
+namespace Fathcore.EntityFramework.Builders
 {
     /// <summary>
     /// Represents base entity mapping configuration.

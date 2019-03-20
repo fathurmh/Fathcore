@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Fathcore.DependencyInjection;
 using Fathcore.Infrastructure;
 using Microsoft.AspNetCore.Http;
 
@@ -11,6 +12,7 @@ namespace Fathcore.MemoryCache
     /// <summary>
     /// Represents a manager for caching during an HTTP request (short term caching).
     /// </summary>
+    [RegisterService(Lifetime.Scoped)]
     public class ScopedCacheManager : ICacheManager
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

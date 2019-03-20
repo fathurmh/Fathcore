@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Fathcore.EntityFramework.Configuration
+namespace Fathcore.EntityFramework.Builders
 {
     public sealed class SqliteTimestampConverter : ValueConverter<byte[], string>
     {

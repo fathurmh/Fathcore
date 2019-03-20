@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Xunit;
 
-namespace Fathcore.EntityFramework.Configuration
+namespace Fathcore.EntityFramework.Builders
 {
     public class EntityTypeConfigurationTest
     {

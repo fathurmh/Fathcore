@@ -5,15 +5,15 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Fathcore.Extensions.DependencyInjection
 {
     /// <summary>
-    /// Extension methods for AuditHandler.
+    /// Extension methods for ResponseWrapper.
     /// </summary>
     public static class ResponseWrapperServicesExtensions
     {
         /// <summary>
-        /// Add response wrapper services.
+        /// Adds an <see cref="ResponseWrapper"/> service with default implementation type to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
-        /// <param name="configure">The <see cref="ResponseWrapperOptions"/>.</param>
+        /// <param name="configure"></param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddResponseWrapper(this IServiceCollection services, Action<ResponseWrapperOptions> configure)
         {

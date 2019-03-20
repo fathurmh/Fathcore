@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Fathcore.EntityFramework.Configuration
+namespace Fathcore.EntityFramework.Builders
 {
     /// <summary>
     /// Represents database context model mapping configuration.

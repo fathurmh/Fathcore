@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Fathcore.EntityFramework.Configuration
+namespace Fathcore.EntityFramework.Builders
 {
     /// <summary>
     /// Represents base query type mapping configuration.

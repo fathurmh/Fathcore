@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Xunit;
 
-namespace Fathcore.EntityFramework.Audit
+namespace Fathcore.EntityFramework.AuditTrail
 {
     public class ConcurrentableEntityTest
     {

@@ -2,17 +2,19 @@
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Fathcore.DependencyInjection;
 using Fathcore.EntityFramework.Extensions;
 using Fathcore.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Fathcore.EntityFramework.Audit
+namespace Fathcore.EntityFramework.AuditTrail
 {
     /// <summary>
     /// Represents an audit handler.
     /// </summary>
+    [RegisterService(Lifetime.Scoped)]
     public class AuditHandler : IAuditHandler
     {
         private readonly IPrincipal _principal;
@@ -94,6 +96,17 @@ namespace Fathcore.EntityFramework.Audit
         }
 
         /// <summary>
+        /// Asynchronously audit the current auditable entity with specified values.
+        /// </summary>
+        /// <param name="entry">The <see cref="EntityEntry"/> being audit.</param>
+        /// <param name="dateTimeNow">The current <see cref="DateTime"/>.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        protected virtual Task AuditEntityEntryAsync(EntityEntry entry, DateTime dateTimeNow)
+        {
+            return Task.Run(() => AuditEntityEntry(entry, dateTimeNow));
+        }
+
+        /// <summary>
         /// Applies any audit entries for the context to the database.
         /// </summary>
         /// <param name="dbContext">The <see cref="BaseDbContext"/> being audit.</param>
@@ -118,7 +131,7 @@ namespace Fathcore.EntityFramework.Audit
         /// </summary>
         /// <param name="dbContext">The <see cref="BaseDbContext"/> being audit.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public virtual Task HandleAsync(BaseDbContext dbContext)
+        public virtual async Task HandleAsync(BaseDbContext dbContext)
         {
             if (dbContext == null)
                 throw new ArgumentNullException(nameof(dbContext));
@@ -126,7 +139,7 @@ namespace Fathcore.EntityFramework.Audit
             try
             {
                 var auditEntries = dbContext.GetCurrentEntries().ToList();
-                return auditEntries.ForEachAsync(async entry => await Task.Run(() => AuditEntityEntry(entry, DateTime.Now)).ConfigureAwait(false));
+                await auditEntries.ForEachAsync(entry => AuditEntityEntryAsync(entry, DateTime.Now));
             }
             catch
             {

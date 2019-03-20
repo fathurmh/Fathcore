@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fathcore.EntityFramework.Audit
+namespace Fathcore.EntityFramework
 {
     /// <summary>
     /// Soft deletable entity interface.

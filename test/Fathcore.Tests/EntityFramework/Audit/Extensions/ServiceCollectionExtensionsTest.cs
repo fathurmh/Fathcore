@@ -4,7 +4,7 @@ using Fathcore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Fathcore.EntityFramework.Audit.Extensions
+namespace Fathcore.EntityFramework.AuditTrail.Extensions
 {
     public class ServiceCollectionExtensionsTest
     {

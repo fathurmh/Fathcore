@@ -5,6 +5,7 @@ using System.Reflection;
 using Fathcore.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fathcore.Infrastructure
 {
@@ -13,28 +14,41 @@ namespace Fathcore.Infrastructure
     /// </summary>
     public sealed class Engine : IEngine
     {
-        private IServiceProvider _serviceProvider = new ServiceCollection().BuildServiceProvider();
-        private ITypeFinder _typeFinder = new TypeFinder();
+        private IServiceProvider _serviceProvider;
+        private ITypeFinder _typeFinder;
+
         private IHttpContextAccessor HttpContextAccessor => _serviceProvider.GetService<IHttpContextAccessor>();
         private IServiceProvider ServiceProvider => HttpContextAccessor?.HttpContext?.RequestServices ?? _serviceProvider;
         private ITypeFinder TypeFinder => ServiceProvider.GetService<ITypeFinder>() ?? _typeFinder;
 
-        public Engine() { }
+        public Engine()
+        {
+            _serviceProvider = new ServiceCollection().BuildServiceProvider();
+        }
 
         /// <summary>
         /// Populating service collection to DI container.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to populate the service to.</param>
+        /// <param name="configure">An <see cref="Action"/> to configure the provided <see cref="EngineOptions"/>.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public IEngine Populate(IServiceCollection services)
+        public IEngine Populate(IServiceCollection services, Action<EngineOptions> configure = default)
         {
-            ActivateDependencyRegistrar(services);
-            ActivateAttributeRegistrar(services);
+            var options = new EngineOptions();
+            configure?.Invoke(options);
 
-            services.AddSingleton(typeof(ITypeFinder), TypeFinder);
-            services.AddSingleton<TypeFinder>(provider => (TypeFinder)provider.GetRequiredService<ITypeFinder>());
-            services.AddSingleton(typeof(IServiceCollection), services);
-            services.AddSingleton<ServiceCollection>(provider => (ServiceCollection)provider.GetRequiredService<IServiceCollection>());
+            _typeFinder = options.TypeFinder;
+
+            if (options.ActivateAttributeRegistrar)
+                ActivateAttributeRegistrar(services);
+
+            if (options.ActivateClassRegistrar)
+                ActivateDependencyRegistrar(services);
+
+            services.TryAddSingleton(TypeFinder);
+            services.TryAddSingleton(provider => (TypeFinder)provider.GetRequiredService<ITypeFinder>());
+            services.TryAddSingleton(services);
+            services.TryAddSingleton(provider => (ServiceCollection)provider.GetRequiredService<IServiceCollection>());
 
             _serviceProvider = services.BuildServiceProvider();
             return this;
@@ -143,24 +157,13 @@ namespace Fathcore.Infrastructure
             {
                 var attribute = type.GetCustomAttribute<RegisterServiceAttribute>();
                 var interfaces = type.GetInterfaces();
+                var minimalInterfaces = interfaces.Except(interfaces.SelectMany(prop => prop.GetInterfaces())).ToArray();
 
-                if (!interfaces.Any())
-                {
+                if (!minimalInterfaces.Any())
                     registrar.RegisterAsSelf(services, type, attribute);
-                }
                 else
-                {
-                    registrar.RegisterAsImplemented(services, type, interfaces, attribute);
-                }
+                    registrar.RegisterAsImplemented(services, type, minimalInterfaces, attribute);
             }
-
-            return this;
-        }
-
-        public IEngine With(TypeFinder typeFinder = null)
-        {
-            if (typeFinder != null)
-                _typeFinder = typeFinder;
 
             return this;
         }

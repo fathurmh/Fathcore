@@ -2,10 +2,16 @@
 
 namespace Fathcore.ResponseWrapper
 {
+    /// <summary>
+    /// Represents a response wrapper options.
+    /// </summary>
     public class ResponseWrapperOptions
     {
         private Type _responseHandler;
 
+        /// <summary>
+        /// Gets or sets the implementation type of <see cref="IResponseHandler"/>.
+        /// </summary>
         public Type ResponseHandler
         {
             get => _responseHandler;

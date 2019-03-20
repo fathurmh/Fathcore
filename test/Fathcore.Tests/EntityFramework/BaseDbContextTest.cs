@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Fathcore.EntityFramework.Audit;
+using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.EntityFramework.Extensions;
 using Fathcore.EntityFramework.Fakes;
 using Fathcore.Extensions.DependencyInjection;

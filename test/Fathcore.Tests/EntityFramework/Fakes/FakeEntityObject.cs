@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Fathcore.EntityFramework.Audit;
+using Fathcore.EntityFramework.AuditTrail;
 
 namespace Fathcore.EntityFramework.Fakes
 {

@@ -156,8 +156,12 @@ namespace Fathcore.Infrastructure
             var typeFinder = new TypeFinder();
             typeFinder.AssemblyNames.Add("Fathcore.Tests");
 
-            var engine = new Engine().With(typeFinder);
-            engine.Populate(ServiceDescriptors);
+            var engine = new Engine();
+            engine.Populate(ServiceDescriptors, opt =>
+            {
+                opt.TypeFinder = typeFinder;
+                opt.ActivateAttributeRegistrar = true;
+            });
 
             var instance = engine.Resolve(serviceType);
 

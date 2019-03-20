@@ -62,7 +62,6 @@ namespace Fathcore.EntityFramework.Extensions
                 .ToList();
         }
 
-
         /// <summary>
         /// Rollback of entity changes and return full error message.
         /// </summary>

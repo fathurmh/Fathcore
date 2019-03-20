@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace Fathcore.EntityFramework.Audit
+namespace Fathcore.EntityFramework.AuditTrail
 {
     public class AuditHandlerTest
     {

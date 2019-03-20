@@ -1,4 +1,4 @@
-﻿using Fathcore.EntityFramework.Configuration;
+﻿using Fathcore.EntityFramework.Builders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

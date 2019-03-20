@@ -1,4 +1,4 @@
-﻿namespace Fathcore.EntityFramework.Audit
+﻿namespace Fathcore.EntityFramework
 {
     /// <summary>
     /// Concurrentable entity interface.

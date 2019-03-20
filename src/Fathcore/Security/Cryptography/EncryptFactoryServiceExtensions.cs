@@ -1,52 +1,52 @@
 ﻿using System;
-using Fathcore.Infrastructure;
+using Fathcore.Security.Cryptography;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fathcore.Extensions.DependencyInjection
 {
     /// <summary>
-    /// Extension methods for FileProvider.
+    /// Extension methods for EncryptFactory.
     /// </summary>
-    public static class FileProviderServicesExtensions
+    public static class EncryptFactoryServiceExtensions
     {
         /// <summary>
-        /// Adds an <see cref="IFileProvider"/> service with default implementation type to the specified <see cref="IServiceCollection"/>.
+        /// Adds an <see cref="IEncryptFactory"/> service with default implementation type to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddFileProvider(this IServiceCollection services)
+        public static IServiceCollection AddEncryptFactory(this IServiceCollection services)
         {
-            services.AddFileProvider<FileProvider>();
+            services.AddEncryptFactory<EncryptFactory>();
 
             return services;
         }
 
         /// <summary>
-        /// Adds an <see cref="IFileProvider"/> service with an implementation type specified in TImplementation to the specified <see cref="IServiceCollection"/>.
+        /// Adds an <see cref="IEncryptFactory"/> service with an implementation type specified in TImplementation to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation to use.</typeparam>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddFileProvider<TImplementation>(this IServiceCollection services)
-            where TImplementation : IFileProvider
+        public static IServiceCollection AddEncryptFactory<TImplementation>(this IServiceCollection services)
+            where TImplementation : IEncryptFactory
         {
-            services.AddFileProvider(typeof(TImplementation));
+            services.AddEncryptFactory(typeof(TImplementation));
 
             return services;
         }
 
         /// <summary>
-        /// Adds an <see cref="IFileProvider"/> service with an implementation type specified in implementationType to the specified <see cref="IServiceCollection"/>.
+        /// Adds an <see cref="IEncryptFactory"/> service with an implementation type specified in implementationType to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <param name="implementationType">The implementation type of the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddFileProvider(this IServiceCollection services, Type implementationType)
+        public static IServiceCollection AddEncryptFactory(this IServiceCollection services, Type implementationType)
         {
-            var serviceType = typeof(IFileProvider);
+            var serviceType = typeof(IEncryptFactory);
             if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
-                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IFileProvider)}.");
+                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IEncryptFactory)}.");
 
             services.AddSingleton(implementationType);
             services.AddSingleton(serviceType, provider => provider.GetRequiredService(implementationType));
@@ -55,42 +55,42 @@ namespace Fathcore.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Adds an <see cref="IFileProvider"/> service with default implementation type to the specified <see cref="IServiceCollection"/> if the service type hasn't already been registered.
+        /// Adds an <see cref="IEncryptFactory"/> service with default implementation type to the specified <see cref="IServiceCollection"/> if the service type hasn't already been registered.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection TryAddFileProvider(this IServiceCollection services)
+        public static IServiceCollection TryAddEncryptFactory(this IServiceCollection services)
         {
-            services.TryAddFileProvider<IFileProvider>();
+            services.TryAddEncryptFactory<IEncryptFactory>();
 
             return services;
         }
 
         /// <summary>
-        /// Adds an <see cref="IFileProvider"/> service with an implementation type specified in TImplementation to the specified <see cref="IServiceCollection"/> if the service type hasn't already been registered.
+        /// Adds an <see cref="IEncryptFactory"/> service with an implementation type specified in TImplementation to the specified <see cref="IServiceCollection"/> if the service type hasn't already been registered.
         /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation to use.</typeparam>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection TryAddFileProvider<TImplementation>(this IServiceCollection services)
-            where TImplementation : class, IFileProvider
+        public static IServiceCollection TryAddEncryptFactory<TImplementation>(this IServiceCollection services)
+            where TImplementation : class, IEncryptFactory
         {
-            services.TryAddFileProvider(typeof(TImplementation));
+            services.TryAddEncryptFactory(typeof(TImplementation));
 
             return services;
         }
 
         /// <summary>
-        /// Adds an <see cref="IFileProvider"/> service with an implementation type specified in implementationType to the specified <see cref="IServiceCollection"/> if the service type hasn't already been registered.
+        /// Adds an <see cref="IEncryptFactory"/> service with an implementation type specified in implementationType to the specified <see cref="IServiceCollection"/> if the service type hasn't already been registered.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <param name="implementationType">The implementation type of the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection TryAddFileProvider(this IServiceCollection services, Type implementationType)
+        public static IServiceCollection TryAddEncryptFactory(this IServiceCollection services, Type implementationType)
         {
-            var serviceType = typeof(IFileProvider);
+            var serviceType = typeof(IEncryptFactory);
             if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
-                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IFileProvider)}.");
+                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IEncryptFactory)}.");
 
             services.TryAddSingleton(implementationType);
             services.TryAddSingleton(serviceType, provider => provider.GetRequiredService(implementationType));

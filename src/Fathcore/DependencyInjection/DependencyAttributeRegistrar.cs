@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fathcore.DependencyInjection
 {
@@ -18,12 +19,10 @@ namespace Fathcore.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public IServiceCollection RegisterAsImplemented(IServiceCollection services, Type implementationType, Type[] serviceTypes, RegisterServiceAttribute attribute)
         {
-            var firstDescriptor = new ServiceDescriptor(serviceTypes[0], implementationType, (ServiceLifetime)attribute.Lifetime);
-            services.Add(firstDescriptor);
-
-            for (int i = 1; i < serviceTypes.Length; i++)
+            RegisterAsSelf(services, implementationType, attribute);
+            foreach (var serviceType in serviceTypes)
             {
-                services.Add(new ServiceDescriptor(serviceTypes[i], firstDescriptor.ImplementationFactory, (ServiceLifetime)attribute.Lifetime));
+                services.TryAdd(new ServiceDescriptor(serviceType, provider => provider.GetRequiredService(implementationType), (ServiceLifetime)attribute.Lifetime));
             }
 
             return services;
@@ -38,7 +37,7 @@ namespace Fathcore.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public IServiceCollection RegisterAsSelf(IServiceCollection services, Type implementationType, RegisterServiceAttribute attribute)
         {
-            services.Add(new ServiceDescriptor(implementationType, implementationType, (ServiceLifetime)attribute.Lifetime));
+            services.TryAdd(new ServiceDescriptor(implementationType, implementationType, (ServiceLifetime)attribute.Lifetime));
 
             return services;
         }

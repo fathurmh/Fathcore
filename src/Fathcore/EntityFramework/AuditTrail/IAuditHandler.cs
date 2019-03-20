@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Fathcore.EntityFramework.Audit
+namespace Fathcore.EntityFramework.AuditTrail
 {
     /// <summary>
     /// Represents an audit handler.
