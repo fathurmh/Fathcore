@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Fathcore.Extensions
@@ -21,6 +20,7 @@ namespace Fathcore.Extensions
                 return false;
 
             source = source.Trim();
+
             return (source.Length % 4 == 0) && Regex.IsMatch(source, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.Compiled | RegexOptions.Singleline);
         }
 
@@ -47,6 +47,9 @@ namespace Fathcore.Extensions
         /// <returns>true if the string is a valid json format and false if it's not</returns>
         public static bool IsValidJson(this string source)
         {
+            if (string.IsNullOrWhiteSpace(source))
+                return false;
+
             source = source.Trim();
             if ((source.StartsWith("{") && source.EndsWith("}")) || //For object
                 (source.StartsWith("[") && source.EndsWith("]"))) //For array
@@ -55,10 +58,6 @@ namespace Fathcore.Extensions
                 {
                     var obj = JToken.Parse(source);
                     return true;
-                }
-                catch (JsonReaderException)
-                {
-                    return false;
                 }
                 catch (Exception)
                 {
@@ -78,7 +77,10 @@ namespace Fathcore.Extensions
         /// <returns>The uppercase equivalent of the current fisrt character.</returns>
         public static string FirstLetterToUpper(this string source)
         {
-            return source == null ? null : source.Length > 1 ? char.ToUpper(source[0]) + source.Substring(1) : source.ToUpper();
+            if (string.IsNullOrEmpty(source))
+                return null;
+
+            return source.Length > 1 ? char.ToUpper(source[0]) + source.Substring(1) : source.ToUpper();
         }
 
         /// <summary>
