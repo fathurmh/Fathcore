@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Fathcore</AssemblyName>
+    <RootNamespace>Fathcore</RootNamespace>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 

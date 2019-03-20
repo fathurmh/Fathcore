@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Fathcore.Extensions.Tests</AssemblyName>
-    <RootNamespace>Fathcore.Extensions</RootNamespace>
+    <RootNamespace>Fathcore.Extensions.Tests</RootNamespace>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
