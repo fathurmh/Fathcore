@@ -8,16 +8,16 @@ namespace Fathcore
     /// <summary>
     /// Represents type-safe enum.
     /// </summary>
-    /// <typeparam name="Type">The type of type safe enum.</typeparam>
-    /// <typeparam name="Key">The type of Id.</typeparam>
-    public class TypeSafeEnum<Type, Key> : ITypeSafeEnum<Key>
-        where Type : ITypeSafeEnum<Key>
-        where Key : IComparable, IComparable<Key>, IConvertible, IEquatable<Key>, IFormattable
+    /// <typeparam name="T">The type of type safe enum.</typeparam>
+    /// <typeparam name="TKey">The type of Id.</typeparam>
+    public class TypeSafeEnum<T, TKey> : ITypeSafeEnum<TKey>
+        where T : ITypeSafeEnum<TKey>
+        where TKey : IComparable, IComparable<TKey>, IConvertible, IEquatable<TKey>, IFormattable
     {
         /// <summary>
         /// Gets the id value of type-safe enum.
         /// </summary>
-        public Key Id { get; }
+        public TKey Id { get; }
 
         /// <summary>
         /// Gets the name value of type-safe enum.
@@ -35,7 +35,7 @@ namespace Fathcore
         /// <param name="id">The given id.</param>
         /// <param name="name">The given name.</param>
         /// <param name="description">The given description.</param>
-        protected TypeSafeEnum(Key id, string name, string description)
+        protected TypeSafeEnum(TKey id, string name, string description)
         {
             Id = id;
             Name = name;
@@ -59,24 +59,24 @@ namespace Fathcore
         /// </summary>
         /// <param name="id">The specified id.</param>
         /// <returns>Type-safe value.</returns>
-        public static Type GetValue(Key id) => GetValues().First(prop => prop.Id.Equals(id));
+        public static T GetValue(TKey id) => GetValues().First(prop => prop.Id.Equals(id));
 
         /// <summary>
         /// Get value with specified name.
         /// </summary>
         /// <param name="name">The specified name.</param>
         /// <returns>Type-safe value.</returns>
-        public static Type GetValue(string name) => GetValues().First(prop => prop.Name == name);
+        public static T GetValue(string name) => GetValues().First(prop => prop.Name == name);
 
         /// <summary>
         /// Get all values.
         /// </summary>
         /// <returns>List of values.</returns>
-        public static IReadOnlyList<Type> GetValues()
+        public static IReadOnlyList<T> GetValues()
         {
             // There are other ways to do that such as filling a collection in the constructor
-            return typeof(Type).GetProperties(BindingFlags.Public | BindingFlags.Static)
-                .Select(property => (Type)property.GetValue(null))
+            return typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Static)
+                .Select(property => (T)property.GetValue(null))
                 .ToList();
         }
 
@@ -84,18 +84,18 @@ namespace Fathcore
         /// Cast value to int.
         /// </summary>
         /// <param name="typeSafeEnum">The value being casted.</param>
-        public static explicit operator Key(TypeSafeEnum<Type, Key> typeSafeEnum) => typeSafeEnum.Id;
+        public static explicit operator TKey(TypeSafeEnum<T, TKey> typeSafeEnum) => typeSafeEnum.Id;
 
         /// <summary>
         /// Cast int to value.
         /// </summary>
         /// <param name="id">The int being casted.</param>
-        public static explicit operator TypeSafeEnum<Type, Key>(Key id) => (dynamic)GetValue(id);
+        public static explicit operator TypeSafeEnum<T, TKey>(TKey id) => (dynamic)GetValue(id);
 
         /// <summary>
         /// Cast string to value.
         /// </summary>
         /// <param name="name">The string being casted.</param>
-        public static explicit operator TypeSafeEnum<Type, Key>(string name) => (dynamic)GetValue(name);
+        public static explicit operator TypeSafeEnum<T, TKey>(string name) => (dynamic)GetValue(name);
     }
 }

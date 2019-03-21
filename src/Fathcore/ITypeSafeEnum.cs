@@ -5,12 +5,12 @@ namespace Fathcore
     /// <summary>
     /// Represents type-safe enum interface.
     /// </summary>
-    public interface ITypeSafeEnum<T> where T : IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
+    public interface ITypeSafeEnum<TKey> where TKey : IComparable, IComparable<TKey>, IConvertible, IEquatable<TKey>, IFormattable
     {
         /// <summary>
         /// Gets the id value of type-safe enum.
         /// </summary>
-        T Id { get; }
+        TKey Id { get; }
 
         /// <summary>
         /// Gets the name value of type-safe enum.
