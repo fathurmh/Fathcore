@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,15 +49,10 @@ namespace Fathcore
         /// <param name="pageSize">Page size.</param>
         public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            var total = source.Count();
-            TotalCount = total;
-            TotalPages = total / pageSize;
-
-            if (total % pageSize > 0)
-                TotalPages++;
-
             PageSize = pageSize;
             PageIndex = pageIndex;
+            TotalCount = source.Count();
+            TotalPages = (int)Math.Ceiling((double)TotalCount / pageSize);
 
             AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
