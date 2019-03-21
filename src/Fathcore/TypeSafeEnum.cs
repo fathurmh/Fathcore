@@ -10,8 +10,8 @@ namespace Fathcore
     /// </summary>
     /// <typeparam name="T">The type of type safe enum.</typeparam>
     /// <typeparam name="TKey">The type of Id.</typeparam>
-    public class TypeSafeEnum<T, TKey> : ITypeSafeEnum<TKey>
-        where T : ITypeSafeEnum<TKey>
+    public abstract class TypeSafeEnum<T, TKey> : TypeSafeEnum<T>, ITypeSafeEnum<TKey>, ITypeSafeEnum
+        where T : ITypeSafeEnum<TKey>, ITypeSafeEnum
         where TKey : IComparable, IComparable<TKey>, IConvertible, IEquatable<TKey>, IFormattable
     {
         /// <summary>
@@ -19,6 +19,45 @@ namespace Fathcore
         /// </summary>
         public TKey Id { get; }
 
+        /// <summary>
+        /// Construct the type-safe enum.
+        /// </summary>
+        /// <param name="id">The given id.</param>
+        /// <param name="name">The given name.</param>
+        /// <param name="description">The given description.</param>
+        protected TypeSafeEnum(TKey id, string name, string description)
+            : base(name, description)
+        {
+            Id = id;
+        }
+
+        /// <summary>
+        /// Get value with specified id.
+        /// </summary>
+        /// <param name="id">The specified id.</param>
+        /// <returns>Type-safe value.</returns>
+        public static T GetValue(TKey id) => GetValues().FirstOrDefault(prop => prop.Id.Equals(id));
+
+        /// <summary>
+        /// Cast value to int.
+        /// </summary>
+        /// <param name="typeSafeEnum">The value being casted.</param>
+        public static explicit operator TKey(TypeSafeEnum<T, TKey> typeSafeEnum) => typeSafeEnum.Id;
+
+        /// <summary>
+        /// Cast int to value.
+        /// </summary>
+        /// <param name="id">The int being casted.</param>
+        public static explicit operator TypeSafeEnum<T, TKey>(TKey id) => (dynamic)GetValue(id);
+    }
+
+    /// <summary>
+    /// Represents type-safe enum.
+    /// </summary>
+    /// <typeparam name="T">The type of type safe enum.</typeparam>
+    public abstract class TypeSafeEnum<T> : ITypeSafeEnum
+        where T : ITypeSafeEnum
+    {
         /// <summary>
         /// Gets the name value of type-safe enum.
         /// </summary>
@@ -32,12 +71,10 @@ namespace Fathcore
         /// <summary>
         /// Construct the type-safe enum.
         /// </summary>
-        /// <param name="id">The given id.</param>
         /// <param name="name">The given name.</param>
         /// <param name="description">The given description.</param>
-        protected TypeSafeEnum(TKey id, string name, string description)
+        protected TypeSafeEnum(string name, string description)
         {
-            Id = id;
             Name = name;
             Description = description;
         }
@@ -55,18 +92,11 @@ namespace Fathcore
         public static IEnumerable<string> GetNames() => GetValues().Select(prop => prop.Name);
 
         /// <summary>
-        /// Get value with specified id.
-        /// </summary>
-        /// <param name="id">The specified id.</param>
-        /// <returns>Type-safe value.</returns>
-        public static T GetValue(TKey id) => GetValues().First(prop => prop.Id.Equals(id));
-
-        /// <summary>
         /// Get value with specified name.
         /// </summary>
         /// <param name="name">The specified name.</param>
         /// <returns>Type-safe value.</returns>
-        public static T GetValue(string name) => GetValues().First(prop => prop.Name == name);
+        public static T GetValue(string name) => GetValues().FirstOrDefault(prop => prop.Name == name);
 
         /// <summary>
         /// Get all values.
@@ -81,21 +111,9 @@ namespace Fathcore
         }
 
         /// <summary>
-        /// Cast value to int.
-        /// </summary>
-        /// <param name="typeSafeEnum">The value being casted.</param>
-        public static explicit operator TKey(TypeSafeEnum<T, TKey> typeSafeEnum) => typeSafeEnum.Id;
-
-        /// <summary>
-        /// Cast int to value.
-        /// </summary>
-        /// <param name="id">The int being casted.</param>
-        public static explicit operator TypeSafeEnum<T, TKey>(TKey id) => (dynamic)GetValue(id);
-
-        /// <summary>
         /// Cast string to value.
         /// </summary>
         /// <param name="name">The string being casted.</param>
-        public static explicit operator TypeSafeEnum<T, TKey>(string name) => (dynamic)GetValue(name);
+        public static explicit operator TypeSafeEnum<T>(string name) => (dynamic)GetValue(name);
     }
 }
