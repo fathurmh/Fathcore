@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Fathcore.Infrastructure
@@ -10,7 +11,7 @@ namespace Fathcore.Infrastructure
     {
         static BaseSingleton()
         {
-            AllSingletons = new Dictionary<Type, object>();
+            AllSingletons = new ConcurrentDictionary<Type, object>();
         }
 
         /// <summary>

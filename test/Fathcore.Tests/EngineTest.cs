@@ -1,10 +1,9 @@
-﻿using System;
-using Fathcore.Infrastructure;
+﻿using Fathcore.Infrastructure;
 using Xunit;
 
 namespace Fathcore.Tests
 {
-    public class EngineTest : IDisposable
+    public class EngineTest : TestBase
     {
         [Fact]
         public void Engine_IsCreated_ByDefault()
@@ -38,11 +37,6 @@ namespace Fathcore.Tests
             Engine.Replace(newEngine);
 
             Assert.Same(newEngine, Engine.Current);
-        }
-
-        public void Dispose()
-        {
-            Engine.Replace(new Infrastructure.Engine());
         }
     }
 }
