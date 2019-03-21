@@ -7,12 +7,12 @@ namespace Fathcore.Tests
     {
         public TestBase()
         {
-            Singleton<IEngine>.Instance = null;
+            BaseSingleton.AllSingletons.Clear();
         }
 
         public void Dispose()
         {
-            Engine.Replace(new Infrastructure.Engine());
+            BaseSingleton.AllSingletons.Clear();
         }
     }
 }

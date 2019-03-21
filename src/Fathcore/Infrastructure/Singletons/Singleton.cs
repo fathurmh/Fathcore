@@ -16,7 +16,18 @@
         /// </summary>
         public static T Instance
         {
-            get => s_instance;
+            get
+            {
+                var baseSingletonHasKey = AllSingletons.ContainsKey(typeof(T));
+
+                if (s_instance == null && AllSingletons.TryGetValue(typeof(T), out var value))
+                    s_instance = (T)value;
+
+                if (!baseSingletonHasKey)
+                    AllSingletons[typeof(T)] = s_instance;
+
+                return s_instance;
+            }
             set
             {
                 s_instance = value;

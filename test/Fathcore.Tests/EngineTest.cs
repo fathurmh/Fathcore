@@ -20,6 +20,7 @@ namespace Fathcore.Tests
         {
             var engine = Engine.Create();
 
+            Assert.Same(engine, Singleton<IEngine>.Instance);
             Assert.Same(engine, BaseSingleton.AllSingletons[typeof(IEngine)]);
             Assert.Same(engine, Engine.Current);
             Assert.Same(Singleton<IEngine>.Instance, Engine.Current);
