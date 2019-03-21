@@ -70,7 +70,7 @@ namespace Fathcore.Extensions.Tests
 
             var sw = new Stopwatch();
             sw.Start();
-            Helper.RunSync(() => numbers.ForEachAsync(item => DoWorkAsync(item, multiplier)));
+            Task.Run(() => numbers.ForEachAsync(item => DoWorkAsync(item, multiplier))).GetAwaiter().GetResult();
             sw.Stop();
 
             var resultAsync = Math.Ceiling((double)sw.ElapsedMilliseconds / multiplier);

@@ -19,15 +19,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Fathcore.Extensions\Fathcore.Extensions.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Include="..\..\src\Fathcore\Helper.cs" Link="Shared\Helper.cs" />
-    <Compile Include="..\..\src\Fathcore\Infrastructure\ExclusiveSynchronizationContext.cs" Link="Shared\ExclusiveSynchronizationContext.cs" />
-    <Compile Include="..\..\src\Fathcore\Infrastructure\FileProvider\IFileProvider.cs" Link="Shared\IFileProvider.cs" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Shared\" />
-  </ItemGroup>
 
 </Project>
