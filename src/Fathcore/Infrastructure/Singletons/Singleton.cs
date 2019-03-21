@@ -9,6 +9,7 @@
     /// <remarks>Access to the instance is not synchronized.</remarks>
     public class Singleton<T> : BaseSingleton
     {
+        private static readonly object s_padlock = new object();
         private static T s_instance;
 
         /// <summary>
@@ -18,13 +19,16 @@
         {
             get
             {
-                var baseSingletonHasKey = AllSingletons.ContainsKey(typeof(T));
+                lock (s_padlock)
+                {
+                    var baseSingletonHasKey = AllSingletons.ContainsKey(typeof(T));
 
-                if (s_instance == null && AllSingletons.TryGetValue(typeof(T), out var value))
-                    s_instance = (T)value;
+                    if (s_instance == null && baseSingletonHasKey)
+                        s_instance = (T)AllSingletons[typeof(T)];
 
-                if (!baseSingletonHasKey)
-                    AllSingletons[typeof(T)] = s_instance;
+                    if (!baseSingletonHasKey)
+                        AllSingletons[typeof(T)] = s_instance;
+                }
 
                 return s_instance;
             }

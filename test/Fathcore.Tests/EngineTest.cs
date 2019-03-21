@@ -1,4 +1,6 @@
-﻿using Fathcore.Infrastructure;
+﻿using System;
+using System.Linq;
+using Fathcore.Infrastructure;
 using Xunit;
 
 namespace Fathcore.Tests
@@ -29,8 +31,9 @@ namespace Fathcore.Tests
         [Fact]
         public void Engine_ShouldReplace_AnInstance()
         {
+            var typeFinder = new TypeFinder();
             var engine = Engine.Create();
-            var newEngine = new Infrastructure.Engine();
+            var newEngine = (IEngine)Activator.CreateInstance(typeFinder.FindClassesOfType<IEngine>().First());
 
             Assert.Same(engine, Engine.Current);
             Assert.NotSame(newEngine, Engine.Current);

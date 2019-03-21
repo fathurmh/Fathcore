@@ -8,7 +8,7 @@ namespace Fathcore.Infrastructure
     /// Classes implementing this interface can serve as a portal for the various services composing the engine. 
     /// Edit functionality, modules and implementations access most functionality through this interface.
     /// </summary>
-    public interface IEngine
+    public partial interface IEngine
     {
         /// <summary>
         /// Populating service collection to DI container.

@@ -32,7 +32,7 @@ namespace Fathcore.Security.Cryptography
 
         public EncryptFactory()
         {
-            string filePath = Path.Combine(Helper.DefaultFileProvider.BaseDirectory, DefaultRsaPrivateKeyFileName);
+            string filePath = Path.Combine(Helper.Current.DefaultFileProvider.BaseDirectory, DefaultRsaPrivateKeyFileName);
             _defaultRsa = ReadRsaFile(filePath);
         }
 
@@ -113,7 +113,7 @@ namespace Fathcore.Security.Cryptography
             }
             else
             {
-                if (Helper.DefaultFileProvider.FileExists(filePath))
+                if (Helper.Current.DefaultFileProvider.FileExists(filePath))
                 {
                     using (FileStream stream = File.OpenRead(filePath))
                     {
@@ -138,7 +138,7 @@ namespace Fathcore.Security.Cryptography
                         }
                     }
 
-                    using (FileStream stream = File.OpenWrite(Path.Combine(Helper.DefaultFileProvider.GetParentDirectory(filePath), DefaultRsaPublicKeyFileName)))
+                    using (FileStream stream = File.OpenWrite(Path.Combine(Helper.Current.DefaultFileProvider.GetParentDirectory(filePath), DefaultRsaPublicKeyFileName)))
                     {
                         using (var writer = new PemWriter(stream))
                         {

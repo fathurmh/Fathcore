@@ -6,7 +6,7 @@ namespace Fathcore
     /// <summary>
     /// Provides access to the singleton instance of the engine.
     /// </summary>
-    public sealed class Engine
+    public static class Engine
     {
         /// <summary>
         /// Create a static instance of the engine.
@@ -36,9 +36,7 @@ namespace Fathcore
             get
             {
                 if (Singleton<IEngine>.Instance == null)
-                {
                     Create();
-                }
 
                 return Singleton<IEngine>.Instance;
             }

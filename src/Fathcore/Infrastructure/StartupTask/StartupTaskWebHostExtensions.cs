@@ -47,7 +47,7 @@ namespace Fathcore.Extensions.Hosting
             var startupTasks = webHost.Services.GetServices<IStartupTask>();
 
             logger.LogInformation("Startup tasks execution started.");
-            Helper.RunSync(() => startupTasksAsync.ForEachAsync(task => task.ExecuteAsync()));
+            Helper.Current.RunSync(() => startupTasksAsync.ForEachAsync(task => task.ExecuteAsync()));
             startupTasks.OrderBy(task => task.Order).ToList().ForEach(task => task.Execute());
             logger.LogInformation("Startup tasks execution finished.");
 
