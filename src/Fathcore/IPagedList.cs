@@ -15,6 +15,9 @@ namespace Fathcore
         new int Count { get; }
     }
 
+    /// <summary>
+    /// Represents a strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
+    /// </summary>
     public interface IPagedList : IList, ICollection, IEnumerable
     {
         /// <summary>
