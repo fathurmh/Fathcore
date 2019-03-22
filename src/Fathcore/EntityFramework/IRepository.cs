@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Fathcore.EntityFramework
 {
     /// <summary>
-    /// Represents the generic repository pattern.
+    /// Provides the interface of generic repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
-    public interface IRepository<TEntity> where TEntity : BaseEntity
+    public interface IRepository<TEntity>
+        where TEntity : BaseEntity<TEntity>, IBaseEntity
     {
         /// <summary>
         /// Gets a minimal DbContext instance that represents a session with the database.

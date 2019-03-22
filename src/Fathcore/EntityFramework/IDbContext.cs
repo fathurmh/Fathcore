@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace Fathcore.EntityFramework
 {
     /// <summary>
-    /// Represents database context.
+    /// Provides the interface of database context that represents a session with the database and can be used to query and save instances of your entities.
     /// </summary>
     public interface IDbContext : IDisposable
     {
@@ -23,14 +23,16 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <typeparam name="TEntity">The type of entity is not being tracked.</typeparam>
         /// <param name="entity">The entity is not being tracked by the context.</param>
-        void Detach<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        void Detach<TEntity>(TEntity entity)
+            where TEntity : BaseEntity<TEntity>, IBaseEntity;
 
         /// <summary>
         /// Detach entities are being tracked by a context.
         /// </summary>
         /// <typeparam name="TEntity">The type of entity is not being tracked.</typeparam>
         /// <param name="entities">The entities are not being tracked by the context.</param>
-        void DetachRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+        void DetachRange<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : BaseEntity<TEntity>, IBaseEntity;
 
         /// <summary>
         /// Creates a LINQ query for the entity based on a raw SQL query.
@@ -39,7 +41,8 @@ namespace Fathcore.EntityFramework
         /// <param name="sql">The raw SQL query.</param>
         /// <param name="parameters">The values to be assigned to parameters.</param>
         /// <returns>Returns an IQueryable representing the raw SQL query.</returns>
-        IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity;
+        IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters)
+            where TEntity : BaseEntity<TEntity>, IBaseEntity;
 
         /// <summary>
         /// Executes the given SQL against the database.
@@ -63,7 +66,8 @@ namespace Fathcore.EntityFramework
         /// <typeparam name="TQuery">Query type.</typeparam>
         /// <param name="sql">The raw SQL query.</param>
         /// <returns>Returns an IQueryable representing the raw SQL query.</returns>
-        IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class;
+        IQueryable<TQuery> QueryFromSql<TQuery>(string sql)
+            where TQuery : class;
 
         /// <summary>
         /// Saves all changes made in this context to the database.
@@ -83,6 +87,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <typeparam name="TEntity">The type of entity being operated on by this set.</typeparam>
         /// <returns>Returns a set for the given entity type.</returns>
-        DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity;
+        DbSet<TEntity> Set<TEntity>()
+            where TEntity : BaseEntity<TEntity>, IBaseEntity;
     }
 }

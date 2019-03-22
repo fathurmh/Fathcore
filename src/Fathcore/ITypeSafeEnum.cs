@@ -5,7 +5,9 @@ namespace Fathcore
     /// <summary>
     /// Provides the interface for strongly typed enumerations.
     /// </summary>
-    public interface ITypeSafeEnum<TKey> : ITypeSafeEnum where TKey : IComparable, IComparable<TKey>, IConvertible, IEquatable<TKey>, IFormattable
+    /// <typeparam name="TKey">The type of key identifier in the strongly typed enumerations.</typeparam>
+    public interface ITypeSafeEnum<TKey> : ITypeSafeEnum
+        where TKey : IComparable, IComparable<TKey>, IConvertible, IEquatable<TKey>, IFormattable
     {
         /// <summary>
         /// Gets the identifier of element contained in the <see cref="ITypeSafeEnum{TKey}"/>.

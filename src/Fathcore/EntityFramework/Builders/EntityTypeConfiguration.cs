@@ -5,10 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Fathcore.EntityFramework.Builders
 {
     /// <summary>
-    /// Represents base entity mapping configuration.
+    /// Provides the base class for entity mapping configuration.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity being configured.</typeparam>
-    public abstract class EntityTypeConfiguration<TEntity> : IMappingConfiguration, IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity
+    /// <typeparam name="TKey">The type of identifier in the base class of entity.</typeparam>
+    public abstract class EntityTypeConfiguration<TEntity, TKey> : IMappingConfiguration, IEntityTypeConfiguration<TEntity>
+        where TEntity : BaseEntity<TEntity, TKey>, IBaseEntity<TKey>, IBaseEntity
+        where TKey : IComparable, IComparable<TKey>, IConvertible, IEquatable<TKey>, IFormattable
     {
         /// <summary>
         /// Post configures the entity.
