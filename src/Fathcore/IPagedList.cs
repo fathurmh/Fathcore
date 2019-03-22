@@ -7,35 +7,43 @@ namespace Fathcore
     /// Represents a strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
-    public interface IPagedList<T> : ICollection<T>, IEnumerable<T>, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IEnumerable, IList
+    public interface IPagedList<T> : IList<T>, ICollection<T>, IEnumerable<T>, IPagedList, IList, ICollection, IEnumerable
     {
         /// <summary>
-        /// Page index.
+        /// Gets the number of elements contained in the <see cref="IPagedList{T}"/>.
+        /// </summary>
+        new int Count { get; }
+    }
+
+    public interface IPagedList : IList, ICollection, IEnumerable
+    {
+        /// <summary>
+        /// Gets the page index contained in the <see cref="IPagedList"/>.
         /// </summary>
         int PageIndex { get; }
 
         /// <summary>
-        /// Page size.
+        /// Gets the page size contained in the <see cref="IPagedList"/>.
         /// </summary>
         int PageSize { get; }
 
         /// <summary>
-        /// Total count.
+        /// Gets the number of total elements contained in the <see cref="IPagedList"/>.
         /// </summary>
         int TotalCount { get; }
 
         /// <summary>
-        /// Total pages.
+        /// Gets the number of total pages contained in the <see cref="IPagedList"/>.
         /// </summary>
         int TotalPages { get; }
 
         /// <summary>
-        /// Has previous page.
+        /// Gets a value indicating whether the <see cref="IPagedList"/> has previous page.
         /// </summary>
         bool HasPreviousPage { get; }
 
         /// <summary>
-        /// Has next page.
+        /// Gets a value indicating whether the <see cref="IPagedList"/> has next page.
         /// </summary>
         bool HasNextPage { get; }
     }

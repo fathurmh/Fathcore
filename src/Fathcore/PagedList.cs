@@ -9,35 +9,35 @@ namespace Fathcore
     /// Represents a strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
-    public class PagedList<T> : List<T>, ICollection<T>, IEnumerable<T>, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IEnumerable, IList, IPagedList<T>
+    public class PagedList<T> : List<T>, IPagedList<T>, IList<T>, ICollection<T>, IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, IPagedList, IList, ICollection, IEnumerable
     {
         /// <summary>
-        /// Page index.
+        /// Gets the page index contained in the <see cref="PagedList{T}"/>.
         /// </summary>
         public int PageIndex { get; }
 
         /// <summary>
-        /// Page size.
+        /// Gets the page size contained in the <see cref="PagedList{T}"/>.
         /// </summary>
         public int PageSize { get; }
 
         /// <summary>
-        /// Total count.
+        /// Gets the number of total elements contained in the <see cref="PagedList{T}"/>.
         /// </summary>
         public int TotalCount { get; }
 
         /// <summary>
-        /// Total pages.
+        /// Gets the number of total pages contained in the <see cref="PagedList{T}"/>.
         /// </summary>
         public int TotalPages { get; }
 
         /// <summary>
-        /// Has previous page.
+        /// Gets a value indicating whether the <see cref="PagedList{T}"/> has previous page.
         /// </summary>
         public bool HasPreviousPage => PageIndex > 0;
 
         /// <summary>
-        /// Has next page.
+        /// Gets a value indicating whether the <see cref="PagedList{T}"/> has next page.
         /// </summary>
         public bool HasNextPage => PageIndex + 1 < TotalPages;
 
@@ -45,8 +45,8 @@ namespace Fathcore
         /// Initializes a new instance of the <see cref="PagedList{T}"/> class that contains elements copied from the specified <see cref="IQueryable{T}"/> collection and has sufficient capacity to accommodate the number of elements copied.
         /// </summary>
         /// <param name="source">The collection whose elements are copied to the new list.</param>
-        /// <param name="pageIndex">Page index.</param>
-        /// <param name="pageSize">Page size.</param>
+        /// <param name="pageIndex">Sets the page index contained in the <see cref="PagedList{T}"/>.</param>
+        /// <param name="pageSize">Sets the page size contained in the <see cref="PagedList{T}"/>.</param>
         public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
         {
             PageSize = pageSize;
@@ -61,8 +61,8 @@ namespace Fathcore
         /// Initializes a new instance of the <see cref="PagedList{T}"/> class that contains elements copied from the specified <see cref="IList{T}"/> collection and has sufficient capacity to accommodate the number of elements copied.
         /// </summary>
         /// <param name="source">The collection whose elements are copied to the new list.</param>
-        /// <param name="pageIndex">Page index.</param>
-        /// <param name="pageSize">Page size.</param>
+        /// <param name="pageIndex">Sets the page index contained in the <see cref="PagedList{T}"/>.</param>
+        /// <param name="pageSize">Sets the page size contained in the <see cref="PagedList{T}"/>.</param>
         public PagedList(IList<T> source, int pageIndex, int pageSize)
             : this(source.AsQueryable(), pageIndex, pageSize) { }
 
@@ -70,8 +70,8 @@ namespace Fathcore
         /// Initializes a new instance of the <see cref="PagedList{T}"/> class that contains elements copied from the specified <see cref="IEnumerable{T}"/> collection and has sufficient capacity to accommodate the number of elements copied.
         /// </summary>
         /// <param name="source">The collection whose elements are copied to the new list.</param>
-        /// <param name="pageIndex">Page index.</param>
-        /// <param name="pageSize">Page size.</param>
+        /// <param name="pageIndex">Sets the page index contained in the <see cref="PagedList{T}"/>.</param>
+        /// <param name="pageSize">Sets the page size contained in the <see cref="PagedList{T}"/>.</param>
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize)
             : this(source.AsQueryable(), pageIndex, pageSize) { }
     }

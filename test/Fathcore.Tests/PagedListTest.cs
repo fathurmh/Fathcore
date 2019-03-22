@@ -67,6 +67,50 @@ namespace Fathcore.Tests
             Assert.Equal(hasNext, pagedList.HasNextPage);
         }
 
+        [Theory]
+        [InlineData(95, 0, 10, false, true)]
+        [InlineData(95, 9, 10, true, false)]
+        [InlineData(95, 8, 10, true, true)]
+        [InlineData(95, 23, 4, true, false)]
+        [InlineData(95, 24, 4, true, false)]
+        public void PagedList_CastToInterface(int totalCount, int pageIndex, int pageSize, bool hasPrev, bool hasNext)
+        {
+            var pagedList = new PagedList<TestClass>(TestClass.GenerateList(totalCount), pageIndex, pageSize);
+            var taken = totalCount - (pageIndex * pageSize);
+
+            var result = (IPagedList<TestClass>)pagedList;
+
+            Assert.Equal(taken > pageSize ? pageSize : taken < 0 ? 0 : taken, result.Count);
+            Assert.Equal(pageIndex, result.PageIndex);
+            Assert.Equal(pageSize, result.PageSize);
+            Assert.Equal(totalCount, result.TotalCount);
+            Assert.Equal(Math.Ceiling((double)totalCount / pageSize), result.TotalPages);
+            Assert.Equal(hasPrev, result.HasPreviousPage);
+            Assert.Equal(hasNext, result.HasNextPage);
+        }
+
+        [Theory]
+        [InlineData(95, 0, 10, false, true)]
+        [InlineData(95, 9, 10, true, false)]
+        [InlineData(95, 8, 10, true, true)]
+        [InlineData(95, 23, 4, true, false)]
+        [InlineData(95, 24, 4, true, false)]
+        public void PagedList_CastToInterface_2(int totalCount, int pageIndex, int pageSize, bool hasPrev, bool hasNext)
+        {
+            var pagedList = new PagedList<TestClass>(TestClass.GenerateList(totalCount), pageIndex, pageSize);
+            var taken = totalCount - (pageIndex * pageSize);
+
+            var result = (IPagedList)pagedList;
+
+            Assert.Equal(taken > pageSize ? pageSize : taken < 0 ? 0 : taken, result.Count);
+            Assert.Equal(pageIndex, result.PageIndex);
+            Assert.Equal(pageSize, result.PageSize);
+            Assert.Equal(totalCount, result.TotalCount);
+            Assert.Equal(Math.Ceiling((double)totalCount / pageSize), result.TotalPages);
+            Assert.Equal(hasPrev, result.HasPreviousPage);
+            Assert.Equal(hasNext, result.HasNextPage);
+        }
+
         private class TestClass
         {
             public string Name { get; set; }
