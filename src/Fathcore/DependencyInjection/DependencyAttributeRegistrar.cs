@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Fathcore.DependencyInjection
 {
     /// <summary>
-    /// Represents dependency attribute registrar.
+    /// Represents dependency attribute registrar that can register services.
     /// </summary>
     internal sealed class DependencyAttributeRegistrar : IDependencyAttributeRegistrar
     {

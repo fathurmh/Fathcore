@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Fathcore.DependencyInjection
 {
     /// <summary>
-    /// Represents dependency attribute registrar interface.
+    /// Provides the interface for dependency attribute registrar that can register services.
     /// </summary>
     internal interface IDependencyAttributeRegistrar
     {
