@@ -34,11 +34,15 @@ namespace Fathcore.Tests
             Assert.Equal(name, typeSafeEnum3.Name);
             Assert.Equal(description, typeSafeEnum3.Description);
 
-            var typeSafeEnum4 = (ITypeSafeEnum)typeSafeEnum3;
+            var typeSafeEnum4 = (TypeSafeEnum)typeSafeEnum2;
             Assert.Equal(name, typeSafeEnum4.Name);
             Assert.Equal(description, typeSafeEnum4.Description);
 
-            var status2 = (Status)typeSafeEnum4;
+            var typeSafeEnum5 = (ITypeSafeEnum)typeSafeEnum4;
+            Assert.Equal(name, typeSafeEnum5.Name);
+            Assert.Equal(description, typeSafeEnum5.Description);
+
+            var status2 = (Status)typeSafeEnum5;
             Assert.Equal(id, status2.Id);
             Assert.Equal(name, status2.Name);
             Assert.Equal(description, status2.Description);
@@ -89,6 +93,13 @@ namespace Fathcore.Tests
         public void TypeSafeEnum_FromValue_CastToId(Status status, short id)
         {
             Assert.Equal(id, (short)status);
+        }
+
+        [Theory]
+        [MemberData(nameof(Data), parameters: new object[] { 3, 3 })]
+        public void TypeSafeEnum_FromValue_CastToString(Status status, string name)
+        {
+            Assert.Equal(name, (string)status);
         }
 
         [Theory]

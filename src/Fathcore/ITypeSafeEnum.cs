@@ -3,28 +3,28 @@
 namespace Fathcore
 {
     /// <summary>
-    /// Represents type-safe enum interface.
+    /// Provides the interface for strongly typed enumerations.
     /// </summary>
     public interface ITypeSafeEnum<TKey> : ITypeSafeEnum where TKey : IComparable, IComparable<TKey>, IConvertible, IEquatable<TKey>, IFormattable
     {
         /// <summary>
-        /// Gets the id value of type-safe enum.
+        /// Gets the identifier of element contained in the <see cref="ITypeSafeEnum{TKey}"/>.
         /// </summary>
         TKey Id { get; }
     }
 
     /// <summary>
-    /// Represents type-safe enum interface.
+    /// Provides the interface for type-safe enumerations.
     /// </summary>
     public interface ITypeSafeEnum
     {
         /// <summary>
-        /// Gets the name value of type-safe enum.
+        /// Gets the name of element contained in the <see cref="ITypeSafeEnum"/>.
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// Gets the description value of type-safe enum.
+        /// Gets the description of element contained in the <see cref="ITypeSafeEnum"/>.
         /// </summary>
         string Description { get; }
     }
