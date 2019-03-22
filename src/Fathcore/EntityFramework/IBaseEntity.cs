@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fathcore.EntityFramework
 {
@@ -12,7 +13,8 @@ namespace Fathcore.EntityFramework
         /// <summary>
         /// Gets the identifier in the <see cref="IBaseEntity{TKey}"/>.
         /// </summary>
-        new TKey Id { get; }
+        [Key]
+        TKey Id { get; }
     }
 
     /// <summary>
@@ -21,8 +23,15 @@ namespace Fathcore.EntityFramework
     public interface IBaseEntity
     {
         /// <summary>
-        /// Gets the identifier in the <see cref="IBaseEntity"/>.
+        /// Gets the type of entity key in the <see cref="IBaseEntity"/>.
         /// </summary>
-        object Id { get; }
+        /// <returns>The type of entity key.</returns>
+        Type GetKeyType();
+
+        /// <summary>
+        /// Gets the type of entity in the <see cref="IBaseEntity"/>.
+        /// </summary>
+        /// <returns>The type of entity.</returns>
+        Type GetEntityType();
     }
 }

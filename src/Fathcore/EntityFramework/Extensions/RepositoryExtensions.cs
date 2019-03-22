@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Fathcore.EntityFramework.Extensions
 {
@@ -172,35 +171,9 @@ namespace Fathcore.EntityFramework.Extensions
             if (keyValue == null)
                 throw new ArgumentNullException(nameof(keyValue));
 
-            IEnumerable<INavigation> navigationProperties = default;
-            TEntity entity = default;
-
-            if (repository.DbContext is DbContext dbContext)
-            {
-                navigationProperties = dbContext.Model.FindEntityType(typeof(TEntity)).GetNavigations();
-
-                if (navigationProperties == null)
-                {
-                    entity = await dbContext.Set<TEntity>().FindAsync(keyValue);
-                }
-                else
-                {
-                    var navigationPropertyNames = new List<string>();
-
-                    foreach (INavigation navigationProperty in navigationProperties)
-                    {
-                        if (navigationPropertyNames.Contains(navigationProperty.Name))
-                            continue;
-
-                        navigationPropertyNames.Add(navigationProperty.Name);
-                    }
-
-                    entity = await repository.SelectAsync(prop => prop.Id.Equals(keyValue), navigationPropertyNames.ToArray());
-                }
-
-                if (repository.DbContext.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
-                    repository.DbContext.Detach(entity);
-            }
+            TEntity entity = await repository.DbContext.Set<TEntity>().FindAsync(keyValue);
+            if (repository.DbContext.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
+                repository.DbContext.Detach(entity);
 
             return entity;
         }

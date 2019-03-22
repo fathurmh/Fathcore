@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Fathcore.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Fathcore.EntityFramework
 {
@@ -221,31 +220,7 @@ namespace Fathcore.EntityFramework
             if (keyValue == null)
                 throw new ArgumentNullException(nameof(keyValue));
 
-            IEnumerable<INavigation> navigationProperties = default;
-            TEntity entity = default;
-
-            if (DbContext is DbContext dbContext)
-                navigationProperties = dbContext.Model.FindEntityType(typeof(TEntity)).GetNavigations();
-
-            if (navigationProperties == null)
-            {
-                entity = _entities.Find(keyValue);
-            }
-            else
-            {
-                var navigationPropertyNames = new List<string>();
-
-                foreach (INavigation navigationProperty in navigationProperties)
-                {
-                    if (navigationPropertyNames.Contains(navigationProperty.Name))
-                        continue;
-
-                    navigationPropertyNames.Add(navigationProperty.Name);
-                }
-
-                entity = Select(prop => prop.Id.Equals(keyValue), navigationPropertyNames.ToArray());
-            }
-
+            TEntity entity = _entities.Find(keyValue);
             if (TrackingBehavior == QueryTrackingBehavior.NoTracking)
                 DbContext.Detach(entity);
 

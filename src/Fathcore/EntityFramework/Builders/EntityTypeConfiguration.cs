@@ -31,7 +31,7 @@ namespace Fathcore.EntityFramework.Builders
         /// <param name="builder">The builder to be used to configure the entity.</param>
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
-            builder.HasKey(entity => entity.Id);
+            //builder.HasKey(entity => entity.Id);
 
             if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
             {
