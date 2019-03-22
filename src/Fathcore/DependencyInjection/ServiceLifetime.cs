@@ -14,7 +14,6 @@ namespace Fathcore.DependencyInjection
 
         /// <summary>
         /// Specifies that a new instance of the service will be created for each scope.
-        /// <para></para>
         /// <remarks>In ASP.NET Core applications a scope is created around each server request.</remarks>
         /// </summary>
         Scoped = 1,

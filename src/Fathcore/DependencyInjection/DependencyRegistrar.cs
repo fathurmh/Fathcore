@@ -3,7 +3,7 @@
 namespace Fathcore.DependencyInjection
 {
     /// <summary>
-    /// Represents dependency registrar.
+    /// Represents dependency registrar that can register services.
     /// </summary>
     internal sealed class DependencyRegistrar : IDependencyRegistrar
     {

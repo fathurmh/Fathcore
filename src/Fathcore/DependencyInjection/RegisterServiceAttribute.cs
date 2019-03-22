@@ -9,14 +9,21 @@ namespace Fathcore.DependencyInjection
     public sealed class RegisterServiceAttribute : Attribute
     {
         /// <summary>
-        /// The lifetime of the service.
+        /// Gets the lifetime of service in the <see cref="RegisterServiceAttribute"/>.
         /// </summary>
-        public Lifetime Lifetime { get; private set; }
+        public Lifetime Lifetime { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegisterServiceAttribute"/> class.
+        /// </summary>
         public RegisterServiceAttribute() : this(Lifetime.Transient)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegisterServiceAttribute"/> class.
+        /// </summary>
+        /// <param name="lifetime">The lifetime of a particular service.</param>
         public RegisterServiceAttribute(Lifetime lifetime)
         {
             Lifetime = lifetime;
