@@ -8,31 +8,31 @@ namespace Fathcore.Tests.Fakes
         public static List<Address> AddressesOnly
             => new List<Address>()
             {
-                new Address() { Street = "First Book Title" },
-                new Address() { Street = "Second Book Title" },
-                new Address() { Street = "Third Book Title" },
-                new Address() { Street = "Fourth Book Title" },
-                new Address() { Street = "Fifth Book Title" },
+                new Address() { Street = "Underwater Street" },
+                new Address() { Street = "Not My Church Street" },
+                new Address() { Street = "Maple Syrup Street" },
+                new Address() { Street = "Dip Wick Drive" },
+                new Address() { Street = "Bearded Clam Passage" },
             };
 
         public static List<Student> StudentsOnly
             => new List<Student>()
             {
-                new Student() { Name = "First Book" },
-                new Student() { Name = "Second Book" },
-                new Student() { Name = "Third Book" },
-                new Student() { Name = "Fourth Book" },
-                new Student() { Name = "Fifth Book" },
+                new Student() { Name = "John Doe" },
+                new Student() { Name = "Jane Doe" },
+                new Student() { Name = "Fathcore" },
+                new Student() { Name = "Fulan" },
+                new Student() { Name = "Fulana" },
             };
 
         public static List<Classroom> ClassroomsOnly
             => new List<Classroom>()
             {
-                new Classroom() { Code = "First Author" },
-                new Classroom() { Code = "Second Author" },
-                new Classroom() { Code = "Third Author" },
-                new Classroom() { Code = "Fourth Author" },
-                new Classroom() { Code = "Fifth Author" },
+                new Classroom() { Code = "01-A" },
+                new Classroom() { Code = "01-B" },
+                new Classroom() { Code = "02-A" },
+                new Classroom() { Code = "02-A1" },
+                new Classroom() { Code = "02-B" },
             };
 
         public static List<Address> Addresses

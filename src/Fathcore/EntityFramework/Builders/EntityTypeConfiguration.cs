@@ -39,7 +39,7 @@ namespace Fathcore.EntityFramework.Builders
                     .IsRequired();
 
                 builder.Property(nameof(ISoftDeletable.DeletedTime))
-                    .HasColumnType("datetime");
+                    .HasColumnType("DATETIME");
             }
 
             if (typeof(IAuditable).IsAssignableFrom(typeof(TEntity)))
@@ -47,18 +47,18 @@ namespace Fathcore.EntityFramework.Builders
                 builder.Property(nameof(IAuditable.CreatedBy))
                     .IsRequired()
                     .HasMaxLength(100)
-                    .HasDefaultValue("Anonymous");
+                    .HasDefaultValue("")
+                    .HasDefaultValueSql("('')");
 
                 builder.Property(nameof(IAuditable.CreatedTime))
                     .IsRequired()
-                    .HasColumnType("datetime")
-                    .HasDefaultValue(DateTime.Now);
+                    .HasColumnType("DATETIME");
 
                 builder.Property(nameof(IAuditable.ModifiedBy))
                     .HasMaxLength(100);
 
                 builder.Property(nameof(IAuditable.ModifiedTime))
-                    .HasColumnType("datetime");
+                    .HasColumnType("DATETIME");
             }
 
             if (typeof(IConcurrentable).IsAssignableFrom(typeof(TEntity)))

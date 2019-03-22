@@ -58,28 +58,6 @@ namespace Fathcore.EntityFramework
         }
 
         /// <summary>
-        /// Modify the input SQL query by adding passed parameters.
-        /// </summary>
-        /// <param name="sql">The raw SQL query.</param>
-        /// <param name="parameters">The values to be assigned to parameters.</param>
-        /// <returns>Modified raw SQL query.</returns>
-        protected virtual string CreateSqlWithParameters(string sql, params object[] parameters)
-        {
-            for (var i = 0; i <= (parameters?.Length ?? 0) - 1; i++)
-            {
-                if (!(parameters[i] is DbParameter parameter))
-                    continue;
-
-                sql = $"{sql}{(i > 0 ? "," : string.Empty)} @{parameter.ParameterName}";
-
-                if (parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Output)
-                    sql = $"{sql} output";
-            }
-
-            return sql;
-        }
-
-        /// <summary>
         /// Detach an entity is being tracked by a context.
         /// </summary>
         /// <typeparam name="TEntity">The type of entity is not being tracked.</typeparam>
@@ -192,7 +170,9 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation.</returns>
         public new virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _auditHandler?.HandleAsync(this);
+            if (_auditHandler != null)
+                await _auditHandler.HandleAsync(this);
+
             return await base.SaveChangesAsync(cancellationToken);
         }
 
@@ -205,6 +185,28 @@ namespace Fathcore.EntityFramework
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
             return base.Set<TEntity>();
+        }
+
+        /// <summary>
+        /// Modify the input SQL query by adding passed parameters.
+        /// </summary>
+        /// <param name="sql">The raw SQL query.</param>
+        /// <param name="parameters">The values to be assigned to parameters.</param>
+        /// <returns>Modified raw SQL query.</returns>
+        protected virtual string CreateSqlWithParameters(string sql, params object[] parameters)
+        {
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                if (!(parameters[i] is DbParameter parameter))
+                    continue;
+
+                sql = $"{sql}{(i > 0 ? "," : string.Empty)} @{parameter.ParameterName}";
+
+                if (parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Output)
+                    sql = $"{sql} output";
+            }
+
+            return sql;
         }
     }
 }
