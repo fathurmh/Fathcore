@@ -14,7 +14,7 @@ namespace Fathcore
     }
 
     /// <summary>
-    /// Provides the interface for type-safe enumerations.
+    /// Provides the interface for strongly typed enumerations.
     /// </summary>
     public interface ITypeSafeEnum
     {

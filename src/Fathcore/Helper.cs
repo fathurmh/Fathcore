@@ -2,13 +2,16 @@
 
 namespace Fathcore
 {
+    /// <summary>
+    /// Provides access to the singleton instance of the helper.
+    /// </summary>
     public static class Helper
     {
         /// <summary>
-        /// Sets the static helper instance to the supplied engine. Use this method to supply your own helper implementation.
+        /// Sets the static helper instance to the supplied helper. Use this method to supply your own helper implementation.
+        /// <remarks>Only use this method if you know what you're doing.</remarks>
         /// </summary>
         /// <param name="helper">The helper to use.</param>
-        /// <remarks>Only use this method if you know what you're doing.</remarks>
         public static void Replace(IHelper helper)
         {
             Singleton<IHelper>.Instance = helper;

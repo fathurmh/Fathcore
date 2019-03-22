@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Fathcore
 {
     /// <summary>
-    /// Represents a strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
+    /// Provides the interface for strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
     public interface IPagedList<T> : IList<T>, ICollection<T>, IEnumerable<T>, IPagedList, IList, ICollection, IEnumerable
@@ -16,7 +16,7 @@ namespace Fathcore
     }
 
     /// <summary>
-    /// Represents a strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
+    /// Provides the interface for strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
     /// </summary>
     public interface IPagedList : IList, ICollection, IEnumerable
     {
