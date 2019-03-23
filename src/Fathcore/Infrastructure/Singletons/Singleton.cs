@@ -28,9 +28,9 @@
 
                     if (!baseSingletonHasKey)
                         AllSingletons[typeof(T)] = s_instance;
-                }
 
-                return s_instance;
+                    return s_instance;
+                }
             }
             set
             {

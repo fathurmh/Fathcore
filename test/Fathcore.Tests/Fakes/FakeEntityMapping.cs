@@ -19,7 +19,8 @@ namespace Fathcore.Tests.Fakes
 
             builder.HasMany(entity => entity.Students)
                 .WithOne(entity => entity.Classroom)
-                .HasForeignKey(entity => entity.ClassroomId);
+                .HasForeignKey(entity => entity.ClassroomId)
+                .IsRequired();
 
             base.Configure(builder);
         }
@@ -36,11 +37,13 @@ namespace Fathcore.Tests.Fakes
 
             builder.HasOne(entity => entity.Classroom)
                 .WithMany(entity => entity.Students)
-                .HasForeignKey(entity => entity.ClassroomId);
+                .HasForeignKey(entity => entity.ClassroomId)
+                .IsRequired();
 
             builder.HasOne(entity => entity.Address)
                 .WithOne(entity => entity.Student)
-                .HasForeignKey<Address>(entity => entity.StudentId);
+                .HasForeignKey<Address>(entity => entity.StudentId)
+                .IsRequired();
 
             base.Configure(builder);
         }
@@ -54,10 +57,6 @@ namespace Fathcore.Tests.Fakes
 
             builder.Property(entity => entity.Street)
                 .IsRequired();
-
-            builder.HasOne(entity => entity.Student)
-                .WithOne(entity => entity.Address)
-                .HasForeignKey<Student>(entity => entity.AddressId);
 
             base.Configure(builder);
         }

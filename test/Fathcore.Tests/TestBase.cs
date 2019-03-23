@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Principal;
+using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.Infrastructure;
 using Fathcore.Tests.Fakes;
 using Microsoft.AspNetCore.Http;
@@ -13,25 +14,42 @@ namespace Fathcore.Tests
 {
     public class TestBase : IDisposable
     {
+        private static readonly object s_padlock = new object();
         private readonly IDictionary<string, DbContextOptions> _options;
         private SqliteConnection _connection;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public IServiceCollection ServiceDescriptors;
-        public IHttpContextAccessor HttpContextAccessor;
+        public IHttpContextAccessor HttpContextAccessor
+        {
+            get
+            {
+                lock (s_padlock)
+                {
+                    if (_httpContextAccessor == null)
+                    {
+                        var mock = new Mock<IHttpContextAccessor>();
+                        var context = new DefaultHttpContext()
+                        {
+                            User = new GenericPrincipal(new GenericIdentity(DefaultIdentity), null)
+                        };
+
+                        mock.Setup(p => p.HttpContext).Returns(context);
+                        _httpContextAccessor = mock.Object;
+                    }
+
+                    return _httpContextAccessor;
+                }
+
+            }
+        }
+
+        public const string DefaultIdentity = "TestIdentity";
 
         public TestBase()
         {
             _options = new Dictionary<string, DbContextOptions>();
             ServiceDescriptors = new ServiceCollection();
-
-            var mock = new Mock<IHttpContextAccessor>();
-            var context = new DefaultHttpContext()
-            {
-                User = new GenericPrincipal(new GenericIdentity("TestIdentity"), null)
-            };
-
-            mock.Setup(p => p.HttpContext).Returns(context);
-            HttpContextAccessor = mock.Object;
         }
 
         public DbContextOptions Options(string name, Provider provider = Provider.InMemory)
@@ -56,7 +74,7 @@ namespace Fathcore.Tests
                         .UseSqlite(_connection)
                         .EnableSensitiveDataLogging()
                         .Options;
-                    using (DbContext context = new TestDbContext(_options[name]))
+                    using (var context = new TestDbContext(_options[name]))
                     {
                         context.Database.EnsureCreated();
                         context.Database.ExecuteSqlCommand(
@@ -80,10 +98,12 @@ namespace Fathcore.Tests
         public DbContextOptions OptionsWithData(string name, Provider provider = Provider.InMemory)
         {
             var options = Options(name, provider);
+            var auditHandler = new AuditHandler(HttpContextAccessor);
 
-            using (DbContext context = new TestDbContext(options))
+            using (var context = new TestDbContext(options))
             {
                 context.AddRange(FakeEntityGenerator.Classrooms);
+                auditHandler.Handle(context);
                 context.SaveChanges();
             }
 
@@ -94,7 +114,7 @@ namespace Fathcore.Tests
         {
             foreach (var item in _options)
             {
-                using (DbContext context = new TestDbContext(item.Value))
+                using (var context = new TestDbContext(item.Value))
                 {
                     context.Database.EnsureDeleted();
                 }

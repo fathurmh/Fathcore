@@ -16,6 +16,7 @@ namespace Fathcore.EntityFramework.AuditTrail
     /// </summary>
     public class AuditHandler : IAuditHandler
     {
+        public const string DefaultName = "Anonymous";
         private readonly IPrincipal _principal;
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace Fathcore.EntityFramework.AuditTrail
         /// <param name="httpContextAccessor"></param>
         public AuditHandler(IHttpContextAccessor httpContextAccessor)
         {
-            _principal = httpContextAccessor?.HttpContext?.User ?? new GenericPrincipal(new GenericIdentity("Anonymous"), null);
+            _principal = httpContextAccessor?.HttpContext?.User ?? new GenericPrincipal(new GenericIdentity(DefaultName), null);
         }
 
         /// <summary>
@@ -146,9 +147,6 @@ namespace Fathcore.EntityFramework.AuditTrail
         /// <param name="entry">The <see cref="EntityEntry"/> being audit.</param>
         protected virtual void AuditEntity(EntityEntry entry)
         {
-            if (entry == null)
-                throw new ArgumentNullException(nameof(entry));
-
             var dateTime = DateTime.UtcNow;
 
             switch (entry.State)
