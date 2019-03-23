@@ -3,7 +3,7 @@
 namespace Fathcore.DependencyInjection
 {
     /// <summary>
-    /// Represents the register service attributes.
+    /// Indicates that a class will be registered as a service. This class cannot be inherited.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class RegisterServiceAttribute : Attribute

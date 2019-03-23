@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Fathcore.EntityFramework
 {
     /// <summary>
-    /// Provides the class of generic repository pattern.
+    /// Provides the class for generic repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
     public class Repository<TEntity> : IRepository<TEntity>

@@ -3,7 +3,7 @@
 namespace Fathcore.EntityFramework
 {
     /// <summary>
-    /// Auditable entity interface.
+    /// Provides the interface for the auditable entity. The class that implements this can be audited by <see cref="AuditTrail.AuditHandler"/>.
     /// </summary>
     public interface IAuditable
     {

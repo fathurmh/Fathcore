@@ -3,7 +3,7 @@
 namespace Fathcore.EntityFramework
 {
     /// <summary>
-    /// Soft deletable entity interface.
+    /// Provides the interface for the soft-deletable entity. The class that implements this, the delete action will be handled by <see cref="AuditTrail.AuditHandler"/>.
     /// </summary>
     public interface ISoftDeletable
     {

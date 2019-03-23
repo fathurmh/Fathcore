@@ -1,7 +1,7 @@
 ﻿namespace Fathcore.EntityFramework
 {
     /// <summary>
-    /// Concurrentable entity interface.
+    /// Provides the interface for the concurrent entity. The class that implements this, the concurrent will be handled by <see cref="AuditTrail.AuditHandler"/>.
     /// </summary>
     public interface IConcurrentable
     {
