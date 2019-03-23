@@ -329,7 +329,7 @@ namespace Fathcore.EntityFramework.Extensions
                 await repository.DbContext.RollbackEntityChangesAsync();
                 throw;
             }
-            catch
+            catch (Exception)
             {
                 throw;
             }

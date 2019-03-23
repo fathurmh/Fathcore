@@ -234,51 +234,44 @@ namespace Fathcore.Infrastructure
         public virtual IEnumerable<Type> FindAllClasses(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
             var result = new List<Type>();
-            try
+            var partitioner = Partitioner.Create(assemblies, EnumerablePartitionerOptions.NoBuffering);
+            var parallelOption = new ParallelOptions { MaxDegreeOfParallelism = 2 };
+
+            Parallel.ForEach(partitioner, parallelOption, assembly =>
             {
-                var partitioner = Partitioner.Create(assemblies, EnumerablePartitionerOptions.NoBuffering);
-                var parallelOption = new ParallelOptions { MaxDegreeOfParallelism = 2 };
-
-                Parallel.ForEach(partitioner, parallelOption, assembly =>
+                Type[] types = null;
+                try
                 {
-                    Type[] types = null;
-                    try
-                    {
-                        types = assembly.GetTypes();
-                    }
-                    catch
-                    {
-                        if (!_ignoreReflectionErrors)
-                            throw;
-                    }
+                    types = assembly.GetTypes();
+                }
+                catch
+                {
+                    if (!_ignoreReflectionErrors)
+                        throw;
+                }
 
-                    if (types == null)
+                if (types == null)
+                    return;
+
+                var nestedPartitioner = Partitioner.Create(types, EnumerablePartitionerOptions.NoBuffering);
+                Parallel.ForEach(nestedPartitioner, parallelOption, type =>
+                {
+                    if (type.IsInterface)
                         return;
 
-                    var nestedPartitioner = Partitioner.Create(types, EnumerablePartitionerOptions.NoBuffering);
-                    Parallel.ForEach(nestedPartitioner, parallelOption, type =>
+                    if (onlyConcreteClasses)
                     {
-                        if (type.IsInterface)
-                            return;
-
-                        if (onlyConcreteClasses)
-                        {
-                            if (type.IsClass && !type.IsAbstract)
-                            {
-                                result.Add(type);
-                            }
-                        }
-                        else
+                        if (type.IsClass && !type.IsAbstract)
                         {
                             result.Add(type);
                         }
-                    });
+                    }
+                    else
+                    {
+                        result.Add(type);
+                    }
                 });
-            }
-            catch
-            {
-                throw;
-            }
+            });
 
             return result;
         }

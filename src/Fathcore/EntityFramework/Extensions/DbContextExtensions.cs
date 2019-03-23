@@ -69,15 +69,8 @@ namespace Fathcore.EntityFramework.Extensions
         /// <returns></returns>
         public static void RollbackEntityChanges(this IDbContext context)
         {
-            try
-            {
-                context.RollbackEntity();
-                context.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
+            context.RollbackEntity();
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -87,15 +80,8 @@ namespace Fathcore.EntityFramework.Extensions
         /// <returns></returns>
         public static async Task RollbackEntityChangesAsync(this IDbContext context)
         {
-            try
-            {
-                context.RollbackEntity();
-                await context.SaveChangesAsync();
-            }
-            catch
-            {
-                throw;
-            }
+            context.RollbackEntity();
+            await context.SaveChangesAsync();
         }
 
         /// <summary>

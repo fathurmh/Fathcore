@@ -3,7 +3,7 @@
 namespace Fathcore.EntityFramework.AuditTrail
 {
     /// <summary>
-    /// Represents an audit handler.
+    /// Provides the interface for audit handler.
     /// </summary>
     public interface IAuditHandler
     {
