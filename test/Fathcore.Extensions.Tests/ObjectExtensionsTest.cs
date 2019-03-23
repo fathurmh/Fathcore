@@ -132,15 +132,81 @@ namespace Fathcore.Extensions.Tests
             Assert.Null(enumerator.Current);
         }
 
+        [Fact]
+        public void Clone_SafetyCheck()
+        {
+            var source = new UnserializableObject();
+
+            Assert.Throws<ArgumentException>(() => source.Clone());
+        }
+
+        [Fact]
+        public void Clone_NullObject_ShouldPass()
+        {
+            TestObject source = default;
+
+            var result = source.Clone();
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void Clone_Object_ShouldPass()
+        {
+            var source = new TestObject()
+            {
+                PublicProperty = "PublicProperty"
+            };
+
+            var result = source.Clone();
+
+            Assert.NotSame(source, result);
+            Assert.Equal(source.PublicProperty, result.PublicProperty);
+            Assert.Equal(source.GetOnlyProperty, result.GetOnlyProperty);
+        }
+
+        [Fact]
+        public void CloneJson_NullObject_ShouldPass()
+        {
+            TestObject source = default;
+
+            var result = source.CloneJson();
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void CloneJson_Object_ShouldPass()
+        {
+            var source = new TestObject()
+            {
+                PublicProperty = "PublicProperty"
+            };
+
+            var result = source.CloneJson();
+
+            Assert.NotSame(source, result);
+            Assert.Equal(source.PublicProperty, result.PublicProperty);
+            Assert.Equal(source.GetOnlyProperty, result.GetOnlyProperty);
+        }
+
+        [Serializable]
         private class TestObject
         {
             public string PublicProperty { get; set; }
             public string GetOnlyProperty { get; }
+
+            public TestObject()
+            {
+                GetOnlyProperty = "Value from constructor";
+            }
 
             public string Method(string input)
             {
                 return input;
             }
         }
+
+        private class UnserializableObject { }
     }
 }

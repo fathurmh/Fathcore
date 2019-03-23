@@ -49,7 +49,7 @@ namespace Fathcore.EntityFramework
 
                 foreach (var property in timestampProperties)
                 {
-                    property.SetValueConverter(new SqliteTimestampConverter());
+                    property.SetValueConverter(new TimestampConverter());
                     property.Relational().DefaultValueSql = "CURRENT_TIMESTAMP";
                 }
             }

@@ -324,10 +324,10 @@ namespace Fathcore.EntityFramework.Extensions
 
                 return count;
             }
-            catch (DbUpdateException exception)
+            catch (DbUpdateException)
             {
-                string errorText = await repository.DbContext.RollbackEntityChangesAsync(exception);
-                throw new Exception(errorText, exception);
+                await repository.DbContext.RollbackEntityChangesAsync();
+                throw;
             }
             catch
             {

@@ -66,19 +66,17 @@ namespace Fathcore.EntityFramework.Extensions
         /// Rollback of entity changes and return full error message.
         /// </summary>
         /// <param name="context">An <see cref="IDbContext"/> context.</param>
-        /// <param name="exception">Exception occurs.</param>
         /// <returns></returns>
-        public static string RollbackEntityChanges(this IDbContext context, DbUpdateException exception)
+        public static void RollbackEntityChanges(this IDbContext context)
         {
             try
             {
                 context.RollbackEntity();
                 context.SaveChanges();
-                return exception.ToString();
             }
-            catch (Exception ex)
+            catch
             {
-                return ex.ToString();
+                throw;
             }
         }
 
@@ -86,19 +84,17 @@ namespace Fathcore.EntityFramework.Extensions
         /// Asynchronously rollback of entity changes and return full error message.
         /// </summary>
         /// <param name="context">An <see cref="IDbContext"/> context.</param>
-        /// <param name="exception">Exception occurs.</param>
         /// <returns></returns>
-        public static async Task<string> RollbackEntityChangesAsync(this IDbContext context, DbUpdateException exception)
+        public static async Task RollbackEntityChangesAsync(this IDbContext context)
         {
             try
             {
                 context.RollbackEntity();
                 await context.SaveChangesAsync();
-                return exception.ToString();
             }
-            catch (Exception ex)
+            catch
             {
-                return ex.ToString();
+                throw;
             }
         }
 

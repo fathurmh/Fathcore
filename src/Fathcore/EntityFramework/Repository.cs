@@ -346,13 +346,9 @@ namespace Fathcore.EntityFramework
 
                 return count;
             }
-            catch (DbUpdateException exception)
+            catch (DbUpdateException)
             {
-                string errorText = DbContext.RollbackEntityChanges(exception);
-                throw new Exception(errorText, exception);
-            }
-            catch
-            {
+                DbContext.RollbackEntityChanges();
                 throw;
             }
         }

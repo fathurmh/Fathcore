@@ -9,6 +9,7 @@ namespace Fathcore.Tests.Fakes
         public string Value { get; set; }
     }
 
+    [Serializable]
     internal class Classroom : BaseEntity<Classroom, int>, IBaseEntity<int>, IAuditable, ISoftDeletable, IConcurrentable
     {
         public Classroom()
@@ -28,6 +29,7 @@ namespace Fathcore.Tests.Fakes
         public virtual ICollection<Student> Students { get; set; }
     }
 
+    [Serializable]
     internal class Student : BaseEntity<Student, int>, IAuditable, ISoftDeletable, IConcurrentable
     {
         public string Name { get; set; }
@@ -45,6 +47,7 @@ namespace Fathcore.Tests.Fakes
         public virtual Address Address { get; set; }
     }
 
+    [Serializable]
     internal class Address : BaseEntity<Address, int>, IAuditable, ISoftDeletable, IConcurrentable
     {
         public string Street { get; set; }
