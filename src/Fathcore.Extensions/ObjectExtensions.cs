@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Fathcore.Extensions
 {
     /// <summary>
-    /// Object extensions.
+    /// Extension methods for Object.
     /// </summary>
     public static class ObjectExtensions
     {

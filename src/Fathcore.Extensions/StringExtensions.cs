@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 namespace Fathcore.Extensions
 {
     /// <summary>
-    /// String extensions.
+    /// Extension methods for String.
     /// </summary>
     public static class StringExtensions
     {

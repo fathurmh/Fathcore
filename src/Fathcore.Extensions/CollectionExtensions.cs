@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Fathcore.Extensions
 {
     /// <summary>
-    /// Collection extensions.
+    /// Extension methods for Collection.
     /// </summary>
     public static class CollectionExtensions
     {
