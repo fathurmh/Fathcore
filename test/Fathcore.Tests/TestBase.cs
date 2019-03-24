@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Security.Principal;
 using Fathcore.EntityFramework.AuditTrail;
@@ -15,11 +16,46 @@ namespace Fathcore.Tests
     public class TestBase : IDisposable
     {
         private static readonly object s_padlock = new object();
-        private readonly IDictionary<string, DbContextOptions> _options;
-        private SqliteConnection _connection;
-        private IHttpContextAccessor _httpContextAccessor;
 
-        public IServiceCollection ServiceDescriptors;
+        public const string DefaultIdentity = "TestIdentity";
+
+        private IDictionary<string, DbContextOptions> _dbContextOptions = null;
+        private SqliteConnection _connection = null;
+        private IHttpContextAccessor _httpContextAccessor = null;
+        private IServiceCollection _serviceDescriptors = null;
+
+        private SqliteConnection Connection
+        {
+            get
+            {
+                lock (s_padlock)
+                {
+                    if (_connection == null)
+                    {
+                        _connection = new SqliteConnection($"DataSource=:memory:");
+                    }
+
+                    return _connection;
+                }
+            }
+        }
+
+        private IDictionary<string, DbContextOptions> DbContextOptions
+        {
+            get
+            {
+                lock (s_padlock)
+                {
+                    if (_dbContextOptions == null)
+                    {
+                        _dbContextOptions = new ConcurrentDictionary<string, DbContextOptions>();
+                    }
+
+                    return _dbContextOptions;
+                }
+            }
+        }
+
         public IHttpContextAccessor HttpContextAccessor
         {
             get
@@ -40,17 +76,28 @@ namespace Fathcore.Tests
 
                     return _httpContextAccessor;
                 }
-
             }
         }
 
-        public const string DefaultIdentity = "TestIdentity";
-
-        public TestBase()
+        public IServiceCollection ServiceDescriptors
         {
-            _options = new Dictionary<string, DbContextOptions>();
-            ServiceDescriptors = new ServiceCollection();
+            get
+            {
+                lock (s_padlock)
+                {
+                    if (_serviceDescriptors == null)
+                    {
+                        _serviceDescriptors = new ServiceCollection();
+                    }
+
+                    return _serviceDescriptors;
+                }
+            }
         }
+
+        static TestBase() { }
+
+        public TestBase() { }
 
         public DbContextOptions Options(string name, Provider provider = Provider.InMemory)
         {
@@ -58,23 +105,28 @@ namespace Fathcore.Tests
             {
                 case Provider.InMemory:
                 {
-                    if (!_options.ContainsKey(name))
-                        _options[name] = new DbContextOptionsBuilder()
+                    if (!DbContextOptions.ContainsKey(name))
+                        DbContextOptions[name] = new DbContextOptionsBuilder()
                             .UseInMemoryDatabase(databaseName: name)
                             .EnableSensitiveDataLogging()
                             .Options;
+
+                    using (var context = new TestDbContext(DbContextOptions[name]))
+                    {
+                        context.Database.EnsureCreated();
+                    }
+
+                    return DbContextOptions[name];
                 }
-                break;
                 case Provider.Sqlite:
                 {
-                    name = "memory";
-                    _connection = new SqliteConnection($"DataSource=:{name}:");
-                    _connection.Open();
-                    _options[name] = new DbContextOptionsBuilder()
-                        .UseSqlite(_connection)
+                    Connection.Open();
+                    var options = new DbContextOptionsBuilder()
+                        .UseSqlite(Connection)
                         .EnableSensitiveDataLogging()
                         .Options;
-                    using (var context = new TestDbContext(_options[name]))
+
+                    using (var context = new TestDbContext(options))
                     {
                         context.Database.EnsureCreated();
                         context.Database.ExecuteSqlCommand(
@@ -88,11 +140,12 @@ namespace Fathcore.Tests
                             END
                         ");
                     }
+
+                    return options;
                 }
-                break;
             }
 
-            return _options[name];
+            return DbContextOptions[name];
         }
 
         public DbContextOptions OptionsWithData(string name, Provider provider = Provider.InMemory)
@@ -112,16 +165,15 @@ namespace Fathcore.Tests
 
         public void Dispose()
         {
-            foreach (var item in _options)
+            foreach (var item in DbContextOptions)
             {
                 using (var context = new TestDbContext(item.Value))
                 {
                     context.Database.EnsureDeleted();
                 }
             }
-            _connection?.Close();
-            _options.Clear();
-            ServiceDescriptors = new ServiceCollection();
+            Connection.Close();
+            ServiceDescriptors.Clear();
             Engine.Create().Populate(ServiceDescriptors);
             BaseSingleton.AllSingletons.Clear();
         }
