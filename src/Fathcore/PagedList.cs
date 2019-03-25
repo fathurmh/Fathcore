@@ -58,15 +58,6 @@ namespace Fathcore
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagedList{T}"/> class that contains elements copied from the specified <see cref="IList{T}"/> collection and has sufficient capacity to accommodate the number of elements copied.
-        /// </summary>
-        /// <param name="source">The collection whose elements are copied to the new list.</param>
-        /// <param name="pageIndex">Sets the page index contained in the <see cref="PagedList{T}"/>.</param>
-        /// <param name="pageSize">Sets the page size contained in the <see cref="PagedList{T}"/>.</param>
-        public PagedList(IList<T> source, int pageIndex, int pageSize)
-            : this(source.AsQueryable(), pageIndex, pageSize) { }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="PagedList{T}"/> class that contains elements copied from the specified <see cref="IEnumerable{T}"/> collection and has sufficient capacity to accommodate the number of elements copied.
         /// </summary>
         /// <param name="source">The collection whose elements are copied to the new list.</param>

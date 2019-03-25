@@ -15,7 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" />
+    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" PrivateAssets="All" />
   </ItemGroup>
+  
+  <Target Name="IncludeP2PAssets">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)\Fathcore.Extensions.dll" />
+    </ItemGroup>
+  </Target>
 
 </Project>

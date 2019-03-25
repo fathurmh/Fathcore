@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Moq;
 
 namespace Fathcore.Tests
@@ -16,6 +18,9 @@ namespace Fathcore.Tests
     public class TestBase : IDisposable
     {
         private static readonly object s_padlock = new object();
+#pragma warning disable CS0618 // Type or member is obsolete
+        private static readonly ILoggerFactory s_myLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) }).AddDebug().AddConsole();
+#pragma warning restore CS0618 // Type or member is obsolete
 
         public const string DefaultIdentity = "TestIdentity";
 
@@ -108,6 +113,7 @@ namespace Fathcore.Tests
                     if (!DbContextOptions.ContainsKey(name))
                         DbContextOptions[name] = new DbContextOptionsBuilder()
                             .UseInMemoryDatabase(databaseName: name)
+                            .UseLoggerFactory(s_myLoggerFactory)
                             .EnableSensitiveDataLogging()
                             .Options;
 
@@ -123,6 +129,7 @@ namespace Fathcore.Tests
                     Connection.Open();
                     var options = new DbContextOptionsBuilder()
                         .UseSqlite(Connection)
+                        .UseLoggerFactory(s_myLoggerFactory)
                         .EnableSensitiveDataLogging()
                         .Options;
 
