@@ -20,7 +20,7 @@
     <StrongNameKeyId>Fathcore</StrongNameKeyId>
     <PackageTags>Fathcore</PackageTags>
     <Product>Fathcore</Product>
-    <Description>Fathcore</Description>
+    <Description>Provides the personal toolset.</Description>
   </PropertyGroup>
 
   <PropertyGroup>
