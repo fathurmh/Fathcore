@@ -1,1 +1,1 @@
-﻿# Fathcore
+# Fathcore

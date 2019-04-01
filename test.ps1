@@ -1,4 +1,4 @@
-﻿dotnet test `
+dotnet test `
   ./${workspaceFolder}/test/Fathcore.Tests/Fathcore.Tests.csproj `
   --no-build `
   /p:CollectCoverage=true `

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.Extensions;
 using Fathcore.Extensions;
@@ -17,7 +16,9 @@ namespace Fathcore.EntityFramework.AuditTrail
     public class AuditHandler : IAuditHandler
     {
         public const string DefaultName = "Anonymous";
-        private readonly IPrincipal _principal;
+        //private readonly IPrincipal _principal;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly string _currentUsername;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditHandler"/> class.
@@ -25,7 +26,8 @@ namespace Fathcore.EntityFramework.AuditTrail
         /// <param name="httpContextAccessor"></param>
         public AuditHandler(IHttpContextAccessor httpContextAccessor)
         {
-            _principal = httpContextAccessor?.HttpContext?.User ?? new GenericPrincipal(new GenericIdentity(DefaultName), null);
+            //_currentUsername = httpContextAccessor?.HttpContext?.User?.Identity.Name ?? DefaultName;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace Fathcore.EntityFramework.AuditTrail
             Type auditEntryType = entry.Entity.GetType();
             if (typeof(IAuditable).IsAssignableFrom(auditEntryType))
             {
-                entry.CurrentValues[nameof(IAuditable.CreatedBy)] = _principal.Identity.Name;
+                entry.CurrentValues[nameof(IAuditable.CreatedBy)] = _httpContextAccessor?.HttpContext?.User?.Identity.Name ?? DefaultName;
                 entry.CurrentValues[nameof(IAuditable.CreatedTime)] = dateTime;
                 entry.State = EntityState.Added;
             }
@@ -110,7 +112,7 @@ namespace Fathcore.EntityFramework.AuditTrail
 
             if (typeof(IAuditable).IsAssignableFrom(auditEntryType))
             {
-                entry.CurrentValues[nameof(IAuditable.ModifiedBy)] = _principal.Identity.Name;
+                entry.CurrentValues[nameof(IAuditable.ModifiedBy)] = _httpContextAccessor?.HttpContext?.User?.Identity.Name ?? DefaultName;
                 entry.CurrentValues[nameof(IAuditable.ModifiedTime)] = dateTime;
                 entry.State = EntityState.Modified;
             }

@@ -452,7 +452,7 @@ namespace Fathcore.Tests.EntityFramework.AuditTrail
             data.Add(new object[] { Provider.Sqlite, mock.Object });
 
             mock.Setup(p => p.HttpContext).Returns(httpContext);
-            mock.Setup(p => p.HttpContext.User).Returns((ClaimsPrincipal)null);
+            mock.Setup(p => p.HttpContext.User).Returns(default(ClaimsPrincipal));
             data.Add(new object[] { Provider.InMemory, mock.Object });
             data.Add(new object[] { Provider.Sqlite, mock.Object });
 
