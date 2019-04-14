@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace Fathcore.Tests.EntityFramework.AuditTrail
 {
     public class AuditHandlerTest : TestBase

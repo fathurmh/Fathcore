@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 
-[assembly: Xunit.CollectionBehavior(DisableTestParallelization = false)]
 namespace Fathcore.Tests
 {
     public class TestBase : IDisposable
