@@ -318,8 +318,8 @@ namespace Fathcore.EntityFramework.Extensions
 
                 if (repository.DbContext.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
                 {
-                    var currentEntries = repository.DbContext.ChangeTracker.Entries<TEntity>().ToList();
-                    repository.DbContext.DetachRange(currentEntries.Select(p => p.Entity));
+                    var currentEntries = repository.DbContext.GetCurrentEntries();
+                    repository.DbContext.DetachRange(currentEntries.Select(p => (TEntity)p.Entity));
                 }
 
                 return count;
@@ -327,10 +327,6 @@ namespace Fathcore.EntityFramework.Extensions
             catch (DbUpdateException)
             {
                 await repository.DbContext.RollbackEntityChangesAsync();
-                throw;
-            }
-            catch (Exception)
-            {
                 throw;
             }
         }

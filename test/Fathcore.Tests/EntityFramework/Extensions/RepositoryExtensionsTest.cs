@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using Fathcore.EntityFramework;
 using Fathcore.EntityFramework.AuditTrail;
+using Fathcore.EntityFramework.Extensions;
 using Fathcore.Tests.Fakes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace Fathcore.Tests.EntityFramework
+namespace Fathcore.Tests.EntityFramework.Extensions
 {
-    public class RepositoryTest : TestBase
+    public class RepositoryExtensionsTest : TestBase
     {
         public IHttpContextAccessor HttpContextAccessor
         {
@@ -33,107 +35,15 @@ namespace Fathcore.Tests.EntityFramework
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
 
-        public void DbContextParameter_ShouldTheSame(Provider provider)
+        public async Task TableQueryableAsync_AsTracking(Provider provider)
         {
-            var options = Options("DbContextParameter_ShouldTheSame", provider);
-            using (var context = new TestDbContext(options))
-            {
-                var repository = new Repository<Classroom>(context);
-                Assert.Same(context, repository.DbContext);
-            }
-        }
-
-        [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-
-        public void Repository_Default_QueryTrackingBehavior_AsTracking(Provider provider)
-        {
-            var options = Options("Repository_Default_QueryTrackingBehavior_AsTracking", provider);
-            using (var context = new TestDbContext(options))
-            {
-                var repository = new Repository<Classroom>(context);
-                Assert.Equal(QueryTrackingBehavior.TrackAll, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
-                Assert.Equal(QueryTrackingBehavior.TrackAll, context.ChangeTracker.QueryTrackingBehavior);
-            }
-        }
-
-        [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-
-        public void AsTracking_ShouldChange_QueryTrackingBehavior(Provider provider)
-        {
-            var options = Options("AsTracking_ShouldChange_QueryTrackingBehavior", provider);
-            using (var context = new TestDbContext(options))
-            {
-                var repository = new Repository<Classroom>(context);
-                repository.AsTracking();
-                Assert.Equal(QueryTrackingBehavior.TrackAll, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
-                Assert.Equal(QueryTrackingBehavior.TrackAll, context.ChangeTracker.QueryTrackingBehavior);
-            }
-        }
-
-        [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-
-        public void AsNoTracking_ShouldChange_QueryTrackingBehavior(Provider provider)
-        {
-            var options = Options("AsNoTracking_ShouldChange_QueryTrackingBehavior", provider);
-            using (var context = new TestDbContext(options))
-            {
-                var repository = new Repository<Classroom>(context);
-                repository.AsNoTracking();
-                Assert.Equal(QueryTrackingBehavior.NoTracking, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
-                Assert.Equal(QueryTrackingBehavior.NoTracking, context.ChangeTracker.QueryTrackingBehavior);
-            }
-        }
-
-        [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-
-        public void Tracking_ShouldChange_QueryTrackingBehavior(Provider provider)
-        {
-            var options = Options("Tracking_ShouldChange_QueryTrackingBehavior", provider);
-            using (var context = new TestDbContext(options))
-            {
-                var repository = new Repository<Classroom>(context);
-
-                Assert.Equal(QueryTrackingBehavior.TrackAll, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
-                Assert.Equal(QueryTrackingBehavior.TrackAll, context.ChangeTracker.QueryTrackingBehavior);
-
-                repository.AsNoTracking();
-
-                Assert.Equal(QueryTrackingBehavior.NoTracking, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
-                Assert.Equal(QueryTrackingBehavior.NoTracking, context.ChangeTracker.QueryTrackingBehavior);
-
-                repository.AsTracking();
-
-                Assert.Equal(QueryTrackingBehavior.TrackAll, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
-                Assert.Equal(QueryTrackingBehavior.TrackAll, context.ChangeTracker.QueryTrackingBehavior);
-
-                repository.AsNoTracking();
-
-                Assert.Equal(QueryTrackingBehavior.NoTracking, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
-                Assert.Equal(QueryTrackingBehavior.NoTracking, context.ChangeTracker.QueryTrackingBehavior);
-            }
-        }
-
-        [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-
-        public void TableQueryable_AsTracking(Provider provider)
-        {
-            var options = OptionsWithData("TableQueryable_AsTracking", provider);
+            var options = OptionsWithData("TableQueryableAsync_AsTracking", provider);
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
                 var query = from c in repository.Table select c;
 
-                var result = query.ToList();
+                var result = await query.ToListAsync();
 
                 Assert.NotEmpty(result);
                 Assert.All(result, prop => Assert.Contains(context.Set<Classroom>().Local, e => e.Id == prop.Id));
@@ -144,16 +54,16 @@ namespace Fathcore.Tests.EntityFramework
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
 
-        public void TableQueryable_AsNoTracking(Provider provider)
+        public async Task TableQueryableAsync_AsNoTracking(Provider provider)
         {
-            var options = OptionsWithData("TableQueryable_AsNoTracking", provider);
+            var options = OptionsWithData("TableQueryableAsync_AsNoTracking", provider);
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
                 repository.AsNoTracking();
                 var query = from c in repository.Table select c;
 
-                var result = query.ToList();
+                var result = await query.ToListAsync();
 
                 Assert.NotEmpty(result);
                 Assert.All(result, prop => Assert.DoesNotContain(context.Set<Classroom>().Local, e => e.Id == prop.Id));
@@ -164,19 +74,19 @@ namespace Fathcore.Tests.EntityFramework
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
 
-        public void TableQueryable_Default_EnabledQueryFilter(Provider provider)
+        public async Task TableQueryableAsync_Default_EnabledQueryFilter(Provider provider)
         {
-            var options = OptionsWithData("TableQueryable_Default_EnabledQueryFilter", provider);
+            var options = OptionsWithData("TableQueryableAsync_Default_EnabledQueryFilter", provider);
             var auditHandler = new AuditHandler(HttpContextAccessor);
             int totalBefore;
 
             using (var context = new TestDbContext(options))
             {
-                var entity = context.Set<Classroom>().First();
-                totalBefore = context.Set<Classroom>().Count();
+                var entity = await context.Set<Classroom>().FirstAsync();
+                totalBefore = await context.Set<Classroom>().CountAsync();
                 context.Remove(entity);
-                auditHandler.Handle(context);
-                context.SaveChanges();
+                await auditHandler.HandleAsync(context);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
@@ -184,7 +94,7 @@ namespace Fathcore.Tests.EntityFramework
                 var repository = new Repository<Classroom>(context);
                 var query = from c in repository.Table select c;
 
-                var result = query.ToList();
+                var result = await query.ToListAsync();
 
                 Assert.True(result.Count < totalBefore);
                 Assert.All(result, prop => Assert.True(!prop.IsDeleted));
@@ -195,19 +105,19 @@ namespace Fathcore.Tests.EntityFramework
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
 
-        public void TableQueryable_IgnoreQueryFilter(Provider provider)
+        public async Task TableQueryableAsync_IgnoreQueryFilter(Provider provider)
         {
-            var options = OptionsWithData("TableQueryable_Default_AsFiltered", provider);
+            var options = OptionsWithData("TableQueryableAsync_IgnoreQueryFilter", provider);
             var auditHandler = new AuditHandler(HttpContextAccessor);
             int totalBefore;
 
             using (var context = new TestDbContext(options))
             {
-                var entity = context.Set<Classroom>().First();
-                totalBefore = context.Set<Classroom>().Count();
+                var entity = await context.Set<Classroom>().FirstAsync();
+                totalBefore = await context.Set<Classroom>().CountAsync();
                 context.Remove(entity);
-                auditHandler.Handle(context);
-                context.SaveChanges();
+                await auditHandler.HandleAsync(context);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
@@ -215,7 +125,7 @@ namespace Fathcore.Tests.EntityFramework
                 var repository = new Repository<Classroom>(context);
                 var query = from c in repository.TableNoFilters select c;
 
-                var result = query.ToList();
+                var result = await query.ToListAsync();
 
                 Assert.True(result.Count == totalBefore);
                 Assert.Contains(result, prop => prop.IsDeleted);
@@ -225,14 +135,14 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SelectList_ShouldPass(Provider provider)
+        public async Task SelectListAsync_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("SelectList_ShouldPass", provider);
+            var options = OptionsWithData("SelectListAsync_ShouldPass", provider);
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                var result = repository.SelectList();
+                var result = await repository.SelectListAsync();
 
                 Assert.Equal(FakeEntityGenerator.Classrooms.Count, result.Count());
             }
@@ -241,31 +151,14 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SelectList_WithLambda_NavigationProperty_ShouldPass(Provider provider)
+        public async Task SelectListAsync_WithLambda_NavigationProperty_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("SelectList_WithLambda_NavigationProperty_ShouldPass", provider);
+            var options = OptionsWithData("SelectListAsync_WithLambda_NavigationProperty_ShouldPass", provider);
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                var result = repository.SelectList(prop => prop.Students);
-
-                Assert.Equal(FakeEntityGenerator.Classrooms.Count, result.Count());
-                Assert.Equal(FakeEntityGenerator.Classrooms.Sum(p => p.Students.Count), result.Sum(p => p.Students.Count));
-            }
-        }
-
-        [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-        public void SelectList_WithString_NavigationProperty_ShouldPass(Provider provider)
-        {
-            var options = OptionsWithData("SelectList_WithLambda_NavigationProperty_ShouldPass", provider);
-            using (var context = new TestDbContext(options))
-            {
-                var repository = new Repository<Classroom>(context);
-
-                var result = repository.SelectList($"{nameof(Classroom.Students)}");
+                var result = await repository.SelectListAsync(prop => prop.Students);
 
                 Assert.Equal(FakeEntityGenerator.Classrooms.Count, result.Count());
                 Assert.Equal(FakeEntityGenerator.Classrooms.Sum(p => p.Students.Count), result.Sum(p => p.Students.Count));
@@ -275,15 +168,32 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SelectList_MatchesPredicate_WithoutNavigationProperty_ShouldPass(Provider provider)
+        public async Task SelectListAsync_WithString_NavigationProperty_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("SelectList_MatchesPredicate_WithoutNavigationProperty_ShouldPass", provider);
+            var options = OptionsWithData("SelectListAsync_WithString_NavigationProperty_ShouldPass", provider);
+            using (var context = new TestDbContext(options))
+            {
+                var repository = new Repository<Classroom>(context);
+
+                var result = await repository.SelectListAsync($"{nameof(Classroom.Students)}");
+
+                Assert.Equal(FakeEntityGenerator.Classrooms.Count, result.Count());
+                Assert.Equal(FakeEntityGenerator.Classrooms.Sum(p => p.Students.Count), result.Sum(p => p.Students.Count));
+            }
+        }
+
+        [Theory]
+        [InlineData(Provider.InMemory)]
+        [InlineData(Provider.Sqlite)]
+        public async Task SelectListAsync_MatchesPredicate_WithoutNavigationProperty_ShouldPass(Provider provider)
+        {
+            var options = OptionsWithData("SelectListAsync_MatchesPredicate_WithoutNavigationProperty_ShouldPass", provider);
             var entity = FakeEntityGenerator.Classrooms.First();
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                var result = repository.SelectList(prop => prop.Code == entity.Code);
+                var result = await repository.SelectListAsync(prop => prop.Code == entity.Code);
 
                 Assert.Single(result);
                 Assert.Empty(result.Single().Students);
@@ -293,15 +203,15 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SelectList_MatchesPredicate_WithLambda_NavigationProperty_ShouldPass(Provider provider)
+        public async Task SelectListAsync_MatchesPredicate_WithLambda_NavigationProperty_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("SelectList_MatchesPredicate_WithLambda_NavigationProperty_ShouldPass", provider);
+            var options = OptionsWithData("SelectListAsync_MatchesPredicate_WithLambda_NavigationProperty_ShouldPass", provider);
             var entity = FakeEntityGenerator.Classrooms.First();
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                var result = repository.SelectList(prop => prop.Code == entity.Code, prop => prop.Students);
+                var result = await repository.SelectListAsync(prop => prop.Code == entity.Code, prop => prop.Students);
 
                 Assert.Single(result);
                 Assert.NotEmpty(result.Single().Students);
@@ -312,15 +222,15 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SelectList_MatchesPredicate_WithString_NavigationProperty_ShouldPass(Provider provider)
+        public async Task SelectListAsync_MatchesPredicate_WithString_NavigationProperty_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("SelectList_MatchesPredicate_WithString_NavigationProperty_ShouldPass", provider);
+            var options = OptionsWithData("SelectListAsync_MatchesPredicate_WithString_NavigationProperty_ShouldPass", provider);
             var entity = FakeEntityGenerator.Classrooms.First();
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                var result = repository.SelectList(prop => prop.Code == entity.Code, $"{nameof(Classroom.Students)}");
+                var result = await repository.SelectListAsync(prop => prop.Code == entity.Code, $"{nameof(Classroom.Students)}");
 
                 Assert.Single(result);
                 Assert.NotEmpty(result.Single().Students);
@@ -331,15 +241,15 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Select_MatchesPredicate_WithoutNavigationProperty_ShouldPass(Provider provider)
+        public async Task SelectAsync_MatchesPredicate_WithoutNavigationProperty_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("Select_MatchesPredicate_WithoutNavigationProperty_ShouldPass", provider);
+            var options = OptionsWithData("SelectAsync_MatchesPredicate_WithoutNavigationProperty_ShouldPass", provider);
             var entity = FakeEntityGenerator.Classrooms.First();
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                var result = repository.Select(prop => prop.Code == entity.Code);
+                var result = await repository.SelectAsync(prop => prop.Code == entity.Code);
 
                 Assert.NotNull(result);
                 Assert.Empty(result.Students);
@@ -349,15 +259,15 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Select_MatchesPredicate_WithLambda_NavigationProperty_ShouldPass(Provider provider)
+        public async Task SelectAsync_MatchesPredicate_WithLambda_NavigationProperty_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("Select_MatchesPredicate_WithLambda_NavigationProperty_ShouldPass", provider);
+            var options = OptionsWithData("SelectAsync_MatchesPredicate_WithLambda_NavigationProperty_ShouldPass", provider);
             var entity = FakeEntityGenerator.Classrooms.First();
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                var result = repository.Select(prop => prop.Code == entity.Code, prop => prop.Students);
+                var result = await repository.SelectAsync(prop => prop.Code == entity.Code, prop => prop.Students);
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result.Students);
@@ -368,15 +278,15 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Select_MatchesPredicate_WithString_NavigationProperty_ShouldPass(Provider provider)
+        public async Task SelectAsync_MatchesPredicate_WithString_NavigationProperty_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("Select_MatchesPredicate_WithString_NavigationProperty_ShouldPass", provider);
+            var options = OptionsWithData("SelectAsync_MatchesPredicate_WithString_NavigationProperty_ShouldPass", provider);
             var entity = FakeEntityGenerator.Classrooms.First();
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                var result = repository.Select(prop => prop.Code == entity.Code, $"{nameof(Classroom.Students)}");
+                var result = await repository.SelectAsync(prop => prop.Code == entity.Code, $"{nameof(Classroom.Students)}");
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result.Students);
@@ -387,15 +297,15 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Select_MatchesPrimaryKey_SafetyCheck(Provider provider)
+        public async Task SelectAsync_MatchesPrimaryKey_SafetyCheck(Provider provider)
         {
-            var options = Options("Select_MatchesPrimaryKey_SafetyCheck", provider);
+            var options = Options("SelectAsync_MatchesPrimaryKey_SafetyCheck", provider);
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Select(keyValue: null));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => repository.SelectAsync(keyValue: null));
             }
         }
 
@@ -404,14 +314,14 @@ namespace Fathcore.Tests.EntityFramework
         [InlineData(Provider.InMemory, false)]
         [InlineData(Provider.Sqlite, true)]
         [InlineData(Provider.Sqlite, false)]
-        public void Select_MatchesPrimaryKey_ShouldPass(Provider provider, bool asTracking)
+        public async Task SelectAsync_MatchesPrimaryKey_ShouldPass(Provider provider, bool asTracking)
         {
-            var options = OptionsWithData("Select_MatchesPrimaryKey_ShouldPass", provider);
+            var options = OptionsWithData("SelectAsync_MatchesPrimaryKey_ShouldPass", provider);
             Classroom entity;
 
             using (var context = new TestDbContext(options))
             {
-                entity = context.Set<Classroom>().First();
+                entity = await context.Set<Classroom>().FirstAsync();
             }
 
             using (var context = new TestDbContext(options))
@@ -420,7 +330,7 @@ namespace Fathcore.Tests.EntityFramework
                 if (!asTracking)
                     repository.AsNoTracking();
 
-                var result = repository.Select(entity.Id);
+                var result = await repository.SelectAsync(entity.Id);
 
                 Assert.NotNull(result);
                 Assert.Empty(result.Students);
@@ -434,38 +344,38 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Insert_Entity_SafetyCheck(Provider provider)
+        public async Task InsertAsync_Entity_SafetyCheck(Provider provider)
         {
-            var options = Options("Insert_Entity_SafetyCheck", provider);
+            var options = Options("InsertAsync_Entity_SafetyCheck", provider);
             Classroom entity = default;
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Insert(entity));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => repository.InsertAsync(entity));
             }
         }
 
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Insert_Entity_ShouldPass(Provider provider)
+        public async Task InsertAsync_Entity_ShouldPass(Provider provider)
         {
-            var options = Options("Insert_Entity_ShouldPass", provider);
+            var options = Options("InsertAsync_Entity_ShouldPass", provider);
             Classroom entity = FakeEntityGenerator.Classrooms.First();
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                repository.Insert(entity);
-                context.SaveChanges();
+                await repository.InsertAsync(entity);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                var result = repository.Select(entity.Id);
+                var result = await repository.SelectAsync(entity.Id);
 
                 Assert.NotNull(result);
             }
@@ -474,38 +384,38 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Insert_Entities_SafetyCheck(Provider provider)
+        public async Task InsertAsync_Entities_SafetyCheck(Provider provider)
         {
-            var options = Options("Insert_Entities_SafetyCheck", provider);
+            var options = Options("InsertAsync_Entities_SafetyCheck", provider);
             IEnumerable<Classroom> entities = default;
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Insert(entities));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => repository.InsertAsync(entities));
             }
         }
 
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Insert_Entities_ShouldPass(Provider provider)
+        public async Task InsertAsync_Entities_ShouldPass(Provider provider)
         {
-            var options = Options("Insert_Entities_ShouldPass", provider);
+            var options = Options("InsertAsync_Entities_ShouldPass", provider);
             IEnumerable<Classroom> entities = FakeEntityGenerator.Classrooms;
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                repository.Insert(entities);
-                context.SaveChanges();
+                await repository.InsertAsync(entities);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                var result = repository.SelectList();
+                var result = await repository.SelectListAsync();
 
                 Assert.NotEmpty(result);
             }
@@ -514,25 +424,25 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Update_Entity_SafetyCheck(Provider provider)
+        public async Task UpdateAsync_Entity_SafetyCheck(Provider provider)
         {
-            var options = OptionsWithData("Update_Entity_SafetyCheck", provider);
+            var options = OptionsWithData("UpdateAsync_Entity_SafetyCheck", provider);
             Classroom entity = default;
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Update(entity));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => repository.UpdateAsync(entity));
             }
         }
 
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Update_Entity_ShouldPass(Provider provider)
+        public async Task UpdateAsync_Entity_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("Update_Entity_ShouldPass", provider);
+            var options = OptionsWithData("UpdateAsync_Entity_ShouldPass", provider);
             Classroom entity;
             string modified = "Modified";
 
@@ -545,13 +455,13 @@ namespace Fathcore.Tests.EntityFramework
             {
                 var repository = new Repository<Classroom>(context);
                 entity.Code = modified;
-                repository.Update(entity);
-                context.SaveChanges();
+                await repository.UpdateAsync(entity);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().First();
+                var result = await context.Set<Classroom>().FirstAsync();
 
                 Assert.Equal(modified, result.Code);
             }
@@ -560,31 +470,31 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Update_Entities_SafetyCheck(Provider provider)
+        public async Task UpdateAsync_Entities_SafetyCheck(Provider provider)
         {
-            var options = OptionsWithData("Update_Entities_SafetyCheck", provider);
+            var options = OptionsWithData("UpdateAsync_Entities_SafetyCheck", provider);
             IEnumerable<Classroom> entities = default;
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Update(entities));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => repository.UpdateAsync(entities));
             }
         }
 
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Update_Entities_ShouldPass(Provider provider)
+        public async Task UpdateAsync_Entities_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("Update_Entities_ShouldPass", provider);
+            var options = OptionsWithData("UpdateAsync_Entities_ShouldPass", provider);
             IEnumerable<Classroom> entities;
             string modified = "Modified";
 
             using (var context = new TestDbContext(options))
             {
-                entities = context.Set<Classroom>().ToList();
+                entities = await context.Set<Classroom>().ToListAsync();
             }
 
             using (var context = new TestDbContext(options))
@@ -594,13 +504,13 @@ namespace Fathcore.Tests.EntityFramework
                 {
                     entity.Code = modified;
                 }
-                repository.Update(entities);
-                context.SaveChanges();
+                await repository.UpdateAsync(entities);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().ToList();
+                var result = await context.Set<Classroom>().ToListAsync();
 
                 Assert.All(result, p => Assert.Equal(modified, p.Code));
             }
@@ -609,42 +519,42 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Delete_Entity_SafetyCheck(Provider provider)
+        public async Task DeleteAsync_Entity_SafetyCheck(Provider provider)
         {
-            var options = OptionsWithData("Delete_Entity_SafetyCheck", provider);
+            var options = OptionsWithData("DeleteAsync_Entity_SafetyCheck", provider);
             Classroom entity = default;
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Delete(entity));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => repository.DeleteAsync(entity));
             }
         }
 
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Delete_Entity_ShouldPass(Provider provider)
+        public async Task DeleteAsync_Entity_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("Delete_Entity_ShouldPass", provider);
+            var options = OptionsWithData("DeleteAsync_Entity_ShouldPass", provider);
             Classroom entity;
 
             using (var context = new TestDbContext(options))
             {
-                entity = context.Set<Classroom>().First();
+                entity = await context.Set<Classroom>().FirstAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                repository.Delete(entity);
-                context.SaveChanges();
+                await repository.DeleteAsync(entity);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().Find(entity.Id);
+                var result = await context.Set<Classroom>().FindAsync(entity.Id);
 
                 Assert.Null(result);
             }
@@ -653,42 +563,42 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Delete_Entity_ByPrimaryKey_SafetyCheck(Provider provider)
+        public async Task DeleteAsync_Entity_ByPrimaryKey_SafetyCheck(Provider provider)
         {
-            var options = OptionsWithData("Delete_Entity_ByPrimaryKey_SafetyCheck", provider);
+            var options = OptionsWithData("DeleteAsync_Entity_ByPrimaryKey_SafetyCheck", provider);
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Delete(keyValue: null));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => repository.DeleteAsync(keyValue: null));
             }
         }
 
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Delete_Entity_ByPrimaryKey_ShouldPass(Provider provider)
+        public async Task DeleteAsync_Entity_ByPrimaryKey_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("Delete_Entity_ByPrimaryKey_ShouldPass", provider);
+            var options = OptionsWithData("DeleteAsync_Entity_ByPrimaryKey_ShouldPass", provider);
             int keyValue;
 
             using (var context = new TestDbContext(options))
             {
-                var entity = context.Set<Classroom>().First();
+                var entity = await context.Set<Classroom>().FirstAsync();
                 keyValue = entity.Id;
             }
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                repository.Delete(keyValue);
-                context.SaveChanges();
+                await repository.DeleteAsync(keyValue);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().Find(keyValue);
+                var result = await context.Set<Classroom>().FindAsync(keyValue);
 
                 Assert.Null(result);
             }
@@ -697,42 +607,42 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Delete_Entities_SafetyCheck(Provider provider)
+        public async Task DeleteAsync_Entities_SafetyCheck(Provider provider)
         {
-            var options = OptionsWithData("Delete_Entities_SafetyCheck", provider);
+            var options = OptionsWithData("DeleteAsync_Entities_SafetyCheck", provider);
             IEnumerable<Classroom> entities = default;
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Delete(entities));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => repository.DeleteAsync(entities));
             }
         }
 
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void Delete_Entities_ShouldPass(Provider provider)
+        public async Task DeleteAsync_Entities_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("Delete_Entities_ShouldPass", provider);
+            var options = OptionsWithData("DeleteAsync_Entities_ShouldPass", provider);
             IEnumerable<Classroom> entities = default;
 
             using (var context = new TestDbContext(options))
             {
-                entities = context.Set<Classroom>().ToList();
+                entities = await context.Set<Classroom>().ToListAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                repository.Delete(entities);
-                context.SaveChanges();
+                await repository.DeleteAsync(entities);
+                await context.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().ToList();
+                var result = await context.Set<Classroom>().ToListAsync();
 
                 Assert.Empty(result);
             }
@@ -741,23 +651,23 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SaveChanges_AsTracking_ShouldPass(Provider provider)
+        public async Task SaveChangesAsync_AsTracking_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("SaveChanges_AsTracking_ShouldPass", provider);
+            var options = OptionsWithData("SaveChangesAsync_AsTracking_ShouldPass", provider);
             Classroom entity;
             string modified = "Modified";
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                entity = context.Set<Classroom>().First();
+                entity = await context.Set<Classroom>().FirstAsync();
                 entity.Code = modified;
-                repository.SaveChanges();
+                await repository.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().First();
+                var result = await context.Set<Classroom>().FirstAsync();
 
                 Assert.Equal(modified, result.Code);
             }
@@ -766,9 +676,9 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SaveChanges_AsNoTracking_ShouldPass(Provider provider)
+        public async Task SaveChangesAsync_AsNoTracking_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("SaveChanges_AsNoTracking_ShouldPass", provider);
+            var options = OptionsWithData("SaveChangesAsync_AsNoTracking_ShouldPass", provider);
             Classroom entity;
             string modified = "Modified";
 
@@ -776,15 +686,15 @@ namespace Fathcore.Tests.EntityFramework
             {
                 var repository = new Repository<Classroom>(context);
                 repository.AsNoTracking();
-                entity = context.Set<Classroom>().First();
+                entity = await context.Set<Classroom>().FirstAsync();
                 entity.Code = modified;
-                repository.Update(entity);
-                repository.SaveChanges();
+                await repository.UpdateAsync(entity);
+                await repository.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().First();
+                var result = await context.Set<Classroom>().FirstAsync();
 
                 Assert.Equal(modified, result.Code);
             }
@@ -793,16 +703,16 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SaveChanges_AsNoTracking_Disconnected_ShouldPass(Provider provider)
+        public async Task SaveChangesAsync_AsNoTracking_Disconnected_ShouldPass(Provider provider)
         {
-            var options = OptionsWithData("SaveChanges_AsNoTracking_Disconnected_ShouldPass", provider);
+            var options = OptionsWithData("SaveChangesAsync_AsNoTracking_Disconnected_ShouldPass", provider);
             Classroom entity;
             string modified = "Modified";
 
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                entity = context.Set<Classroom>().First();
+                entity = await context.Set<Classroom>().FirstAsync();
             }
 
             using (var context = new TestDbContext(options))
@@ -810,13 +720,13 @@ namespace Fathcore.Tests.EntityFramework
                 var repository = new Repository<Classroom>(context);
                 repository.AsNoTracking();
                 entity.Code = modified;
-                repository.Update(entity);
-                repository.SaveChanges();
+                await repository.UpdateAsync(entity);
+                await repository.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().First();
+                var result = await context.Set<Classroom>().FirstAsync();
 
                 Assert.Equal(modified, result.Code);
             }
@@ -825,9 +735,9 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SaveChanges_AsNoTracking_ShouldNotSaved(Provider provider)
+        public async Task SaveChangesAsync_AsNoTracking_ShouldNotSaved(Provider provider)
         {
-            var options = OptionsWithData("SaveChanges_AsNoTracking_ShouldNotSaved", provider);
+            var options = OptionsWithData("SaveChangesAsync_AsNoTracking_ShouldNotSaved", provider);
             Classroom entity;
             string modified = "Modified";
 
@@ -835,14 +745,14 @@ namespace Fathcore.Tests.EntityFramework
             {
                 var repository = new Repository<Classroom>(context);
                 repository.AsNoTracking();
-                entity = context.Set<Classroom>().First();
+                entity = await context.Set<Classroom>().FirstAsync();
                 entity.Code = modified;
-                repository.SaveChanges();
+                await repository.SaveChangesAsync();
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().First();
+                var result = await context.Set<Classroom>().FirstAsync();
 
                 Assert.NotEqual(modified, result.Code);
             }
@@ -851,9 +761,9 @@ namespace Fathcore.Tests.EntityFramework
         [Theory]
         //[InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
-        public void SaveChanges_ShouldRollbackEntityChanges(Provider provider)
+        public async Task SaveChangesAsync_ShouldRollbackEntityChanges(Provider provider)
         {
-            var options = OptionsWithData("SaveChanges_ShouldRollbackEntityChanges", provider);
+            var options = OptionsWithData("SaveChangesAsync_ShouldRollbackEntityChanges", provider);
             Classroom entity;
             string modifiedLinq = "Modified By Linq";
             string modifiedSqlCommand = "Modified By SqlCommand";
@@ -861,18 +771,18 @@ namespace Fathcore.Tests.EntityFramework
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                entity = context.Set<Classroom>().First();
+                entity = await context.Set<Classroom>().FirstAsync();
                 entity.Code = modifiedLinq;
 
                 // simulate a concurrency conflict
                 context.ExecuteSqlCommand("UPDATE [Classroom] SET [Code] = {0} WHERE Id = {1}", false, null, modifiedSqlCommand, entity.Id);
 
-                Assert.Throws<DbUpdateConcurrencyException>(() => repository.SaveChanges());
+                await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => repository.SaveChangesAsync());
             }
 
             using (var context = new TestDbContext(options))
             {
-                var result = context.Set<Classroom>().First();
+                var result = await context.Set<Classroom>().FirstAsync();
 
                 Assert.NotEqual(modifiedLinq, result.Code);
                 Assert.Equal(modifiedSqlCommand, result.Code);

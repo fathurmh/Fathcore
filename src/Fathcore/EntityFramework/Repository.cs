@@ -340,8 +340,8 @@ namespace Fathcore.EntityFramework
 
                 if (TrackingBehavior == QueryTrackingBehavior.NoTracking)
                 {
-                    var currentEntries = DbContext.ChangeTracker.Entries<TEntity>().ToList();
-                    DbContext.DetachRange(currentEntries.Select(p => p.Entity));
+                    var currentEntries = DbContext.GetCurrentEntries();
+                    DbContext.DetachRange(currentEntries.Select(p => (TEntity)p.Entity));
                 }
 
                 return count;
