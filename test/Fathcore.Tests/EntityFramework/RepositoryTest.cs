@@ -1,16 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using Fathcore.EntityFramework;
 using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.Tests.Fakes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Xunit;
 
 namespace Fathcore.Tests.EntityFramework
 {
     public class RepositoryTest : TestBase
     {
+        public IHttpContextAccessor HttpContextAccessor
+        {
+            get
+            {
+                var mock = new Mock<IHttpContextAccessor>();
+                var context = new DefaultHttpContext()
+                {
+                    User = new GenericPrincipal(new GenericIdentity(DefaultIdentity), null)
+                };
+
+                mock.Setup(p => p.HttpContext).Returns(context);
+                return mock.Object;
+            }
+        }
+
         [Theory]
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]

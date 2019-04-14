@@ -1,33 +1,28 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Security.Principal;
 using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.Infrastructure;
 using Fathcore.Tests.Fakes;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
-using Moq;
 
+[assembly: Xunit.CollectionBehavior(DisableTestParallelization = false)]
 namespace Fathcore.Tests
 {
     public class TestBase : IDisposable
     {
-        private static readonly object s_padlock = new object();
-#pragma warning disable CS0618 // Type or member is obsolete
-        private static readonly ILoggerFactory s_myLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) }).AddDebug().AddConsole();
-#pragma warning restore CS0618 // Type or member is obsolete
-
         public const string DefaultIdentity = "TestIdentity";
 
-        private IDictionary<string, DbContextOptions> _dbContextOptions = null;
-        private SqliteConnection _connection = null;
-        private IHttpContextAccessor _httpContextAccessor = null;
-        private IServiceCollection _serviceDescriptors = null;
+        private static readonly object s_padlock;
+        private static readonly ILoggerFactory s_myLoggerFactory;
+
+        private IDictionary<string, DbContextOptions> _dbContextOptions;
+        private SqliteConnection _connection;
+        private IServiceCollection _serviceDescriptors;
 
         private SqliteConnection Connection
         {
@@ -61,29 +56,6 @@ namespace Fathcore.Tests
             }
         }
 
-        public IHttpContextAccessor HttpContextAccessor
-        {
-            get
-            {
-                lock (s_padlock)
-                {
-                    if (_httpContextAccessor == null)
-                    {
-                        var mock = new Mock<IHttpContextAccessor>();
-                        var context = new DefaultHttpContext()
-                        {
-                            User = new GenericPrincipal(new GenericIdentity(DefaultIdentity), null)
-                        };
-
-                        mock.Setup(p => p.HttpContext).Returns(context);
-                        _httpContextAccessor = mock.Object;
-                    }
-
-                    return _httpContextAccessor;
-                }
-            }
-        }
-
         public IServiceCollection ServiceDescriptors
         {
             get
@@ -100,9 +72,20 @@ namespace Fathcore.Tests
             }
         }
 
-        static TestBase() { }
+        static TestBase()
+        {
+            s_padlock = new object();
+#pragma warning disable CS0618 // Type or member is obsolete
+            s_myLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) }).AddDebug().AddConsole();
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
 
-        public TestBase() { }
+        public TestBase()
+        {
+            _dbContextOptions = null;
+            _connection = null;
+            _serviceDescriptors = null;
+        }
 
         public DbContextOptions Options(string name, Provider provider = Provider.InMemory)
         {
@@ -158,7 +141,7 @@ namespace Fathcore.Tests
         public DbContextOptions OptionsWithData(string name, Provider provider = Provider.InMemory)
         {
             var options = Options(name, provider);
-            var auditHandler = new AuditHandler(HttpContextAccessor);
+            var auditHandler = new AuditHandler(null);
 
             using (var context = new TestDbContext(options))
             {
@@ -183,6 +166,9 @@ namespace Fathcore.Tests
             ServiceDescriptors.Clear();
             Engine.Create().Populate(ServiceDescriptors);
             BaseSingleton.AllSingletons.Clear();
+            _dbContextOptions = null;
+            _connection = null;
+            _serviceDescriptors = null;
         }
     }
 

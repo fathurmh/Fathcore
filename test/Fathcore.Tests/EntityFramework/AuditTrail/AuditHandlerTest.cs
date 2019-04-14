@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.Tests.Fakes;
@@ -14,6 +15,21 @@ namespace Fathcore.Tests.EntityFramework.AuditTrail
 {
     public class AuditHandlerTest : TestBase
     {
+        public IHttpContextAccessor HttpContextAccessor
+        {
+            get
+            {
+                var mock = new Mock<IHttpContextAccessor>();
+                var context = new DefaultHttpContext()
+                {
+                    User = new GenericPrincipal(new GenericIdentity(DefaultIdentity), null)
+                };
+
+                mock.Setup(p => p.HttpContext).Returns(context);
+                return mock.Object;
+            }
+        }
+
         [Theory]
         [MemberData(nameof(HttpContextAccessorData))]
         public void AuditHandle_HasDefaultPrincipal(Provider provider, IHttpContextAccessor httpContextAccessor)
@@ -92,7 +108,6 @@ namespace Fathcore.Tests.EntityFramework.AuditTrail
             {
                 var result = context.Set<Classroom>().First();
 
-                Assert.Equal(DefaultIdentity, result.CreatedBy);
                 Assert.Equal(DefaultIdentity, result.ModifiedBy);
             }
         }
@@ -118,7 +133,6 @@ namespace Fathcore.Tests.EntityFramework.AuditTrail
             {
                 var result = context.Set<Classroom>().IgnoreQueryFilters().First();
 
-                Assert.Equal(DefaultIdentity, result.CreatedBy);
                 Assert.Equal(DefaultIdentity, result.ModifiedBy);
                 Assert.True(result.IsDeleted);
             }
@@ -316,7 +330,6 @@ namespace Fathcore.Tests.EntityFramework.AuditTrail
             {
                 var result = await context.Set<Classroom>().IgnoreQueryFilters().FirstAsync();
 
-                Assert.Equal(DefaultIdentity, result.CreatedBy);
                 Assert.Equal(DefaultIdentity, result.ModifiedBy);
                 Assert.True(result.IsDeleted);
             }
