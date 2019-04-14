@@ -24,7 +24,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
     <NoWarn>$(NoWarn);CS1591;NU5125</NoWarn>
     <DebugType>portable</DebugType>

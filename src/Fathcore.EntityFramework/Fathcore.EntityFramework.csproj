@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Fathcore.EntityFramework</AssemblyName>
+    <RootNamespace>Fathcore.EntityFramework</RootNamespace>
+    <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" />
+    <ProjectReference Include="..\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" />
+    <ProjectReference Include="..\Fathcore.Security\Fathcore.Security.csproj" />
+  </ItemGroup>
+
+</Project>

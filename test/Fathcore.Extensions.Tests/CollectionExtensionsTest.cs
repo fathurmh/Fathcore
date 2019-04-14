@@ -20,8 +20,8 @@ namespace Fathcore.Extensions.Tests
         }
 
         [Theory]
-        [InlineData(50)]
-        [InlineData(100)]
+        [InlineData(10)]
+        [InlineData(20)]
         public async Task ForEachAsync_Benchmarks(int multiplier)
         {
             var numbers = new[] { 1, 5, 3, 2, 4 };
@@ -37,8 +37,8 @@ namespace Fathcore.Extensions.Tests
         }
 
         [Theory]
-        [InlineData(50)]
-        [InlineData(100)]
+        [InlineData(10)]
+        [InlineData(20)]
         public async Task ForEachAsync_Benchmarks_2(int multiplier)
         {
             var numbers = new[] { 1, 5, 3, 2, 4 };
@@ -62,8 +62,8 @@ namespace Fathcore.Extensions.Tests
         }
 
         [Theory]
-        [InlineData(50)]
-        [InlineData(100)]
+        [InlineData(10)]
+        [InlineData(20)]
         public void ForEachAsync_Benchmarks_3(int multiplier)
         {
             var numbers = new[] { 1, 5, 3, 2, 4 };

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyName>Fathcore</AssemblyName>
     <RootNamespace>Fathcore</RootNamespace>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
@@ -15,13 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" />
   </ItemGroup>
-  
-  <Target Name="IncludeP2PAssets">
-    <ItemGroup>
-      <BuildOutputInPackage Include="$(OutputPath)\Fathcore.Extensions.dll" />
-    </ItemGroup>
-  </Target>
 
 </Project>
