@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Fathcore.Infrastructure.Engines;
+using Fathcore.Infrastructure.TypeFinders;
 using Xunit;
 
 namespace Fathcore.Infrastructure.Tests
@@ -44,7 +46,9 @@ namespace Fathcore.Infrastructure.Tests
 
         public void Dispose()
         {
+            Singleton<IEngine>.Instance = null;
             BaseSingleton.AllSingletons.Clear();
+            EngineContext.Create();
         }
     }
 }

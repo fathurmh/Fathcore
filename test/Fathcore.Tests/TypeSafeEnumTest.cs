@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Fathcore.Tests
 {
-    public class TypeSafeEnumTest : TestBase
+    public class TypeSafeEnumTest
     {
         [Theory]
         [MemberData(nameof(Data), parameters: new object[] { 1, 3 })]

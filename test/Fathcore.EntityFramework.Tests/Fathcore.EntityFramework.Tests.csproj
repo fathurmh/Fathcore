@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>Fathcore.EntityFramework.Tests</AssemblyName>
+    <RootNamespace>Fathcore.EntityFramework.Tests</RootNamespace>
+    <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Fathcore.EntityFramework\Fathcore.EntityFramework.csproj" />
+  </ItemGroup>
+
+</Project>

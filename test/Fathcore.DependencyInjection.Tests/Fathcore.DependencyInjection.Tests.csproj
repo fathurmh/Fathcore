@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>Fathcore.DependencyInjection.Tests</AssemblyName>
+    <RootNamespace>Fathcore.DependencyInjection.Tests</RootNamespace>
+    <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Fathcore.DependencyInjection\Fathcore.DependencyInjection.csproj" />
+  </ItemGroup>
+
+</Project>

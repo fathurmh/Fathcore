@@ -68,6 +68,21 @@ namespace Fathcore.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData(" ", "")]
+        [InlineData("abc==", "abc==")]
+        [InlineData(" abc== ", "abc==")]
+        [InlineData("ab c=", "abc=")]
+        [InlineData(" abc= ", "abc=")]
+        public void RemoveWhitespace_Should_Pass(string source, string expected)
+        {
+            var result = source.RemoveWhitespace();
+
+            Assert.Equal(expected, result);
+        }
+
         public static IEnumerable<object[]> EmailData()
         {
             var data = new List<object[]>

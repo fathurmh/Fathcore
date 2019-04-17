@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>Fathcore.Security.Tests</AssemblyName>
+    <RootNamespace>Fathcore.Security.Tests</RootNamespace>
+    <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Fathcore.Security\Fathcore.Security.csproj" />
+  </ItemGroup>
+
+</Project>

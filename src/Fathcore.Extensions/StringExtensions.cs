@@ -97,5 +97,18 @@ namespace Fathcore.Extensions
 
             return Enum.TryParse(source, true, out T result) ? result : defaultValue;
         }
+
+        /// <summary>
+        /// Remove whitespace.
+        /// </summary>
+        /// <param name="source">String value being whitespace removed.</param>
+        /// <returns></returns>
+        public static string RemoveWhitespace(this string source)
+        {
+            if (string.IsNullOrEmpty(source))
+                return source;
+
+            return Regex.Replace(source, @"\s+", string.Empty);
+        }
     }
 }

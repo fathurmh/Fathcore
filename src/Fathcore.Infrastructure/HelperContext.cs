@@ -1,4 +1,6 @@
-﻿namespace Fathcore.Infrastructure
+﻿using Fathcore.Infrastructure.Helpers;
+
+namespace Fathcore.Infrastructure
 {
     /// <summary>
     /// Provides access to the singleton instance of the helper.
