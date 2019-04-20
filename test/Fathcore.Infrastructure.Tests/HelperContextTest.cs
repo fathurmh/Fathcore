@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using Fathcore.Infrastructure.Engines;
 using Fathcore.Infrastructure.Helpers;
 using Fathcore.Infrastructure.TypeFinders;
 using Xunit;
 
 namespace Fathcore.Infrastructure.Tests
 {
-    public class HelperContextTest
+    public class HelperContextTest : IDisposable
     {
         [Fact]
         public void Helper_IsCreated_ByDefault()
@@ -42,6 +43,14 @@ namespace Fathcore.Infrastructure.Tests
             HelperContext.Replace(newHelper);
 
             Assert.Same(newHelper, HelperContext.Current);
+        }
+
+        public void Dispose()
+        {
+            Singleton<IEngine>.Instance = null;
+            Singleton<IHelper>.Instance = null;
+            EngineContext.Create();
+            _ = HelperContext.Current;
         }
     }
 }

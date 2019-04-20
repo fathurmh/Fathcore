@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.EntityFramework.Tests.Fakes;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -197,46 +198,58 @@ namespace Fathcore.EntityFramework.Tests
         }
 
         [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-        public void SaveChanges_ShouldSave_Entity(Provider provider)
+        [InlineData(Provider.InMemory, true, TestHelper.DefaultIdentity)]
+        [InlineData(Provider.InMemory, false, "")]
+        [InlineData(Provider.Sqlite, true, TestHelper.DefaultIdentity)]
+        [InlineData(Provider.Sqlite, false, "")]
+        public void SaveChanges_ShouldSave_Entity(Provider provider, bool injectAuditHandler, string expectedCreatedBy)
         {
-            var options = TestHelper.Options("SaveChanges_ShouldSave_Entity", provider);
+            var options = TestHelper.Options($"SaveChanges_ShouldSave_Entity_{expectedCreatedBy}", provider);
+            var auditHandler = new AuditHandler(TestHelper.HttpContextAccessor);
 
             var entities = FakeEntityGenerator.Classrooms;
 
-            using (var context = new TestDbContext(options))
+            using (var context = injectAuditHandler ? new TestDbContext(options, auditHandler) : new TestDbContext(options))
             {
                 context.AddRange(entities);
                 context.SaveChanges();
             }
 
-            using (var context = new TestDbContext(options))
+            using (var context = injectAuditHandler ? new TestDbContext(options, auditHandler) : new TestDbContext(options))
             {
                 var result = context.Set<Classroom>().ToList();
                 Assert.NotEmpty(result);
+
+                if (injectAuditHandler)
+                    Assert.All(result, p => Assert.Equal(expectedCreatedBy, p.CreatedBy));
             }
         }
 
         [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-        public async Task SaveChangesAsync_ShouldSave_Entity(Provider provider)
+        [InlineData(Provider.InMemory, true, TestHelper.DefaultIdentity)]
+        [InlineData(Provider.InMemory, false, "")]
+        [InlineData(Provider.Sqlite, true, TestHelper.DefaultIdentity)]
+        [InlineData(Provider.Sqlite, false, "")]
+        public async Task SaveChangesAsync_ShouldSave_Entity(Provider provider, bool injectAuditHandler, string expectedCreatedBy)
         {
-            var options = TestHelper.Options("SaveChangesAsync_ShouldSave_Entity", provider);
+            var options = TestHelper.Options($"SaveChangesAsync_ShouldSave_Entity_{expectedCreatedBy}", provider);
+            var auditHandler = new AuditHandler(TestHelper.HttpContextAccessor);
 
             var entities = FakeEntityGenerator.Classrooms;
 
-            using (var context = new TestDbContext(options))
+            using (var context = injectAuditHandler ? new TestDbContext(options, auditHandler) : new TestDbContext(options))
             {
                 await context.AddRangeAsync(entities);
                 await context.SaveChangesAsync();
             }
 
-            using (var context = new TestDbContext(options))
+            using (var context = injectAuditHandler ? new TestDbContext(options, auditHandler) : new TestDbContext(options))
             {
                 var result = await context.Set<Classroom>().ToListAsync();
                 Assert.NotEmpty(result);
+
+                if (injectAuditHandler)
+                    Assert.All(result, p => Assert.Equal(expectedCreatedBy, p.CreatedBy));
             }
         }
     }

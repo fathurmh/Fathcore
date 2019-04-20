@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Fathcore.Infrastructure.Engines;
+using Fathcore.Infrastructure.Helpers;
 using Fathcore.Infrastructure.TypeFinders;
 using Xunit;
 
@@ -33,10 +34,9 @@ namespace Fathcore.Infrastructure.Tests
         public void Engine_ShouldReplace_AnInstance()
         {
             var typeFinder = new TypeFinder();
-            var engine = EngineContext.Create();
+            IEngine engine = EngineContext.Create();
             var newEngine = (IEngine)Activator.CreateInstance(typeFinder.FindClassesOfType<IEngine>().First());
 
-            Assert.Same(engine, EngineContext.Current);
             Assert.NotSame(newEngine, EngineContext.Current);
 
             EngineContext.Replace(newEngine);
@@ -47,8 +47,9 @@ namespace Fathcore.Infrastructure.Tests
         public void Dispose()
         {
             Singleton<IEngine>.Instance = null;
-            BaseSingleton.AllSingletons.Clear();
+            Singleton<IHelper>.Instance = null;
             EngineContext.Create();
+            _ = HelperContext.Current;
         }
     }
 }
