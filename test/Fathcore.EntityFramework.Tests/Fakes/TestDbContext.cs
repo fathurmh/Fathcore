@@ -1,4 +1,5 @@
 ﻿using System;
+using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.EntityFramework.Builders;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,8 @@ namespace Fathcore.EntityFramework.Tests.Fakes
 {
     internal class TestDbContext : BaseDbContext, IDbContext
     {
-        public TestDbContext(DbContextOptions options) : base(options)
+        public TestDbContext(DbContextOptions options, IAuditHandler auditHandler = default)
+            : base(options, auditHandler)
         {
         }
 

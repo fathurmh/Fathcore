@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" />
-    <ProjectReference Include="..\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" />
     <ProjectReference Include="..\Fathcore.Security\Fathcore.Security.csproj" />
   </ItemGroup>
 

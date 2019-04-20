@@ -48,6 +48,7 @@ namespace Fathcore.Extensions.DependencyInjection
             if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IAuditHandler)}.");
 
+            services.AddHttpContextAccessor();
             services.AddScoped(implementationType);
             services.AddScoped(serviceType, provider => provider.GetRequiredService(implementationType));
 
@@ -92,6 +93,7 @@ namespace Fathcore.Extensions.DependencyInjection
             if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IAuditHandler)}.");
 
+            services.AddHttpContextAccessor();
             services.TryAddScoped(implementationType);
             services.TryAddScoped(serviceType, provider => provider.GetRequiredService(implementationType));
 

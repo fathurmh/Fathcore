@@ -5,6 +5,7 @@
     <AssemblyName>Fathcore</AssemblyName>
     <RootNamespace>Fathcore</RootNamespace>
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,11 +13,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fathcore.DependencyInjection\Fathcore.DependencyInjection.csproj" />
-    <ProjectReference Include="..\Fathcore.EntityFramework\Fathcore.EntityFramework.csproj" />
-    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" />
-    <ProjectReference Include="..\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" />
-    <ProjectReference Include="..\Fathcore.Security\Fathcore.Security.csproj" />
+    <ProjectReference Include="..\Fathcore.DependencyInjection\Fathcore.DependencyInjection.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Fathcore.EntityFramework\Fathcore.EntityFramework.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Fathcore.Security\Fathcore.Security.csproj" PrivateAssets="All" />
   </ItemGroup>
+
+  <Target Name="IncludeP2PAssets">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)Fathcore.DependencyInjection.dll" />
+      <BuildOutputInPackage Include="$(OutputPath)Fathcore.EntityFramework.dll" />
+      <BuildOutputInPackage Include="$(OutputPath)Fathcore.Extensions.dll" />
+      <BuildOutputInPackage Include="$(OutputPath)Fathcore.Infrastructure.dll" />
+      <BuildOutputInPackage Include="$(OutputPath)Fathcore.Security.dll" />
+    </ItemGroup>
+  </Target>
 
 </Project>

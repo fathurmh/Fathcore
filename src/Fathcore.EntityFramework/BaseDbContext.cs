@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.EntityFramework.Builders;
-using Fathcore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -27,10 +26,11 @@ namespace Fathcore.EntityFramework
         /// The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/> method will still be called to allow further configuration of the options.
         /// </summary>
         /// <param name="options">The options for this context.</param>
-        public BaseDbContext(DbContextOptions options)
+        /// <param name="auditHandler">The audit handler.</param>
+        public BaseDbContext(DbContextOptions options, IAuditHandler auditHandler)
             : base(options)
         {
-            _auditHandler = EngineContext.Current.Resolve<IAuditHandler>();
+            _auditHandler = auditHandler;
         }
 
         /// <summary>
