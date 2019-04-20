@@ -66,11 +66,11 @@ namespace Fathcore.EntityFramework
         public void Detach<TEntity>(TEntity entity)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-
-            EntityEntry<TEntity> entityEntry = Entry(entity);
-            entityEntry.State = EntityState.Detached;
+            if (entity != null)
+            {
+                EntityEntry<TEntity> entityEntry = Entry(entity);
+                entityEntry.State = EntityState.Detached;
+            }
         }
 
         /// <summary>

@@ -33,8 +33,8 @@ namespace Fathcore.Extensions.DependencyInjection
         public static IServiceCollection AddStartupTask(this IServiceCollection services, Type implementationType)
         {
             var serviceType = new[] { typeof(IStartupTask), typeof(IAsyncStartupTask) };
-            if (!(serviceType[0].IsAssignableFrom(implementationType) && !serviceType[1].IsAssignableFrom(implementationType)) || !implementationType.IsClass)
-                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStartupTask)} and {nameof(IAsyncStartupTask)}.");
+            if (!(serviceType[0].IsAssignableFrom(implementationType) || serviceType[1].IsAssignableFrom(implementationType)) || !implementationType.IsClass)
+                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStartupTask)} or {nameof(IAsyncStartupTask)}.");
 
             if (serviceType[0].IsAssignableFrom(implementationType))
             {
@@ -74,8 +74,8 @@ namespace Fathcore.Extensions.DependencyInjection
         public static IServiceCollection TryAddStartupTask(this IServiceCollection services, Type implementationType)
         {
             var serviceType = new[] { typeof(IStartupTask), typeof(IAsyncStartupTask) };
-            if (!(serviceType[0].IsAssignableFrom(implementationType) && !serviceType[1].IsAssignableFrom(implementationType)) || !implementationType.IsClass)
-                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStartupTask)} and {nameof(IAsyncStartupTask)}.");
+            if (!(serviceType[0].IsAssignableFrom(implementationType) || serviceType[1].IsAssignableFrom(implementationType)) || !implementationType.IsClass)
+                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStartupTask)} or {nameof(IAsyncStartupTask)}.");
 
             if (serviceType[0].IsAssignableFrom(implementationType))
             {

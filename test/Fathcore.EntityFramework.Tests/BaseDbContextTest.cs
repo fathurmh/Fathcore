@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.EntityFramework.Tests.Fakes;
@@ -26,20 +25,6 @@ namespace Fathcore.EntityFramework.Tests
 
                 Assert.NotEmpty(result);
                 Assert.Equal(4, result.Count());
-            }
-        }
-
-        [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-        public void Detach_SafetyCheck(Provider provider)
-        {
-            var options = TestHelper.Options("Detach_SafetyCheck", provider);
-
-            using (var context = new TestDbContext(options))
-            {
-                Assert.Throws<ArgumentNullException>(() => context.Detach<Classroom>(null));
-                Assert.Throws<ArgumentNullException>(() => context.DetachRange<Classroom>(null));
             }
         }
 
