@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Fathcore.EntityFramework.AuditTrail;
 using Fathcore.EntityFramework.Tests.Fakes;
@@ -51,6 +53,19 @@ namespace Fathcore.EntityFramework.Tests
             {
                 var result = context.Set<Classroom>().ToList();
                 Assert.All(result, p => Assert.NotEqual("Modified", p.Code));
+            }
+        }
+
+        [Theory]
+        [InlineData(Provider.InMemory)]
+        [InlineData(Provider.Sqlite)]
+        public void DetachRange_SafetyCheck(Provider provider)
+        {
+            var options = TestHelper.OptionsWithData("DetachRange_SafetyCheck", provider);
+
+            using (var context = new TestDbContext(options))
+            {
+                Assert.Throws<ArgumentNullException>(() => context.DetachRange(default(IEnumerable<Classroom>)));
             }
         }
 

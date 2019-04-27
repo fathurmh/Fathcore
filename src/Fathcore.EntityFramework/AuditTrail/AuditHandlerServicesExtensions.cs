@@ -49,8 +49,7 @@ namespace Fathcore.Extensions.DependencyInjection
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IAuditHandler)}.");
 
             services.AddHttpContextAccessor();
-            services.TryAddScoped(implementationType);
-            services.TryAddScoped(serviceType, provider => provider.GetRequiredService(implementationType));
+            services.TryAddScoped(serviceType, implementationType);
 
             return services;
         }

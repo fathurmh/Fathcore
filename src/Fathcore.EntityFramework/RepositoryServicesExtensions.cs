@@ -31,11 +31,10 @@ namespace Fathcore.Extensions.DependencyInjection
         public static IServiceCollection AddGenericRepository(this IServiceCollection services, Type implementationType)
         {
             var serviceType = typeof(IRepository<>);
-            if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
+            if (!implementationType.IsAssignableToGenericType(serviceType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {typeof(IRepository<>).Name}.");
 
-            services.TryAddSingleton(implementationType);
-            services.TryAddSingleton(serviceType, provider => provider.GetRequiredService(implementationType));
+            services.TryAddScoped(serviceType, implementationType);
 
             return services;
         }
