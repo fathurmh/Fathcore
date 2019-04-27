@@ -8,25 +8,30 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageVersion>2.0.0-beta-3</PackageVersion>
+    <PreReleaseVersionLabel>prerelease</PreReleaseVersionLabel>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fathcore.DependencyInjection\Fathcore.DependencyInjection.csproj" PrivateAssets="All" />
+    <!--<ProjectReference Include="..\Fathcore.DependencyInjection\Fathcore.DependencyInjection.csproj" PrivateAssets="All" />-->
     <ProjectReference Include="..\Fathcore.EntityFramework\Fathcore.EntityFramework.csproj" PrivateAssets="All" />
-    <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" PrivateAssets="All" />
+    <!--<ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" PrivateAssets="All" />
-    <ProjectReference Include="..\Fathcore.Security\Fathcore.Security.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Fathcore.Security\Fathcore.Security.csproj" PrivateAssets="All" />-->
   </ItemGroup>
 
   <Target Name="IncludeP2PAssets">
     <ItemGroup>
-      <BuildOutputInPackage Include="$(OutputPath)Fathcore.DependencyInjection.dll" />
+      <!--<BuildOutputInPackage Include="$(OutputPath)Fathcore.DependencyInjection.dll" />-->
       <BuildOutputInPackage Include="$(OutputPath)Fathcore.EntityFramework.dll" />
-      <BuildOutputInPackage Include="$(OutputPath)Fathcore.Extensions.dll" />
+      <!--<BuildOutputInPackage Include="$(OutputPath)Fathcore.Extensions.dll" />
       <BuildOutputInPackage Include="$(OutputPath)Fathcore.Infrastructure.dll" />
-      <BuildOutputInPackage Include="$(OutputPath)Fathcore.Security.dll" />
+      <BuildOutputInPackage Include="$(OutputPath)Fathcore.Security.dll" />-->
     </ItemGroup>
   </Target>
 

@@ -7,16 +7,28 @@
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageVersion>2.0.0-beta-3</PackageVersion>
+    <PreReleaseVersionLabel>prerelease</PreReleaseVersionLabel>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2" />
+    <Compile Remove="EntityTag\**" />
+    <EmbeddedResource Remove="EntityTag\**" />
+    <None Remove="EntityTag\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" />
-    <ProjectReference Include="..\Fathcore.Security\Fathcore.Security.csproj" />
+    <ProjectReference Include="..\Fathcore.Infrastructure.Abstraction\Fathcore.Infrastructure.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

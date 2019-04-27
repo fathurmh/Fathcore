@@ -1,9 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Fathcore.EntityFramework.Extensions;
 using Fathcore.EntityFramework.Tests.Fakes;
-using Fathcore.Infrastructure.FileProviders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -84,15 +84,13 @@ namespace Fathcore.EntityFramework.Tests.Extensions
             mockHostingEnvironment.Setup(x => x.ContentRootPath).Returns(AppDomain.CurrentDomain.BaseDirectory);
             mockHostingEnvironment.Setup(x => x.WebRootPath).Returns(AppDomain.CurrentDomain.BaseDirectory);
 
-            var fileProvider = new FileProvider(mockHostingEnvironment.Object);
-
             var connection = new SqliteConnection($"DataSource=:memory:");
             connection.Open();
             var options = new DbContextOptionsBuilder().UseSqlite(connection).Options;
 
             using (var context = new TestDbContext(options))
             {
-                fileProvider.WriteAllText("script.sql", context.GenerateCreateScript(), Encoding.Default);
+                File.WriteAllText("script.sql", context.GenerateCreateScript(), Encoding.Default);
                 context.ExecuteSqlScriptFromFile("script.sql");
             }
 
