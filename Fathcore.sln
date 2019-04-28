@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathcore.DependencyInjectio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathcore.Security.Tests", "test\Fathcore.Security.Tests\Fathcore.Security.Tests.csproj", "{55E2445F-F4C0-4E66-B874-B3E0A110B270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathcore.Infrastructure.Abstraction", "src\Fathcore.Infrastructure.Abstraction\Fathcore.Infrastructure.Abstraction.csproj", "{AEA57998-9F44-4715-9F60-8C8E43F2533A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathcore.Infrastructure.Abstraction", "src\Fathcore.Infrastructure.Abstraction\Fathcore.Infrastructure.Abstraction.csproj", "{AEA57998-9F44-4715-9F60-8C8E43F2533A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
