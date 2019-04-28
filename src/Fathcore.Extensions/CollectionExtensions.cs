@@ -12,11 +12,11 @@ namespace Fathcore.Extensions
     public static class CollectionExtensions
     {
         /// <summary>
-        /// Performs the specified action on each element of the <see cref="List{T}"/>.
+        /// Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
-        /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <param name="source">Source collection.</param>
-        /// <param name="func">The <see cref="Func{T, TResult}"/> delegate to perform on each element of the <see cref="List{T}"/>.</param>
+        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}" /> to enumerate.</param>
+        /// <param name="func">The <see cref="Func{T, TResult}"/> delegate to perform on each element.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         public static Task ForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> func)
         {
@@ -32,8 +32,8 @@ namespace Fathcore.Extensions
         /// <summary>
         /// This method extends the LINQ methods to flatten a collection of items that have a property of children of the same type.
         /// </summary>
-        /// <typeparam name="T">Item type.</typeparam>
-        /// <param name="source">Source collection.</param>
+        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}" /> to enumerate.</param>
         /// <param name="childPropertySelector">Child property selector delegate of each item. IEnumerable'T' childPropertySelector(T itemBeingFlattened).</param>
         /// <returns>Returns a one level list of elements of type T.</returns>
         public static IEnumerable<T> FlattenList<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> childPropertySelector)
@@ -53,8 +53,8 @@ namespace Fathcore.Extensions
         /// <summary>
         /// This method extends the LINQ methods to flatten a collection of items that have a property of children of the same type.
         /// </summary>
-        /// <typeparam name="T">Item type.</typeparam>
-        /// <param name="source">Source collection.</param>
+        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}" /> to enumerate.</param>
         /// <param name="childPropertySelector">Child property selector delegate of each item. IEnumerable'T' childPropertySelector (T itemBeingFlattened, IEnumerable'T' objectsBeingFlattened).</param>
         /// <returns>Returns a one level list of elements of type T.</returns>
         private static IEnumerable<T> FlattenList<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>, IEnumerable<T>> childPropertySelector)
@@ -69,9 +69,9 @@ namespace Fathcore.Extensions
         /// <summary>
         /// Generates tree of items from item list.
         /// </summary>
-        /// <typeparam name="T">Type of item in collection.</typeparam>
-        /// <typeparam name="U">Type of parent id.</typeparam>
-        /// <param name="source">Collection of items.</param>
+        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <typeparam name="U">The type of <paramref name="rootId" />.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}" /> to enumerate.</param>
         /// <param name="idPropertySelector">Function extracting item's id.</param>
         /// <param name="parentIdPropertySelector">Function extracting item's parent_id.</param>
         /// <param name="childPropertySelector">Child property selector delegate of each item.</param>
@@ -97,9 +97,9 @@ namespace Fathcore.Extensions
         /// <summary>
         /// Generates tree of items from item list.
         /// </summary>
-        /// <typeparam name="T">Type of item in collection.</typeparam>
-        /// <typeparam name="U">Type of parent id.</typeparam>
-        /// <param name="source">Collection of items.</param>
+        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <typeparam name="U">The type of <paramref name="rootId" />.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}" /> to enumerate.</param>
         /// <param name="idPropertySelector">Function extracting item's id.</param>
         /// <param name="parentIdPropertySelector">Function extracting item's parent_id.</param>
         /// <param name="childPropertySelector">Child property selector delegate of each item.</param>
