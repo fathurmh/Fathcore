@@ -7,6 +7,11 @@
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageVersion>2.0.0-beta-3</PackageVersion>
+    <PreReleaseVersionLabel>prerelease</PreReleaseVersionLabel>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.2.3" />
     <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.2.3" />
@@ -14,6 +19,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.2" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.5.0" />

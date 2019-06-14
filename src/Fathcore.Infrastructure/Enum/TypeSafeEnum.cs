@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Fathcore
+namespace Fathcore.Infrastructure.Enum
 {
     /// <summary>
     /// Provides the base class for a strongly typed enumerations.

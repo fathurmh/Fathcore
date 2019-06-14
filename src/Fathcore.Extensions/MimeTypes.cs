@@ -1,4 +1,4 @@
-﻿namespace Fathcore
+﻿namespace Fathcore.Extensions
 {
     /// <summary>
     /// Collection of MimeType Constants for using to avoid Typos.

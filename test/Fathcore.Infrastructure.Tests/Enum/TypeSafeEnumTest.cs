@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Fathcore.Infrastructure.Enum;
 using Xunit;
 
-namespace Fathcore.Tests
+namespace Fathcore.Infrastructure.Tests.Enum
 {
     public class TypeSafeEnumTest
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fathcore
+namespace Fathcore.Infrastructure.Enum
 {
     /// <summary>
     /// Provides the interface for strongly typed enumerations.
