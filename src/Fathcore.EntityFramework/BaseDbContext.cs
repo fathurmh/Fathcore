@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -81,11 +80,11 @@ namespace Fathcore.EntityFramework
         public void DetachRange<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            if (entities == null)
-                throw new ArgumentNullException(nameof(entities));
-
-            foreach (var entity in entities)
-                Detach(entity);
+            if (entities != null)
+            {
+                foreach (var entity in entities)
+                    Detach(entity);
+            }
         }
 
         /// <summary>

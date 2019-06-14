@@ -15,7 +15,6 @@ namespace Fathcore.Infrastructure.Caching
     public class MemoryCacheManager : ILocker, IStaticCacheManager
     {
         private readonly IMemoryCache _cache;
-        private readonly ICacheSetting _cacheSetting;
 
         /// <summary>
         /// All keys of cache.
@@ -28,15 +27,28 @@ namespace Fathcore.Infrastructure.Caching
         /// </summary>
         protected CancellationTokenSource _cancellationTokenSource;
 
+        /// <summary>
+        /// Represents default values related to caching.
+        /// </summary>
+        public ICacheSetting CacheSetting { get; }
+
+        /// <summary>
+        /// Initializes a new static instance of the <see cref="MemoryCacheManager"/> class.
+        /// </summary>
         static MemoryCacheManager()
         {
             s_allKeys = new ConcurrentDictionary<string, bool>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemoryCacheManager"/> class.
+        /// </summary>
+        /// <param name="cache">An instance of <see cref="IMemoryCache"/>.</param>
+        /// <param name="cacheSetting">An instance of <see cref="ICacheSetting"/>.</param>
         public MemoryCacheManager(IMemoryCache cache, ICacheSetting cacheSetting)
         {
             _cache = cache;
-            _cacheSetting = cacheSetting;
+            CacheSetting = cacheSetting;
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -127,8 +139,8 @@ namespace Fathcore.Infrastructure.Caching
 
             var result = acquire();
 
-            if ((cacheTime ?? _cacheSetting.CacheTime) > 0)
-                Set(key, result, cacheTime ?? _cacheSetting.CacheTime);
+            if ((cacheTime ?? CacheSetting.CacheTime) > 0)
+                Set(key, result, cacheTime ?? CacheSetting.CacheTime);
 
             return result;
         }
@@ -148,8 +160,8 @@ namespace Fathcore.Infrastructure.Caching
 
             var result = await acquire();
 
-            if ((cacheTime ?? _cacheSetting.CacheTime) > 0)
-                Set(key, result, cacheTime ?? _cacheSetting.CacheTime);
+            if ((cacheTime ?? CacheSetting.CacheTime) > 0)
+                Set(key, result, cacheTime ?? CacheSetting.CacheTime);
 
             return result;
         }

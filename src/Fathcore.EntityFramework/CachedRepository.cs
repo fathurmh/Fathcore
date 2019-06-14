@@ -17,7 +17,6 @@ namespace Fathcore.EntityFramework
     {
         private readonly IRepository<TEntity> _repository;
         private readonly IStaticCacheManager _cacheManager;
-        private readonly ICacheSetting _cacheSetting;
         private readonly string _cachePattern;
 
         /// <summary>
@@ -25,13 +24,11 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="repository">An instance of <see cref="IRepository{TEntity}"/>.</param>
         /// <param name="cacheManager">An instance of <see cref="IStaticCacheManager"/>.</param>
-        /// <param name="cacheSetting">An instance of <see cref="ICacheSetting"/>.</param>
-        public CachedRepository(IRepository<TEntity> repository, IStaticCacheManager cacheManager, ICacheSetting cacheSetting)
+        public CachedRepository(IRepository<TEntity> repository, IStaticCacheManager cacheManager)
         {
             _repository = repository.AsNoTracking();
             _cacheManager = cacheManager;
-            _cacheSetting = cacheSetting;
-            _cachePattern = string.Join(".", _cacheSetting.CachePrefix, typeof(TEntity).Name);
+            _cachePattern = string.Join(".", _cacheManager.CacheSetting.CachePrefix, typeof(TEntity).Name);
         }
 
         /// <summary>
@@ -43,7 +40,7 @@ namespace Fathcore.EntityFramework
         public virtual IEnumerable<TEntity> SelectList()
         {
             var key = string.Join(".", _cachePattern, nameof(SelectList));
-            return _cacheManager.Get(key, () => _repository.SelectList(), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.SelectList());
         }
 
         /// <summary>
@@ -57,7 +54,7 @@ namespace Fathcore.EntityFramework
         public virtual IEnumerable<TEntity> SelectList(params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.Select(p => p.Name)));
-            return _cacheManager.Get(key, () => _repository.SelectList(navigationProperties), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.SelectList(navigationProperties));
         }
 
         /// <summary>
@@ -71,7 +68,7 @@ namespace Fathcore.EntityFramework
         public virtual IEnumerable<TEntity> SelectList(params string[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties));
-            return _cacheManager.Get(key, () => _repository.SelectList(navigationProperties), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.SelectList(navigationProperties));
         }
 
         /// <summary>
@@ -84,7 +81,7 @@ namespace Fathcore.EntityFramework
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name);
-            return _cacheManager.Get(key, () => _repository.SelectList(predicate), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.SelectList(predicate));
         }
 
         /// <summary>
@@ -99,7 +96,7 @@ namespace Fathcore.EntityFramework
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, string.Join(".", navigationProperties.Select(p => p.Name)));
-            return _cacheManager.Get(key, () => _repository.SelectList(predicate, navigationProperties), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.SelectList(predicate, navigationProperties));
         }
 
         /// <summary>
@@ -114,7 +111,7 @@ namespace Fathcore.EntityFramework
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, string.Join(".", navigationProperties));
-            return _cacheManager.Get(key, () => _repository.SelectList(predicate, navigationProperties), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.SelectList(predicate, navigationProperties));
         }
 
         /// <summary>
@@ -127,7 +124,7 @@ namespace Fathcore.EntityFramework
         public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate)
         {
             var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name);
-            return _cacheManager.Get(key, () => _repository.Select(predicate), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.Select(predicate));
         }
 
         /// <summary>
@@ -142,7 +139,7 @@ namespace Fathcore.EntityFramework
         public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, string.Join(".", navigationProperties.Select(p => p.Name)));
-            return _cacheManager.Get(key, () => _repository.Select(predicate, navigationProperties), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.Select(predicate, navigationProperties));
         }
 
         /// <summary>
@@ -157,7 +154,7 @@ namespace Fathcore.EntityFramework
         public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, string.Join(".", navigationProperties));
-            return _cacheManager.Get(key, () => _repository.Select(predicate, navigationProperties), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.Select(predicate, navigationProperties));
         }
 
         /// <summary>
@@ -169,11 +166,8 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found, or null.</returns>
         public virtual TEntity Select(object keyValue)
         {
-            if (keyValue == null)
-                throw new ArgumentNullException(nameof(keyValue));
-
             var key = string.Join(".", _cachePattern, nameof(Select), keyValue.ToString());
-            return _cacheManager.Get(key, () => _repository.Select(keyValue), _cacheSetting.CacheTime);
+            return _cacheManager.Get(key, () => _repository.Select(keyValue));
         }
 
         /// <summary>
@@ -288,7 +282,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync()
         {
             var key = string.Join(".", _cachePattern, nameof(SelectListAsync));
-            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync());
         }
 
         /// <summary>
@@ -302,7 +296,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectListAsync), string.Join(".", navigationProperties.Select(p => p.Name)));
-            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(navigationProperties), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(navigationProperties));
         }
 
         /// <summary>
@@ -316,7 +310,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(params string[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectListAsync), string.Join(".", navigationProperties));
-            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(navigationProperties), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(navigationProperties));
         }
 
         /// <summary>
@@ -329,7 +323,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectListAsync), predicate.Name);
-            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(predicate), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(predicate));
         }
 
         /// <summary>
@@ -344,7 +338,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectListAsync), predicate.Name, string.Join(".", navigationProperties.Select(p => p.Name)));
-            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(predicate, navigationProperties), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(predicate, navigationProperties));
         }
 
         /// <summary>
@@ -359,7 +353,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectListAsync), predicate.Name, string.Join(".", navigationProperties));
-            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(predicate, navigationProperties), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectListAsync(predicate, navigationProperties));
         }
 
         /// <summary>
@@ -372,7 +366,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectAsync), predicate.Name);
-            return await _cacheManager.GetAsync(key, () => _repository.SelectAsync(predicate), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectAsync(predicate));
         }
 
         /// <summary>
@@ -387,7 +381,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectAsync), predicate.Name, string.Join(".", navigationProperties.Select(p => p.Name)));
-            return await _cacheManager.GetAsync(key, () => _repository.SelectAsync(predicate, navigationProperties), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectAsync(predicate, navigationProperties));
         }
 
         /// <summary>
@@ -402,7 +396,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectAsync), predicate.Name, string.Join(".", navigationProperties));
-            return await _cacheManager.GetAsync(key, () => _repository.SelectAsync(predicate, navigationProperties), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectAsync(predicate, navigationProperties));
         }
 
         /// <summary>
@@ -415,7 +409,7 @@ namespace Fathcore.EntityFramework
         public virtual async Task<TEntity> SelectAsync(object keyValue)
         {
             var key = string.Join(".", _cachePattern, nameof(SelectAsync), keyValue.ToString());
-            return await _cacheManager.GetAsync(key, () => _repository.SelectAsync(keyValue), _cacheSetting.CacheTime);
+            return await _cacheManager.GetAsync(key, () => _repository.SelectAsync(keyValue));
         }
 
         /// <summary>

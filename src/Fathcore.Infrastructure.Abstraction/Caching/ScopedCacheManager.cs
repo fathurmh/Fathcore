@@ -13,13 +13,22 @@ namespace Fathcore.Infrastructure.Caching
     public class ScopedCacheManager : ICacheManager
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICacheSetting _cacheSetting;
         private readonly ReaderWriterLockSlim _locker;
 
+        /// <summary>
+        /// Represents default values related to caching.
+        /// </summary>
+        public ICacheSetting CacheSetting { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScopedCacheManager"/> class.
+        /// </summary>
+        /// <param name="httpContextAccessor">An instance of <see cref="IHttpContextAccessor"/>.</param>
+        /// <param name="cacheSetting">An instance of <see cref="ICacheSetting"/>.</param>
         public ScopedCacheManager(IHttpContextAccessor httpContextAccessor, ICacheSetting cacheSetting)
         {
             _httpContextAccessor = httpContextAccessor;
-            _cacheSetting = cacheSetting;
+            CacheSetting = cacheSetting;
             _locker = new ReaderWriterLockSlim();
         }
 
@@ -52,7 +61,7 @@ namespace Fathcore.Infrastructure.Caching
 
                 var result = acquire();
 
-                if (result != null && (cacheTime ?? _cacheSetting.CacheTime) > 0)
+                if (result != null && (cacheTime ?? CacheSetting.CacheTime) > 0)
                     items[key] = result;
 
                 return result;

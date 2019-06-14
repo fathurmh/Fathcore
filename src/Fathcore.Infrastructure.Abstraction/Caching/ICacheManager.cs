@@ -8,6 +8,11 @@ namespace Fathcore.Infrastructure.Caching
     public interface ICacheManager : IDisposable
     {
         /// <summary>
+        /// Represents default values related to caching.
+        /// </summary>
+        ICacheSetting CacheSetting { get; }
+
+        /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it.
         /// </summary>
         /// <typeparam name="T">Type of cached item.</typeparam>
