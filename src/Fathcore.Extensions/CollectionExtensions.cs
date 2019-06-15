@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -92,6 +93,34 @@ namespace Fathcore.Extensions
                 throw new ArgumentNullException(nameof(childPropertySelector));
 
             return source.UnFlattenListIterator(idPropertySelector, parentIdPropertySelector, childPropertySelector, rootId);
+        }
+
+        /// <summary>
+        /// Sorts the elements of a sequence in specified order direction according to a key.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of source.</typeparam>
+        /// <typeparam name="U">The type of the key returned by keySelector.</typeparam>
+        /// <param name="source">A sequence of values to order.</param>
+        /// <param name="keySelector">A function to extract a key from an element.</param>
+        /// <param name="sortOrder">A specified order direction.</param>
+        /// <returns>An <see cref="IOrderedQueryable{T}"/> whose elements are sorted according to a key.</returns>
+        public static IOrderedQueryable<T> OrderBy<T, U>(this IQueryable<T> source, Expression<Func<T, U>> keySelector, ListSortDirection sortOrder)
+        {
+            if (source.Expression.Type.Name.Contains(nameof(IOrderedQueryable)))
+            {
+                var orderedSource = (IOrderedQueryable<T>)source;
+                if (sortOrder == ListSortDirection.Ascending)
+                    return orderedSource.ThenBy(keySelector);
+                else
+                    return orderedSource.ThenByDescending(keySelector);
+            }
+            else
+            {
+                if (sortOrder == ListSortDirection.Ascending)
+                    return source.OrderBy(keySelector);
+                else
+                    return source.OrderByDescending(keySelector);
+            }
         }
 
         /// <summary>

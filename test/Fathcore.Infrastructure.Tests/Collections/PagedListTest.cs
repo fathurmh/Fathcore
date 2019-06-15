@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fathcore.Infrastructure.Collections;
+using Fathcore.Infrastructure.Pagination;
 using Xunit;
 
 namespace Fathcore.Infrastructure.Tests.Collections

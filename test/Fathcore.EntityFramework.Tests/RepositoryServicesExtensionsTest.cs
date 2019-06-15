@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Fathcore.EntityFramework.Tests.Fakes;
 using Fathcore.Extensions.DependencyInjection;
-using Fathcore.Infrastructure.Collections;
+using Fathcore.Infrastructure.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -103,32 +103,32 @@ namespace Fathcore.EntityFramework.Tests
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> PagedList(int pageIndex, int pageSize)
+        public IPagedList<TEntity> PagedList(IPaginationData<TEntity> paginationData)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> PagedList(int pageIndex, int pageSize, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public IPagedList<TEntity> PagedList(IPaginationData<TEntity> paginationData, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> PagedList(int pageIndex, int pageSize, params string[] navigationProperties)
+        public IPagedList<TEntity> PagedList(IPaginationData<TEntity> paginationData, params string[] navigationProperties)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageIndex, int pageSize)
+        public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageIndex, int pageSize, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, params Expression<Func<TEntity, object>>[] navigationProperties)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageIndex, int pageSize, params string[] navigationProperties)
+        public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, params string[] navigationProperties)
         {
             throw new NotImplementedException();
         }

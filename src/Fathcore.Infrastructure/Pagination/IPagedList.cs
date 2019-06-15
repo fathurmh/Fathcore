@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Fathcore.Infrastructure.Collections
+namespace Fathcore.Infrastructure.Pagination
 {
     /// <summary>
     /// Provides the interface for strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
