@@ -110,9 +110,22 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
+        /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
+        /// <returns>The entities found, or zero collection.</returns>
+        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, object>> navigationProperty)
+        {
+            return Table.Include(navigationProperty).ToList();
+        }
+
+        /// <summary>
+        /// Select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IEnumerable<TEntity> SelectList(params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual IEnumerable<TEntity> SelectList(IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
             return Table.Include(navigationProperties).ToList();
         }
@@ -123,9 +136,22 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
+        /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
+        /// <returns>The entities found, or zero collection.</returns>
+        public virtual IEnumerable<TEntity> SelectList(string navigationProperty)
+        {
+            return Table.Include(navigationProperty).ToList();
+        }
+
+        /// <summary>
+        /// Select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IEnumerable<TEntity> SelectList(params string[] navigationProperties)
+        public virtual IEnumerable<TEntity> SelectList(IEnumerable<string> navigationProperties)
         {
             return Table.Include(navigationProperties).ToList();
         }
@@ -149,9 +175,23 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
+        /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
+        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> navigationProperty)
+        {
+            return Table.Where(predicate).Include(navigationProperty).ToList();
+        }
+
+        /// <summary>
+        /// Select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).ToList();
         }
@@ -163,9 +203,23 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
+        /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
+        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, string navigationProperty)
+        {
+            return Table.Where(predicate).Include(navigationProperty).ToList();
+        }
+
+        /// <summary>
+        /// Select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
+        public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IEnumerable<string> navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).ToList();
         }
@@ -177,7 +231,7 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="paginationData">Sets the data for pagination.</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IPagedList<TEntity> PagedList(IPaginationData<TEntity> paginationData)
+        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData)
         {
             return Table.ToPagedList(paginationData);
         }
@@ -189,9 +243,23 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
+        /// <returns>The entities found, or zero collection.</returns>
+        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty)
+        {
+            return Table.Include(navigationProperty).ToPagedList(paginationData);
+        }
+
+        /// <summary>
+        /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
+        /// <param name="paginationData">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IPagedList<TEntity> PagedList(IPaginationData<TEntity> paginationData, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
             return Table.Include(navigationProperties).ToPagedList(paginationData);
         }
@@ -203,9 +271,23 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
+        /// <returns>The entities found, or zero collection.</returns>
+        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, string navigationProperty)
+        {
+            return Table.Include(navigationProperty).ToPagedList(paginationData);
+        }
+
+        /// <summary>
+        /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
+        /// <param name="paginationData">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IPagedList<TEntity> PagedList(IPaginationData<TEntity> paginationData, params string[] navigationProperties)
+        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties)
         {
             return Table.Include(navigationProperties).ToPagedList(paginationData);
         }
@@ -218,7 +300,7 @@ namespace Fathcore.EntityFramework
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="paginationData">Sets the data for pagination.</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData)
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData)
         {
             return Table.Where(predicate).ToPagedList(paginationData);
         }
@@ -231,9 +313,24 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
+        /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty)
+        {
+            return Table.Where(predicate).Include(navigationProperty).ToPagedList(paginationData);
+        }
+
+        /// <summary>
+        /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="paginationData">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).ToPagedList(paginationData);
         }
@@ -246,9 +343,24 @@ namespace Fathcore.EntityFramework
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
+        /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, string navigationProperty)
+        {
+            return Table.Where(predicate).Include(navigationProperty).ToPagedList(paginationData);
+        }
+
+        /// <summary>
+        /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="paginationData">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, params string[] navigationProperties)
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).ToPagedList(paginationData);
         }
@@ -272,9 +384,23 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
+        /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
+        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> navigationProperty)
+        {
+            return Table.Where(predicate).Include(navigationProperty).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entity, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
-        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] navigationProperties)
+        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).FirstOrDefault();
         }
@@ -286,9 +412,23 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
+        /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
+        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, string navigationProperty)
+        {
+            return Table.Where(predicate).Include(navigationProperty).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for the entity, if found, is attached to the context and returned.
+        /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
+        /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
-        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, params string[] navigationProperties)
+        public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, IEnumerable<string> navigationProperties)
         {
             return Table.Where(predicate).Include(navigationProperties).FirstOrDefault();
         }
@@ -379,7 +519,7 @@ namespace Fathcore.EntityFramework
         /// <summary>
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
-        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be deleted.</param>
         public virtual void Delete(object keyValue)
         {
             if (keyValue == null)
@@ -387,6 +527,22 @@ namespace Fathcore.EntityFramework
 
             var entity = Select(keyValue);
             _entities.Remove(entity);
+        }
+
+        /// <summary>
+        /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
+        /// </summary>
+        /// <param name="keyValues">The values of the primary key for the entity to be deleted.</param>
+        public virtual void Delete(IEnumerable<object> keyValues)
+        {
+            if (keyValues == null || keyValues.Count() == 0)
+                throw new ArgumentNullException(nameof(keyValues));
+
+            foreach (var keyValue in keyValues)
+            {
+                var entity = Select(keyValue);
+                _entities.Remove(entity);
+            }
         }
 
         /// <summary>

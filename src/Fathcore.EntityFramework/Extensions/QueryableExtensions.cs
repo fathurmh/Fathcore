@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,10 @@ namespace Fathcore.EntityFramework.Extensions
         /// <param name="source">The source query.</param>
         /// <param name="navigationProperties">An array of lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>A new query with the related data included.</returns>
-        public static IQueryable<TEntity> Include<TEntity>(this IQueryable<TEntity> source, Expression<Func<TEntity, object>>[] navigationProperties)
+        public static IQueryable<TEntity> Include<TEntity>(this IQueryable<TEntity> source, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
             where TEntity : class
         {
-            foreach (Expression<Func<TEntity, object>> navigationProperty in navigationProperties)
+            foreach (var navigationProperty in navigationProperties)
             {
                 source = source.Include(navigationProperty);
             }
@@ -35,10 +36,10 @@ namespace Fathcore.EntityFramework.Extensions
         /// <param name="source">The source query.</param>
         /// <param name="navigationProperties">An array of string, a string of '.' separated navigation property names to be included.</param>
         /// <returns>A new query with the related data included.</returns>
-        public static IQueryable<TEntity> Include<TEntity>(this IQueryable<TEntity> source, string[] navigationProperties)
+        public static IQueryable<TEntity> Include<TEntity>(this IQueryable<TEntity> source, IEnumerable<string> navigationProperties)
             where TEntity : class
         {
-            foreach (string navigationProperty in navigationProperties)
+            foreach (var navigationProperty in navigationProperties)
             {
                 source = source.Include(navigationProperty);
             }

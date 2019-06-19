@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 
 namespace Fathcore.Infrastructure.Pagination
 {
@@ -25,22 +22,5 @@ namespace Fathcore.Infrastructure.Pagination
         /// Gets or sets the page sorting contained in the <see cref="IPaginationData{T}"/>.
         /// </summary>
         IEnumerable<IPageSort<T>> PageSorts { get; }
-    }
-
-    /// <summary>
-    /// Provides the interface for page sorting.
-    /// </summary>
-    /// <typeparam name="T">The type of entity data.</typeparam>
-    public interface IPageSort<T>
-    {
-        /// <summary>
-        /// Gets or sets the key selector contained in the <see cref="IPageSort{T}"/>.
-        /// </summary>
-        Expression<Func<T, dynamic>> KeySelector { get; }
-
-        /// <summary>
-        /// Gets or sets the sort direction contained in the <see cref="IPageSort{T}"/>.
-        /// </summary>
-        ListSortDirection SortDirection { get; }
     }
 }

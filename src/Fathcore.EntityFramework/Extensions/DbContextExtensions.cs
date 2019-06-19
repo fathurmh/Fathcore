@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -77,11 +78,12 @@ namespace Fathcore.EntityFramework.Extensions
         /// Asynchronously rollback of entity changes and return full error message.
         /// </summary>
         /// <param name="context">An <see cref="IDbContext"/> context.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns></returns>
-        public static async Task RollbackEntityChangesAsync(this IDbContext context)
+        public static async Task RollbackEntityChangesAsync(this IDbContext context, CancellationToken cancellationToken = default)
         {
             context.RollbackEntity();
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
