@@ -54,17 +54,28 @@ namespace Fathcore.Infrastructure.Enum
     /// Provides the base class for a strongly typed enumerations.
     /// </summary>
     /// <typeparam name="T">The type of element constant in the strongly typed enumerations.</typeparam>
-    public abstract class TypeSafeEnum<T> : TypeSafeEnum, ITypeSafeEnum
+    public abstract class TypeSafeEnum<T> : ITypeSafeEnum
         where T : ITypeSafeEnum
     {
+        /// <summary>
+        /// Gets the name of element contained in the <see cref="TypeSafeEnum{T}"/>.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets the description of element contained in the <see cref="TypeSafeEnum{T}"/>.
+        /// </summary>
+        public string Description { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeSafeEnum{T}"/> class.
         /// </summary>
         /// <param name="name">The name of a particular enumerated constant.</param>
         /// <param name="description">The description of a particular enumerated constant.</param>
         protected TypeSafeEnum(string name, string description)
-            : base(name, description)
         {
+            Name = name;
+            Description = description;
         }
 
         /// <summary>
@@ -78,7 +89,7 @@ namespace Fathcore.Infrastructure.Enum
         /// </summary>
         /// <param name="name">The name of a particular enumerated constant.</param>
         /// <returns>The value that contains the specified name of the constant in strongly typed enumerations; or null if no such constant is found.</returns>
-        public static T GetValue(string name) => GetValues().FirstOrDefault(prop => prop.Name == name);
+        public static T GetValue(string name) => GetValues().FirstOrDefault(prop => prop.Name.Equals(name, StringComparison.Ordinal));
 
         /// <summary>
         /// Retrieves an array of the values of the constants in a specified enumeration.
@@ -96,39 +107,12 @@ namespace Fathcore.Infrastructure.Enum
         /// </summary>
         /// <param name="name">The name of a particular enumerated constant.</param>
         public static explicit operator TypeSafeEnum<T>(string name) => (dynamic)GetValue(name);
-    }
-
-    /// <summary>
-    /// Provides the base class for a strongly typed enumerations.
-    /// </summary>
-    public abstract class TypeSafeEnum : ITypeSafeEnum
-    {
-        /// <summary>
-        /// Gets the name of element contained in the <see cref="TypeSafeEnum"/>.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets the description of element contained in the <see cref="TypeSafeEnum"/>.
-        /// </summary>
-        public string Description { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TypeSafeEnum{T}"/> class.
-        /// </summary>
-        /// <param name="name">The name of a particular enumerated constant.</param>
-        /// <param name="description">The description of a particular enumerated constant.</param>
-        protected TypeSafeEnum(string name, string description)
-        {
-            Name = name;
-            Description = description;
-        }
 
         /// <summary>
         /// Convert the value of the constant in strongly typed enumerations to its equivalent string representation.
         /// </summary>
         /// <param name="enumType">The value of constant in strongly typed enumerations.</param>
-        public static explicit operator string(TypeSafeEnum enumType) => enumType.ToString();
+        public static explicit operator string(TypeSafeEnum<T> enumType) => enumType.ToString();
 
         /// <summary>
         /// Converts the value of this instance to its equivalent string representation.

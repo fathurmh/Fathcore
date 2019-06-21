@@ -8,11 +8,6 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageVersion>2.0.0-beta-6</PackageVersion>
-    <PreReleaseVersionLabel>prerelease</PreReleaseVersionLabel>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
   </ItemGroup>

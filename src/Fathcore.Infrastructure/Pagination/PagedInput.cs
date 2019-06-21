@@ -9,22 +9,22 @@ namespace Fathcore.Infrastructure.Pagination
     /// Provides the class for pagination.
     /// </summary>
     /// <typeparam name="T">The type of entity data.</typeparam>
-    public class PaginationData<T> : IPaginationData<T>
+    public class PagedInput<T> : IPagedInput<T>
     {
         /// <summary>
-        /// Gets or sets the page index contained in the <see cref="PaginationData{T}"/>.
+        /// Gets or sets the page index contained in the <see cref="PagedInput{T}"/>.
         /// </summary>
         public int PageIndex { get; }
 
         /// <summary>
-        /// Gets or sets the page size contained in the <see cref="PaginationData{T}"/>.
+        /// Gets or sets the page size contained in the <see cref="PagedInput{T}"/>.
         /// </summary>
         public int PageSize { get; }
 
         /// <summary>
-        /// Gets or sets the page sort elements contained in the <see cref="PaginationData{T}"/>.
+        /// Gets or sets the page sort elements contained in the <see cref="PagedInput{T}"/>.
         /// </summary>
-        public IEnumerable<IPageSort<T>> PageSorts { get; }
+        public IEnumerable<IPagedSort<T>> PageSorts { get; }
 
         /// <summary>
         /// 
@@ -32,7 +32,7 @@ namespace Fathcore.Infrastructure.Pagination
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="pageSorts"></param>
-        public PaginationData(int pageIndex = default, int pageSize = default, params IPageSort<T>[] pageSorts)
+        public PagedInput(int pageIndex = default, int pageSize = default, params IPagedSort<T>[] pageSorts)
         {
             PageIndex = pageIndex <= 0 ? 0 : pageIndex;
             PageSize = pageSize <= 0 ? 10 : pageSize;
@@ -44,7 +44,7 @@ namespace Fathcore.Infrastructure.Pagination
     /// Provides the class for page sorting.
     /// </summary>
     /// <typeparam name="T">The type of entity data.</typeparam>
-    public class PageSort<T> : IPageSort<T>
+    public class PageSort<T> : IPagedSort<T>
     {
         /// <summary>
         /// Gets or sets the key selector contained in the <see cref="PageSort{T}"/>.

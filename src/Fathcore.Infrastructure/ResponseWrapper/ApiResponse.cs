@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using Fathcore.Extensions;
+using Fathcore.Infrastructure.Pagination;
 using Newtonsoft.Json;
 
 namespace Fathcore.Infrastructure.ResponseWrapper
@@ -8,7 +9,7 @@ namespace Fathcore.Infrastructure.ResponseWrapper
     /// Represents api response.
     /// </summary>
     [DataContract]
-    public class Response
+    public class ApiResponse
     {
         /// <summary>
         /// Gets or sets a status code value.
@@ -35,18 +36,25 @@ namespace Fathcore.Infrastructure.ResponseWrapper
         public IResponseException ResponseException { get; set; }
 
         /// <summary>
+        /// Gets or sets a paged data value.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false)]
+        public IPagedData Pagination { get; set; }
+
+        /// <summary>
         /// Gets or sets a result value.
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
         public object Result { get; set; }
 
         [JsonConstructor]
-        public Response(int statusCode, bool isSuccess, string message, object result, IResponseException responseException = null)
+        public ApiResponse(int statusCode, bool isSuccess, string message, object result, IPagedData pagedData = default, IResponseException responseException = default)
         {
             StatusCode = statusCode;
             IsSuccess = isSuccess;
             Message = message.FirstLetterToUpper();
             Result = result;
+            Pagination = new PagedData(pagedData);
             ResponseException = responseException;
         }
     }
@@ -55,10 +63,10 @@ namespace Fathcore.Infrastructure.ResponseWrapper
     /// Represents api response.
     /// </summary>
     [DataContract]
-    public class Response<TResult> : Response
+    public class ApiResponse<TResult> : ApiResponse
     {
         [JsonConstructor]
-        public Response(int statusCode, bool isSuccess, string message, TResult result, IResponseException apiError = null)
-            : base(statusCode, isSuccess, message, result, apiError) { }
+        public ApiResponse(int statusCode, bool isSuccess, string message, TResult result, IPagedData pagedData = default, IResponseException apiError = default)
+            : base(statusCode, isSuccess, message, result, pagedData, apiError) { }
     }
 }

@@ -8,17 +8,27 @@ namespace Fathcore.Infrastructure.ResponseWrapper
     public interface IResponseException
     {
         /// <summary>
-        /// Gets or sets error message value.
+        /// Gets a status code value.
+        /// </summary>
+        int StatusCode { get; }
+
+        /// <summary>
+        /// Gets error type value.
+        /// </summary>
+        string ErrorType { get; }
+
+        /// <summary>
+        /// Gets error message value.
         /// </summary>
         string ErrorMessage { get; }
 
         /// <summary>
-        /// Gets or sets details value.
+        /// Gets details value.
         /// </summary>
         string Details { get; }
 
         /// <summary>
-        /// Gets or sets validation errors value.
+        /// Gets validation errors value.
         /// </summary>
         IEnumerable<IModelValidation> ValidationErrors { get; }
     }

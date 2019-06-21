@@ -9,7 +9,7 @@ namespace Fathcore.Infrastructure.Pagination
     /// Represents a strongly typed paged list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
-    public class PagedList<T> : List<T>, IPagedList<T>, IList<T>, ICollection<T>, IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, IPagedList, IList, ICollection, IEnumerable
+    public class PagedList<T> : List<T>, IPagedList<T>, IList<T>, ICollection<T>, IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, IPagedData, IList, ICollection, IEnumerable
     {
         /// <summary>
         /// Gets the page index contained in the <see cref="PagedList{T}"/>.

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Fathcore.Infrastructure.Enum;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 
@@ -10,56 +11,58 @@ namespace Fathcore.Infrastructure.ResponseWrapper
     /// Represents response exception.
     /// </summary>
     [DataContract]
-    public class BaseResponseException : IResponseException
+    public class ResponseException : IResponseException
     {
-        /// <summary>
-        /// Gets or sets error type value.
-        /// </summary>
-        [DataMember]
-        public string ErrorType { get; }
+        private readonly IErrorType _errorType;
 
         /// <summary>
-        /// Gets or sets error message value.
+        /// Gets a status code value.
+        /// </summary>
+        public int StatusCode => _errorType.StatusCode;
+
+        /// <summary>
+        /// Gets error type value.
+        /// </summary>
+        [DataMember]
+        public string ErrorType => _errorType.Description;
+
+        /// <summary>
+        /// Gets error message value.
         /// </summary>
         [DataMember]
         public string ErrorMessage { get; }
 
         /// <summary>
-        /// Gets or sets details value.
+        /// Gets details value.
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
         public string Details { get; }
 
         /// <summary>
-        /// Gets or sets validation errors value.
+        /// Gets validation errors value.
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
         public IEnumerable<IModelValidation> ValidationErrors { get; }
 
-        public BaseResponseException()
-        {
-
-        }
-
         [JsonConstructor]
-        public BaseResponseException(string errorMessage)
+        public ResponseException(string errorMessage)
         {
             ErrorMessage = errorMessage;
         }
 
-        public BaseResponseException(string errorMessage, string errorType)
+        public ResponseException(string errorMessage, IErrorType errorType)
             : this(errorMessage)
         {
-            ErrorType = errorType;
+            _errorType = errorType;
         }
 
-        public BaseResponseException(string errorMessage, string errorType, string details)
+        public ResponseException(string errorMessage, IErrorType errorType, string details)
             : this(errorMessage, errorType)
         {
             Details = details;
         }
 
-        public BaseResponseException(string errorMessage, string errorType, string details, ModelStateDictionary modelState)
+        public ResponseException(string errorMessage, IErrorType errorType, string details, ModelStateDictionary modelState)
             : this(errorMessage, errorType, details)
         {
             if (modelState != null && modelState.Any(m => m.Value.Errors.Count > 0))

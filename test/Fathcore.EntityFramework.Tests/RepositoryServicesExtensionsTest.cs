@@ -193,52 +193,52 @@ namespace Fathcore.EntityFramework.Tests
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData)
+        public IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty)
+        public IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
+        public IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, string navigationProperty)
+        public IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, string navigationProperty)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties)
+        public IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData)
+        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty)
+        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
+        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, string navigationProperty)
+        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, string navigationProperty)
         {
             throw new NotImplementedException();
         }
 
-        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties)
+        public IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties)
         {
             throw new NotImplementedException();
         }

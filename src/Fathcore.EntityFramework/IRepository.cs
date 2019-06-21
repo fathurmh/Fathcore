@@ -154,9 +154,9 @@ namespace Fathcore.EntityFramework
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// If no entity is found, then zero collection is returned.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <returns>The entities found, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData);
+        IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput);
 
         /// <summary>
         /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -164,10 +164,10 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty);
+        IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty);
 
         /// <summary>
         /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -175,10 +175,10 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties);
+        IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties);
 
         /// <summary>
         /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -186,10 +186,10 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, string navigationProperty);
+        IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, string navigationProperty);
 
         /// <summary>
         /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -197,10 +197,10 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties);
+        IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties);
 
         /// <summary>
         /// Select paged entities and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -208,9 +208,9 @@ namespace Fathcore.EntityFramework
         /// If no entity is found, then zero collection is returned.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData);
+        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput);
 
         /// <summary>
         /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -219,10 +219,10 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty);
+        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty);
 
         /// <summary>
         /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -231,10 +231,10 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties);
+        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties);
 
         /// <summary>
         /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -243,10 +243,10 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, string navigationProperty);
+        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, string navigationProperty);
 
         /// <summary>
         /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
@@ -255,10 +255,10 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties);
+        IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties);
 
         /// <summary>
         /// Select an entity and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.

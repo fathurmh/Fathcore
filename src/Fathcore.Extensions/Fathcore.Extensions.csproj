@@ -7,11 +7,6 @@
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageVersion>2.0.0-beta-6</PackageVersion>
-    <PreReleaseVersionLabel>prerelease</PreReleaseVersionLabel>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>

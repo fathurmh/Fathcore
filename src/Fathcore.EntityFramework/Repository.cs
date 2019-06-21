@@ -229,11 +229,11 @@ namespace Fathcore.EntityFramework
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// If no entity is found, then zero collection is returned.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData)
+        public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput)
         {
-            return Table.ToPagedList(paginationData);
+            return Table.ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -242,12 +242,12 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty)
+        public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty)
         {
-            return Table.Include(navigationProperty).ToPagedList(paginationData);
+            return Table.Include(navigationProperty).ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -256,12 +256,12 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
+        public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
-            return Table.Include(navigationProperties).ToPagedList(paginationData);
+            return Table.Include(navigationProperties).ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -270,12 +270,12 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, string navigationProperty)
+        public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, string navigationProperty)
         {
-            return Table.Include(navigationProperty).ToPagedList(paginationData);
+            return Table.Include(navigationProperty).ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -284,12 +284,12 @@ namespace Fathcore.EntityFramework
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties)
+        public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties)
         {
-            return Table.Include(navigationProperties).ToPagedList(paginationData);
+            return Table.Include(navigationProperties).ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -298,11 +298,11 @@ namespace Fathcore.EntityFramework
         /// If no entity is found, then zero collection is returned.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData)
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput)
         {
-            return Table.Where(predicate).ToPagedList(paginationData);
+            return Table.Where(predicate).ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -312,12 +312,12 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty)
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty)
         {
-            return Table.Where(predicate).Include(navigationProperty).ToPagedList(paginationData);
+            return Table.Where(predicate).Include(navigationProperty).ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -327,12 +327,12 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
-            return Table.Where(predicate).Include(navigationProperties).ToPagedList(paginationData);
+            return Table.Where(predicate).Include(navigationProperties).ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -342,12 +342,12 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, string navigationProperty)
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, string navigationProperty)
         {
-            return Table.Where(predicate).Include(navigationProperty).ToPagedList(paginationData);
+            return Table.Where(predicate).Include(navigationProperty).ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -357,12 +357,12 @@ namespace Fathcore.EntityFramework
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties)
+        public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties)
         {
-            return Table.Where(predicate).Include(navigationProperties).ToPagedList(paginationData);
+            return Table.Where(predicate).Include(navigationProperties).ToPagedList(pagedInput);
         }
 
         /// <summary>

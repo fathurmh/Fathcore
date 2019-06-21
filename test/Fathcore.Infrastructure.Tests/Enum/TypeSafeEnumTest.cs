@@ -35,15 +35,11 @@ namespace Fathcore.Infrastructure.Tests.Enum
             Assert.Equal(name, typeSafeEnum3.Name);
             Assert.Equal(description, typeSafeEnum3.Description);
 
-            var typeSafeEnum4 = (TypeSafeEnum)typeSafeEnum2;
+            var typeSafeEnum4 = (ITypeSafeEnum)typeSafeEnum3;
             Assert.Equal(name, typeSafeEnum4.Name);
             Assert.Equal(description, typeSafeEnum4.Description);
 
-            var typeSafeEnum5 = (ITypeSafeEnum)typeSafeEnum4;
-            Assert.Equal(name, typeSafeEnum5.Name);
-            Assert.Equal(description, typeSafeEnum5.Description);
-
-            var status2 = (Status)typeSafeEnum5;
+            var status2 = (Status)typeSafeEnum4;
             Assert.Equal(id, status2.Id);
             Assert.Equal(name, status2.Name);
             Assert.Equal(description, status2.Description);

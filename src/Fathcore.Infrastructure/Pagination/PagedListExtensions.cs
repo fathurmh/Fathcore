@@ -70,17 +70,17 @@ namespace Fathcore.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <param name="source">The <see cref="IQueryable{T}"/> to create a <see cref="IPagedList{T}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <returns>A <see cref="IPagedList{T}"/> that contains elements from the input sequence.</returns>
-        public static IPagedList<T> ToPagedList<T>(this IQueryable<T> source, IPaginationData<T> paginationData)
+        public static IPagedList<T> ToPagedList<T>(this IQueryable<T> source, IPagedInput<T> pagedInput)
         {
             var query = source;
 
-            if (paginationData.PageSorts != null)
-                foreach (var pageSort in paginationData.PageSorts)
+            if (pagedInput.PageSorts != null)
+                foreach (var pageSort in pagedInput.PageSorts)
                     query = query.OrderBy(pageSort.KeySelector, pageSort.SortDirection);
 
-            return new PagedList<T>(query, paginationData.PageIndex, paginationData.PageSize);
+            return new PagedList<T>(query, pagedInput.PageIndex, pagedInput.PageSize);
         }
 
         /// <summary>
@@ -88,11 +88,11 @@ namespace Fathcore.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <param name="source">The <see cref="IEnumerable{T}"/> to create a <see cref="IPagedList{T}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <returns>A <see cref="IPagedList{T}"/> that contains elements from the input sequence.</returns>
-        public static IPagedList<T> ToPagedList<T>(this IEnumerable<T> source, IPaginationData<T> paginationData)
+        public static IPagedList<T> ToPagedList<T>(this IEnumerable<T> source, IPagedInput<T> pagedInput)
         {
-            return source.AsQueryable().ToPagedList(paginationData);
+            return source.AsQueryable().ToPagedList(pagedInput);
         }
 
         /// <summary>
@@ -100,18 +100,18 @@ namespace Fathcore.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <param name="source">The <see cref="IQueryable{T}"/> to create a <see cref="IPagedList{T}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IPagedList{T}"/> that contains elements from the input sequence.</returns>
-        public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, IPaginationData<T> paginationData, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, IPagedInput<T> pagedInput, CancellationToken cancellationToken = default)
         {
             var query = source;
 
-            if (paginationData.PageSorts != null)
-                foreach (var pageSort in paginationData.PageSorts)
+            if (pagedInput.PageSorts != null)
+                foreach (var pageSort in pagedInput.PageSorts)
                     query = query.OrderBy(pageSort.KeySelector, pageSort.SortDirection);
 
-            return await Task.Run(() => new PagedList<T>(query, paginationData.PageIndex, paginationData.PageSize), cancellationToken);
+            return await Task.Run(() => new PagedList<T>(query, pagedInput.PageIndex, pagedInput.PageSize), cancellationToken);
         }
 
         /// <summary>
@@ -119,12 +119,12 @@ namespace Fathcore.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <param name="source">The <see cref="IEnumerable{T}"/> to create a <see cref="IPagedList{T}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IPagedList{T}"/> that contains elements from the input sequence.</returns>
-        public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IEnumerable<T> source, IPaginationData<T> paginationData, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IEnumerable<T> source, IPagedInput<T> pagedInput, CancellationToken cancellationToken = default)
         {
-            return await source.AsQueryable().ToPagedListAsync(paginationData, cancellationToken);
+            return await source.AsQueryable().ToPagedListAsync(pagedInput, cancellationToken);
         }
     }
 }

@@ -7,10 +7,11 @@
     <CodeAnalysisRuleSet>..\..\Fathcore.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageVersion>2.0.0-beta-6</PackageVersion>
-    <PreReleaseVersionLabel>prerelease</PreReleaseVersionLabel>
-  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Localization\Resources\**" />
+    <EmbeddedResource Remove="Localization\Resources\**" />
+    <None Remove="Localization\Resources\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.2.3" />

@@ -193,13 +193,13 @@ namespace Fathcore.EntityFramework.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPaginationData<TEntity> paginationData, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPagedInput<TEntity> pagedInput, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -210,14 +210,14 @@ namespace Fathcore.EntityFramework.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Include(navigationProperty).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Include(navigationProperty).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -228,14 +228,14 @@ namespace Fathcore.EntityFramework.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Include(navigationProperties).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Include(navigationProperties).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -246,14 +246,14 @@ namespace Fathcore.EntityFramework.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPaginationData<TEntity> paginationData, string navigationProperty, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPagedInput<TEntity> pagedInput, string navigationProperty, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Include(navigationProperty).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Include(navigationProperty).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -264,14 +264,14 @@ namespace Fathcore.EntityFramework.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Include(navigationProperties).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Include(navigationProperties).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -282,13 +282,13 @@ namespace Fathcore.EntityFramework.Extensions
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Where(predicate).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Where(predicate).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -300,14 +300,14 @@ namespace Fathcore.EntityFramework.Extensions
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Where(predicate).Include(navigationProperty).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Where(predicate).Include(navigationProperty).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -319,14 +319,14 @@ namespace Fathcore.EntityFramework.Extensions
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A lambda expression representing the navigation property to be included (t => t.Property1).</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Where(predicate).Include(navigationProperties).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Where(predicate).Include(navigationProperties).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -338,14 +338,14 @@ namespace Fathcore.EntityFramework.Extensions
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperty">A string representing the navigation property to be included ("Property1").</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, string navigationProperty, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, string navigationProperty, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Where(predicate).Include(navigationProperty).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Where(predicate).Include(navigationProperty).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>
@@ -357,14 +357,14 @@ namespace Fathcore.EntityFramework.Extensions
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="paginationData">Sets the data for pagination.</param>
+        /// <param name="pagedInput">Sets the data for pagination.</param>
         /// <param name="navigationProperties">A string representing the navigation property to be included ("Property1").</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
-        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPaginationData<TEntity> paginationData, IEnumerable<string> navigationProperties, CancellationToken cancellationToken = default)
+        public static async Task<IPagedList<TEntity>> SelectListAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            return await repository.Table.Where(predicate).Include(navigationProperties).ToPagedListAsync(paginationData, cancellationToken);
+            return await repository.Table.Where(predicate).Include(navigationProperties).ToPagedListAsync(pagedInput, cancellationToken);
         }
 
         /// <summary>

@@ -101,9 +101,8 @@ namespace Fathcore.Infrastructure.Tests.Collections
             var pagedList = new PagedList<TestClass>(TestClass.GenerateList(totalCount), pageIndex, pageSize);
             var taken = totalCount - (pageIndex * pageSize);
 
-            var result = (IPagedList)pagedList;
+            var result = (IPagedData)pagedList;
 
-            Assert.Equal(taken > pageSize ? pageSize : taken < 0 ? 0 : taken, result.Count);
             Assert.Equal(pageIndex, result.PageIndex);
             Assert.Equal(pageSize, result.PageSize);
             Assert.Equal(totalCount, result.TotalCount);
