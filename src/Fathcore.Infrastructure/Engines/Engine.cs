@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Fathcore.Infrastructure.DependencyInjection;
 using Fathcore.Infrastructure.TypeFinders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,33 @@ namespace Fathcore.Infrastructure.Engines
             configure?.Invoke(options);
 
             _typeFinder = options.TypeFinder;
+
+            if (options.ActivateAttributeRegistrar)
+            {
+                var registrar = new DependencyAttributeRegistrar();
+                var types = _typeFinder.FindClassesWithAttribute<RegisterServiceAttribute>();
+
+                foreach (var type in types)
+                {
+                    var attribute = type.GetCustomAttribute<RegisterServiceAttribute>();
+                    var interfaces = type.GetInterfaces();
+
+                    if (interfaces.Any())
+                        registrar.RegisterAsImplemented(services, type, interfaces, attribute);
+                    else
+                        registrar.RegisterAsSelf(services, type, attribute);
+                }
+            }
+
+            if (options.ActivateClassRegistrar)
+            {
+                var dependencyRegistrarTypes = _typeFinder.FindClassesOfType<IDependencyRegistrar>();
+                var dependencyRegistrars = dependencyRegistrarTypes
+                    .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar));
+
+                foreach (var dependencyRegistrar in dependencyRegistrars)
+                    dependencyRegistrar.Register(services);
+            }
 
             services.TryAddSingleton(TypeFinder);
             services.TryAddSingleton(provider => (TypeFinder)provider.GetRequiredService<ITypeFinder>());

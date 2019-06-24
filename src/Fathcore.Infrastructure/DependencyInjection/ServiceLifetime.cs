@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Fathcore.DependencyInjection
+namespace Fathcore.Infrastructure.DependencyInjection
 {
     /// <summary>
     /// Specifies the lifetime of a service in an <see cref="IServiceCollection"/>.

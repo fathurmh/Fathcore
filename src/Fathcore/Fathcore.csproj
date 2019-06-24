@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fathcore.DependencyInjection\Fathcore.DependencyInjection.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\Fathcore.EntityFramework\Fathcore.EntityFramework.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\Fathcore.Extensions\Fathcore.Extensions.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\Fathcore.Infrastructure\Fathcore.Infrastructure.csproj" PrivateAssets="All" />

@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="cs" original="../CommonMessage.en-US.resx">
+    <body>
+      <trans-unit id="Conflict">
+        <source>The data may have been modified or deleted since it were loaded.</source>
+        <target state="new">The data may have been modified or deleted since it were loaded.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContactSupport">
+        <source>Your request cannot be processed. Please contact a support.</source>
+        <target state="new">Your request cannot be processed. Please contact a support.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Exception">
+        <source>Request responded with exceptions.</source>
+        <target state="new">Request responded with exceptions.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Failure">
+        <source>Unable to process the request.</source>
+        <target state="new">Unable to process the request.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Hello">
+        <source>Hello, the Web API is ready to rock!</source>
+        <target state="new">Hello, the Web API is ready to rock!</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Success">
+        <source>Request successful.</source>
+        <target state="new">Request successful.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Unauthorized">
+        <source>Request denied.</source>
+        <target state="new">Request denied.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Unhandled">
+        <source>An unhandled error occurred.</source>
+        <target state="new">An unhandled error occurred.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="UriNotFound">
+        <source>The specified URI does not exist. Please verify and try again.</source>
+        <target state="new">The specified URI does not exist. Please verify and try again.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationDetail">
+        <source>Please correct the specified validation errors and try again.</source>
+        <target state="new">Please correct the specified validation errors and try again.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationError">
+        <source>Request responded with validation error(s).</source>
+        <target state="new">Request responded with validation error(s).</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fathcore.DependencyInjection
+namespace Fathcore.Infrastructure.DependencyInjection
 {
     /// <summary>
     /// Provides the interface for dependency attribute registrar that can register services through attribute.

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="fr" original="../ValidationMessage.id-ID.resx">
+    <body>
+      <trans-unit id="AlreadyExist">
+        <source>{0} sudah ada.</source>
+        <target state="new">{0} sudah ada.</target>
+        <note>{0} is already exist.</note>
+      </trans-unit>
+      <trans-unit id="ArgumentNull">
+        <source>Kolom {0} tidak boleh kosong.</source>
+        <target state="new">Kolom {0} tidak boleh kosong.</target>
+        <note>The {0} field cannot be null.</note>
+      </trans-unit>
+      <trans-unit id="DoesNotMatch">
+        <source>Data {0} dan {1} tidak cocok.</source>
+        <target state="new">Data {0} dan {1} tidak cocok.</target>
+        <note>The {0} and {1} doesn't match.</note>
+      </trans-unit>
+      <trans-unit id="MinimumLength">
+        <source>Panjang dari '{0}' setidaknya {1} karakter. Anda hanya memasukan {2} karakter.</source>
+        <target state="new">Panjang dari '{0}' setidaknya {1} karakter. Anda hanya memasukan {2} karakter.</target>
+        <note>The length of '{0}' must be at least {1} characters. You entered {2} characters.</note>
+      </trans-unit>
+      <trans-unit id="NotFound">
+        <source>{0} tidak ditemukan.</source>
+        <target state="new">{0} tidak ditemukan.</target>
+        <note>The {0} not found.</note>
+      </trans-unit>
+      <trans-unit id="NotFoundOrDoesNotMatch">
+        <source>{0} tidak ditemukan atau {1} dan {2} tidak cocok.</source>
+        <target state="new">{0} tidak ditemukan atau {1} dan {2} tidak cocok.</target>
+        <note>The {0} not found or the {1} and {2} doesn't match.</note>
+      </trans-unit>
+      <trans-unit id="NotRecognized">
+        <source>{0} tidak dikenali.</source>
+        <target state="new">{0} tidak dikenali.</target>
+        <note>The {0} not recognized.</note>
+      </trans-unit>
+      <trans-unit id="Required">
+        <source>Kolom {0} harus diisi.</source>
+        <target state="new">Kolom {0} harus diisi.</target>
+        <note>The {0} field is required.</note>
+      </trans-unit>
+      <trans-unit id="Unauthorized">
+        <source>Permintaan ditolak.</source>
+        <target state="new">Permintaan ditolak.</target>
+        <note>Request denied.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

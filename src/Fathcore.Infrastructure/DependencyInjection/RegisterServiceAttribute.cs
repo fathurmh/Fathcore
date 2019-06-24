@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fathcore.DependencyInjection
+namespace Fathcore.Infrastructure.DependencyInjection
 {
     /// <summary>
     /// Indicates that a class will be registered as a service. This class cannot be inherited.

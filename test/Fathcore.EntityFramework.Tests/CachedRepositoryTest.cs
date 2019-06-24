@@ -520,7 +520,7 @@ namespace Fathcore.EntityFramework.Tests
                     () => cachedRepository.Select(entity.Id)
                 );
 
-                Assert.True(timingResult.First() > timingResult.Last());
+                Assert.True(timingResult.First() >= timingResult.Last());
             }
         }
 

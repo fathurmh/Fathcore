@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Fathcore.DependencyInjection
+namespace Fathcore.Infrastructure.DependencyInjection
 {
     /// <summary>
     /// Provides the interface for dependency registrar that can register services.

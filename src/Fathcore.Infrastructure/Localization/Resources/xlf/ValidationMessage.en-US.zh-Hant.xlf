@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="zh-Hant" original="../ValidationMessage.en-US.resx">
+    <body>
+      <trans-unit id="AlreadyExist">
+        <source>{0} is already exist.</source>
+        <target state="new">{0} is already exist.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ArgumentNull">
+        <source>The {0} field cannot be null.</source>
+        <target state="new">The {0} field cannot be null.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DoesNotMatch">
+        <source>The {0} and {1} doesn't match.</source>
+        <target state="new">The {0} and {1} doesn't match.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MinimumLength">
+        <source>The length of '{0}' must be at least {1} characters. You entered {2} characters.</source>
+        <target state="new">The length of '{0}' must be at least {1} characters. You entered {2} characters.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound">
+        <source>The {0} not found.</source>
+        <target state="new">The {0} not found.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFoundOrDoesNotMatch">
+        <source>The {0} not found or {1} and {2} doesn't match.</source>
+        <target state="new">The {0} not found or {1} and {2} doesn't match.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotRecognized">
+        <source>The {0} not recognized.</source>
+        <target state="new">The {0} not recognized.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Required">
+        <source>The {0} field is required.</source>
+        <target state="new">The {0} field is required.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Unauthorized">
+        <source>Request denied.</source>
+        <target state="new">Request denied.</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Xunit;
 
-namespace Fathcore.DependencyInjection.Tests
+namespace Fathcore.Infrastructure.DependencyInjection.Tests
 {
     public class RegisterServiceAttributeTest
     {

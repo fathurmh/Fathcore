@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="pl" original="../CommonMessage.id-ID.resx">
+    <body>
+      <trans-unit id="Conflict">
+        <source>Data mungkin telah dimodifikasi atau dihapus sejak dimuat.</source>
+        <target state="new">Data mungkin telah dimodifikasi atau dihapus sejak dimuat.</target>
+        <note>The data may have been modified or deleted since it was loaded.</note>
+      </trans-unit>
+      <trans-unit id="ContactSupport">
+        <source>Permintaan tidak dapat diproses. Silahkan hubungi bantuan.</source>
+        <target state="new">Permintaan tidak dapat diproses. Silahkan hubungi bantuan.</target>
+        <note>Your request cannot be processed. Please contact a support.</note>
+      </trans-unit>
+      <trans-unit id="Exception">
+        <source>Kesalahan dalam merespon permintaan.</source>
+        <target state="new">Kesalahan dalam merespon permintaan.</target>
+        <note>Request responded with exceptions.</note>
+      </trans-unit>
+      <trans-unit id="Failure">
+        <source>Tidak dapat memproses permintaan.</source>
+        <target state="new">Tidak dapat memproses permintaan.</target>
+        <note>Unable to process the request.</note>
+      </trans-unit>
+      <trans-unit id="Hello">
+        <source>Hai, Web API siap untuk digunakan!</source>
+        <target state="new">Hai, Web API siap untuk digunakan!</target>
+        <note>Hello, the Web API is ready to rock!</note>
+      </trans-unit>
+      <trans-unit id="Success">
+        <source>Permintaan behasil.</source>
+        <target state="new">Permintaan behasil.</target>
+        <note>Request successful.</note>
+      </trans-unit>
+      <trans-unit id="Unauthorized">
+        <source>Permintaan ditolak.</source>
+        <target state="new">Permintaan ditolak.</target>
+        <note>Request denied.</note>
+      </trans-unit>
+      <trans-unit id="Unhandled">
+        <source>Terdapat kesalahan yang tidak dapat ditangani.</source>
+        <target state="new">Terdapat kesalahan yang tidak dapat ditangani.</target>
+        <note>An unhandled error occurred.</note>
+      </trans-unit>
+      <trans-unit id="UriNotFound">
+        <source>URI yang diminta tidak ditemukan. Silahkan periksa dan coba kembali.</source>
+        <target state="new">URI yang diminta tidak ditemukan. Silahkan periksa dan coba kembali.</target>
+        <note>The specified URI does not exist. Please verify and try again.</note>
+      </trans-unit>
+      <trans-unit id="ValidationDetail">
+        <source>Silahkan perbaiki kesalahan validasi berikut dan coba kembali.</source>
+        <target state="new">Silahkan perbaiki kesalahan validasi berikut dan coba kembali.</target>
+        <note>Please correct the specified validation errors and try again.</note>
+      </trans-unit>
+      <trans-unit id="ValidationError">
+        <source>Terdapat kesalahan validasi dalam merespon permintaan.</source>
+        <target state="new">Terdapat kesalahan validasi dalam merespon permintaan.</target>
+        <note>Request responded with validation error(s).</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

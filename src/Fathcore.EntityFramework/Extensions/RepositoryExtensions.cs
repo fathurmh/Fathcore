@@ -16,7 +16,7 @@ namespace Fathcore.EntityFramework.Extensions
     public static class RepositoryExtensions
     {
         /// <summary>
-        /// Select all entities. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// If no entity is found, then zero collection is returned.
         /// </summary>
@@ -31,7 +31,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -48,7 +48,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -65,7 +65,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -82,7 +82,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -99,7 +99,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// If no entity is found, then zero collection is returned.
         /// </summary>
@@ -115,7 +115,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -133,7 +133,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -151,7 +151,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -169,7 +169,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select all entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -187,7 +187,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// If no entity is found, then zero collection is returned.
         /// </summary>
@@ -203,7 +203,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -221,7 +221,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -239,7 +239,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -257,7 +257,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities with the given navigation property values. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -275,7 +275,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// If no entity is found, then zero collection is returned.
         /// </summary>
@@ -292,7 +292,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -311,7 +311,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -330,7 +330,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -349,7 +349,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select paged entities with the given navigation property values and filters a sequence of values based on a predicate. If the entities is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -368,7 +368,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select an entity and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select an entity and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entity, if found, is attached to the context and returned.
         /// If no entity is found, then null is returned.
         /// </summary>
@@ -384,7 +384,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entity, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -402,7 +402,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entity, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -420,7 +420,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entity, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -438,7 +438,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously select an entity with the given navigation property values and filters a sequence of values based on a predicate. If the entity is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entity, if found, is attached to the context and returned.
         /// The navigation property to be included is specified starting with the type of entity being queried (TEntity).
         /// If you wish to include additional types based on the navigation properties of the type being included, then chain a call with comma separated.
@@ -456,7 +456,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Asynchronously finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned.
         /// If no entity is found, then null is returned.
         /// </summary>
@@ -478,7 +478,30 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Begins tracking the given entity, and any other reachable entities that are not already being tracked,
+        /// Asynchronously finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database.
+        /// Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned.
+        /// If no entity is found, then null is returned.
+        /// </summary>
+        /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
+        /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The entity found, or null.</returns>
+        public static async Task<TEntity> SelectAsync<TEntity>(this IRepository<TEntity> repository, object[] keyValue, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<TEntity>, IBaseEntity
+        {
+            if (keyValue == null)
+                throw new ArgumentNullException(nameof(keyValue));
+
+            TEntity entity = await repository.DbContext.Set<TEntity>().FindAsync(keyValue, cancellationToken);
+            if (repository.DbContext.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
+                repository.DbContext.Detach(entity);
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Asynchronously begins tracking the given entity, and any other reachable entities that are not already being tracked,
         /// in the EntityState.Added state such that they will be inserted into the database when SaveChanges is called.
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
@@ -498,7 +521,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Begins tracking the given entities, and any other reachable entities that are not already being tracked,
+        /// Asynchronously begins tracking the given entities, and any other reachable entities that are not already being tracked,
         /// in the EntityState.Added state such that they will be inserted into the database when SaveChanges is called.
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
@@ -518,7 +541,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Begins tracking the given entity in the EntityState.Modified state such that it will be updated in the database when SaveChanges is called.
+        /// Asynchronously begins tracking the given entity in the EntityState.Modified state such that it will be updated in the database when SaveChanges is called.
         /// A recursive search of the navigation properties will be performed to find reachable entities that are not already being tracked by the context.
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
@@ -538,7 +561,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Begins tracking the given entities in the EntityState.Modified state such that they will be updated in the database when SaveChanges is called.
+        /// Asynchronously begins tracking the given entities in the EntityState.Modified state such that they will be updated in the database when SaveChanges is called.
         /// A recursive search of the navigation properties will be performed to find reachable entities that are not already being tracked by the context.
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
@@ -558,7 +581,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
+        /// Asynchronously begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
@@ -575,28 +598,25 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
+        /// Asynchronously begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
-        /// <param name="keyValues">The values of the primary key for the entity to be deleted.</param>
+        /// <param name="keyValue">The values of the primary key for the entity to be deleted.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static async Task DeleteAsync<TEntity>(this IRepository<TEntity> repository, IEnumerable<object> keyValues, CancellationToken cancellationToken = default)
+        public static async Task DeleteAsync<TEntity>(this IRepository<TEntity> repository, object[] keyValue, CancellationToken cancellationToken = default)
             where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            if (keyValues == null || keyValues.Count() == 0)
-                throw new ArgumentNullException(nameof(keyValues));
+            if (keyValue == null)
+                throw new ArgumentNullException(nameof(keyValue));
 
-            foreach (var keyValue in keyValues)
-            {
-                var entity = await repository.SelectAsync(keyValue, cancellationToken);
-                await Task.Run(() => repository.DbContext.Set<TEntity>().Remove(entity), cancellationToken);
-            }
+            var entity = await repository.SelectAsync(keyValue, cancellationToken);
+            await Task.Run(() => repository.DbContext.Set<TEntity>().Remove(entity));
         }
 
         /// <summary>
-        /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
+        /// Asynchronously begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>
@@ -613,7 +633,7 @@ namespace Fathcore.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Begins tracking the given entity in the EntityState.Deleted state such that they will be removed from the database when SaveChanges is called.
+        /// Asynchronously begins tracking the given entity in the EntityState.Deleted state such that they will be removed from the database when SaveChanges is called.
         /// </summary>
         /// <typeparam name="TEntity">The class inherits from <see cref="BaseEntity{TEntity}"/>.</typeparam>
         /// <param name="repository">The <see cref="IRepository{TEntity}"/>.</param>

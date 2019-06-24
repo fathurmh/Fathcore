@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Fathcore.Infrastructure.Enum;
@@ -11,7 +12,7 @@ namespace Fathcore.Infrastructure.ResponseWrapper
     /// Represents response exception.
     /// </summary>
     [DataContract]
-    public class ResponseException : IResponseException
+    public class ResponseException : Exception, IResponseException
     {
         private readonly IErrorType _errorType;
 
