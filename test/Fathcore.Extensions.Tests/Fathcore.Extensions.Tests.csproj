@@ -15,4 +15,12 @@
     <ProjectReference Include="..\..\src\Fathcore.Extensions\Fathcore.Extensions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="coverlet.msbuild" Version="2.6.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="Moq" Version="4.12.0" />
+  </ItemGroup>
+
 </Project>
