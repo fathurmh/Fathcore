@@ -29,8 +29,8 @@ namespace Fathcore.Extensions.Hosting
             var startupTasks = webHost.Services.GetServices<IStartupTask>();
 
             logger.LogInformation("Startup tasks execution started.");
-            await startupTasksAsync.ForEachAsync(task => task.ExecuteAsync(cancellationToken));
-            startupTasks.OrderBy(task => task.Order).ToList().ForEach(task => task.Execute());
+            await startupTasksAsync.ForEachAsync(task => task.StartAsync(cancellationToken));
+            startupTasks.OrderBy(task => task.Order).ToList().ForEach(task => task.Start());
             logger.LogInformation("Startup tasks execution finished.");
 
             await webHost.RunAsync(cancellationToken);
@@ -48,8 +48,8 @@ namespace Fathcore.Extensions.Hosting
             var startupTasks = webHost.Services.GetServices<IStartupTask>();
 
             logger.LogInformation("Startup tasks execution started.");
-            HelperContext.Current.RunSync(() => startupTasksAsync.ForEachAsync(task => task.ExecuteAsync()));
-            startupTasks.OrderBy(task => task.Order).ToList().ForEach(task => task.Execute());
+            HelperContext.Current.RunSync(() => startupTasksAsync.ForEachAsync(task => task.StartAsync()));
+            startupTasks.OrderBy(task => task.Order).ToList().ForEach(task => task.Start());
             logger.LogInformation("Startup tasks execution finished.");
 
             webHost.Run();

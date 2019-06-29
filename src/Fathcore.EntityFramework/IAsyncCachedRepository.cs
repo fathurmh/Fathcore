@@ -10,8 +10,7 @@ namespace Fathcore.EntityFramework
     /// <summary>
     /// Provides the interface for generic asynchronous cached repository pattern.
     /// </summary>
-    /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
-    public interface IAsyncCachedRepository<TEntity>
+    public partial interface ICachedRepository<TEntity>
         where TEntity : BaseEntity<TEntity>, IBaseEntity
     {
         /// <summary>

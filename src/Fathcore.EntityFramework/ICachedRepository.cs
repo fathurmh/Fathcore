@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Fathcore.Infrastructure.Pagination;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fathcore.EntityFramework
 {
@@ -9,9 +11,24 @@ namespace Fathcore.EntityFramework
     /// Provides the interface for generic cached repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity being queried.</typeparam>
-    public interface ICachedRepository<TEntity>
+    public partial interface ICachedRepository<TEntity>
         where TEntity : BaseEntity<TEntity>, IBaseEntity
     {
+        /// <summary>
+        /// Returns a new query where the change tracker will keep track of changes for all entities that are returned.
+        /// Any modification to the entity instances will be detected and persisted to the database during <see cref="DbContext.SaveChanges()"/>.
+        /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
+        /// </summary>
+        /// <value>A new query where the result set will be tracked by the context.</value>
+        IQueryable<TEntity> Table { get; }
+
+        /// <summary>
+        /// Returns a new query where the query ignoring the filters and change tracker will not track any of the entities that are returned. If the entity instances are modified, this will not be detected by the change tracker and <see cref="DbContext.SaveChanges()"/> will not persist those changes to the database.
+        /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
+        /// </summary>
+        /// <returns>A new query where the result set ignore query filter and will not be tracked by the context.</returns>
+        IQueryable<TEntity> TableNoFilters { get; }
+
         /// <summary>
         /// Select all entities. If the entities is exists in cache, then it is returned immediately without making a request to the database.
         /// Otherwise, a query is made to the database for the entities.

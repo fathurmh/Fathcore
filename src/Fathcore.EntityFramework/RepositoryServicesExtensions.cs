@@ -38,5 +38,36 @@ namespace Fathcore.Extensions.DependencyInjection
 
             return services;
         }
+
+        /// <summary>
+        /// Adds an <see cref="Repository{TEntity}"/> service with default implementation type to the specified <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        public static IServiceCollection AddGenericCachedRepository(this IServiceCollection services)
+        {
+            services.AddGenericCachedRepository(typeof(CachedRepository<>));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds an <see cref="Repository{TEntity}"/> service with an implementation type specified in implementationType to the specified <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="implementationType">The implementation type of the service.</param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        public static IServiceCollection AddGenericCachedRepository(this IServiceCollection services, Type implementationType)
+        {
+            var serviceType = typeof(ICachedRepository<>);
+            if (!implementationType.IsAssignableToGenericType(serviceType) || !implementationType.IsClass)
+                throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {typeof(ICachedRepository<>).Name}.");
+
+            services.AddGenericRepository();
+            services.AddMemoryCacheManager();
+            services.TryAddScoped(serviceType, implementationType);
+
+            return services;
+        }
     }
 }

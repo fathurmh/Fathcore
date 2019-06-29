@@ -14,27 +14,12 @@ namespace Fathcore.EntityFramework.Tests
         [InlineData(Provider.InMemory)]
         [InlineData(Provider.Sqlite)]
 
-        public void DbContextParameter_ShouldTheSame(Provider provider)
-        {
-            var options = TestHelper.Options("DbContextParameter_ShouldTheSame", provider);
-            using (var context = new TestDbContext(options))
-            {
-                var repository = new Repository<Classroom>(context);
-                Assert.Same(context, repository.DbContext);
-            }
-        }
-
-        [Theory]
-        [InlineData(Provider.InMemory)]
-        [InlineData(Provider.Sqlite)]
-
         public void Repository_Default_QueryTrackingBehavior_AsTracking(Provider provider)
         {
             var options = TestHelper.Options("Repository_Default_QueryTrackingBehavior_AsTracking", provider);
             using (var context = new TestDbContext(options))
             {
                 var repository = new Repository<Classroom>(context);
-                Assert.Equal(QueryTrackingBehavior.TrackAll, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
                 Assert.Equal(QueryTrackingBehavior.TrackAll, context.ChangeTracker.QueryTrackingBehavior);
             }
         }
@@ -50,7 +35,6 @@ namespace Fathcore.EntityFramework.Tests
             {
                 var repository = new Repository<Classroom>(context);
                 repository.AsTracking();
-                Assert.Equal(QueryTrackingBehavior.TrackAll, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
                 Assert.Equal(QueryTrackingBehavior.TrackAll, context.ChangeTracker.QueryTrackingBehavior);
             }
         }
@@ -66,7 +50,6 @@ namespace Fathcore.EntityFramework.Tests
             {
                 var repository = new Repository<Classroom>(context);
                 repository.AsNoTracking();
-                Assert.Equal(QueryTrackingBehavior.NoTracking, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
                 Assert.Equal(QueryTrackingBehavior.NoTracking, context.ChangeTracker.QueryTrackingBehavior);
             }
         }
@@ -82,22 +65,18 @@ namespace Fathcore.EntityFramework.Tests
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Equal(QueryTrackingBehavior.TrackAll, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
                 Assert.Equal(QueryTrackingBehavior.TrackAll, context.ChangeTracker.QueryTrackingBehavior);
 
                 repository.AsNoTracking();
 
-                Assert.Equal(QueryTrackingBehavior.NoTracking, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
                 Assert.Equal(QueryTrackingBehavior.NoTracking, context.ChangeTracker.QueryTrackingBehavior);
 
                 repository.AsTracking();
 
-                Assert.Equal(QueryTrackingBehavior.TrackAll, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
                 Assert.Equal(QueryTrackingBehavior.TrackAll, context.ChangeTracker.QueryTrackingBehavior);
 
                 repository.AsNoTracking();
 
-                Assert.Equal(QueryTrackingBehavior.NoTracking, repository.DbContext.ChangeTracker.QueryTrackingBehavior);
                 Assert.Equal(QueryTrackingBehavior.NoTracking, context.ChangeTracker.QueryTrackingBehavior);
             }
         }
@@ -376,7 +355,7 @@ namespace Fathcore.EntityFramework.Tests
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Select(keyValue: null));
+                Assert.Throws<ArgumentNullException>(() => repository.Select(keyValues: null));
             }
         }
 
@@ -642,7 +621,7 @@ namespace Fathcore.EntityFramework.Tests
             {
                 var repository = new Repository<Classroom>(context);
 
-                Assert.Throws<ArgumentNullException>(() => repository.Delete(keyValue: null));
+                Assert.Throws<ArgumentNullException>(() => repository.Delete(keyValues: null));
             }
         }
 

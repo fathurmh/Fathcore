@@ -439,6 +439,16 @@ namespace Fathcore.EntityFramework.Tests.AuditTrail
             }
         }
 
+        [Fact]
+        public void Assignable()
+        {
+            var implementationType = typeof(AuditHandler);
+            var serviceType = typeof(IAuditHandler);
+
+            Assert.True(serviceType.IsAssignableFrom(implementationType));
+            Assert.False(implementationType.IsAssignableFrom(serviceType));
+        }
+
         public static IEnumerable<object[]> HttpContextAccessorData()
         {
             var data = new List<object[]>();

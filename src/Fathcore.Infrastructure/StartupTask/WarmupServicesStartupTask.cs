@@ -30,7 +30,7 @@ namespace Fathcore.Infrastructure.StartupTask
         /// </summary>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete. </param>
         /// <returns>A task that represents the asynchronous migration operation.</returns>
-        public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {

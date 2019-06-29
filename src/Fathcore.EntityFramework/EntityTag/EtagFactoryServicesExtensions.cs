@@ -48,6 +48,8 @@ namespace Fathcore.Extensions.DependencyInjection
             if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IEtagFactory)}.");
 
+            services.AddHttpContextAccessor();
+            services.AddHashFactory();
             services.TryAddScoped(serviceType, implementationType);
 
             return services;

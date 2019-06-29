@@ -11,8 +11,8 @@
         int Order { get; }
 
         /// <summary>
-        /// Execute a startup task.
+        /// Start a startup task.
         /// </summary>
-        void Execute();
+        void Start();
     }
 }

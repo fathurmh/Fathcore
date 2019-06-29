@@ -17,7 +17,7 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddScopedMemoryCacheManager(this IServiceCollection services)
         {
-            services.AddScopedMemoryCacheManager<ICacheManager>();
+            services.AddScopedMemoryCacheManager<ScopedCacheManager>();
 
             return services;
         }
@@ -45,11 +45,11 @@ namespace Fathcore.Extensions.DependencyInjection
         public static IServiceCollection AddScopedMemoryCacheManager(this IServiceCollection services, Type implementationType)
         {
             var serviceType = typeof(ICacheManager);
-            if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
+            if (!implementationType.IsAssignableFrom(serviceType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(ICacheManager)}.");
 
-            services.TryAddScoped(implementationType);
-            services.TryAddScoped(serviceType, provider => provider.GetRequiredService(implementationType));
+            services.AddHttpContextAccessor();
+            services.TryAddScoped(serviceType, implementationType);
 
             return services;
         }
@@ -61,7 +61,7 @@ namespace Fathcore.Extensions.DependencyInjection
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddMemoryCacheManager(this IServiceCollection services)
         {
-            services.AddMemoryCacheManager<IStaticCacheManager>();
+            services.AddMemoryCacheManager<MemoryCacheManager>();
 
             return services;
         }
@@ -92,9 +92,9 @@ namespace Fathcore.Extensions.DependencyInjection
             if (!serviceType[0].IsAssignableFrom(implementationType) || !serviceType[1].IsAssignableFrom(implementationType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStaticCacheManager)} and {nameof(ILocker)}.");
 
-            services.TryAddSingleton(implementationType);
-            services.TryAddSingleton(serviceType[0], provider => provider.GetRequiredService(implementationType));
-            services.TryAddSingleton(serviceType[1], provider => provider.GetRequiredService(implementationType));
+            services.AddMemoryCache();
+            services.TryAddSingleton(serviceType[0], implementationType);
+            services.TryAddSingleton(serviceType[1], implementationType);
 
             return services;
         }

@@ -16,6 +16,7 @@ namespace Fathcore.EntityFramework
     public partial class Repository<TEntity> : IRepository<TEntity>
         where TEntity : BaseEntity<TEntity>, IBaseEntity
     {
+        private readonly IDbContext _dbContext;
         private readonly DbSet<TEntity> _entities;
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace Fathcore.EntityFramework
         /// You should not disable change tracking if you want to manipulate entity instances and persist those changes to the database using <see cref="DbContext.SaveChanges()"/>.
         /// The default value is <see cref="QueryTrackingBehavior.TrackAll"/>. This means the change tracker will keep track of changes for all entities that are returned from a LINQ query.
         /// </summary>
-        private QueryTrackingBehavior TrackingBehavior { get => DbContext.ChangeTracker.QueryTrackingBehavior; set => DbContext.ChangeTracker.QueryTrackingBehavior = value; }
+        private QueryTrackingBehavior TrackingBehavior { get => _dbContext.ChangeTracker.QueryTrackingBehavior; set => _dbContext.ChangeTracker.QueryTrackingBehavior = value; }
 
         /// <summary>
         /// Returns a new query where the change tracker will keep track of changes for all entities that are returned.
@@ -38,13 +39,7 @@ namespace Fathcore.EntityFramework
         /// The default tracking behavior for queries can be controlled by <see cref="QueryTrackingBehavior"/>.
         /// </summary>
         /// <returns>A new query where the result set will not be tracked by the context.</returns>
-
         private IQueryable<TEntity> TableNoTracking => _entities.AsNoTracking();
-
-        /// <summary>
-        /// Gets a minimal DbContext instance that represents a session with the database.
-        /// </summary>
-        public IDbContext DbContext { get; }
 
         /// <summary>
         /// Returns a new repository where the change tracker will keep track of changes for all entities that are returned.
@@ -86,11 +81,11 @@ namespace Fathcore.EntityFramework
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class.
         /// </summary>
-        /// <param name="context">An <see cref="IDbContext"/> context.</param>
-        public Repository(IDbContext context)
+        /// <param name="dbContext">An <see cref="IDbContext"/> context.</param>
+        public Repository(IDbContext dbContext)
         {
-            DbContext = context;
-            _entities = DbContext.Set<TEntity>();
+            _dbContext = dbContext;
+            _entities = _dbContext.Set<TEntity>();
         }
 
         /// <summary>
@@ -438,16 +433,16 @@ namespace Fathcore.EntityFramework
         /// Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned.
         /// If no entity is found, then null is returned.
         /// </summary>
-        /// <param name="keyValue">The values of the primary key for the entity to be found.</param>
+        /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
         /// <returns>The entity found, or null.</returns>
-        public virtual TEntity Select(object keyValue)
+        public virtual TEntity Select(params object[] keyValues)
         {
-            if (keyValue == null)
-                throw new ArgumentNullException(nameof(keyValue));
+            if (keyValues == null)
+                throw new ArgumentNullException(nameof(keyValues));
 
-            TEntity entity = _entities.Find(keyValue);
+            TEntity entity = _entities.Find(keyValues);
             if (TrackingBehavior == QueryTrackingBehavior.NoTracking)
-                DbContext.Detach(entity);
+                _dbContext.Detach(entity);
 
             return entity;
         }
@@ -519,13 +514,13 @@ namespace Fathcore.EntityFramework
         /// <summary>
         /// Begins tracking the given entity in the EntityState.Deleted state such that it will be removed from the database when SaveChanges is called.
         /// </summary>
-        /// <param name="keyValue">The values of the primary key for the entity to be deleted.</param>
-        public virtual void Delete(object keyValue)
+        /// <param name="keyValues">The values of the primary key for the entity to be deleted.</param>
+        public virtual void Delete(params object[] keyValues)
         {
-            if (keyValue == null)
-                throw new ArgumentNullException(nameof(keyValue));
+            if (keyValues == null)
+                throw new ArgumentNullException(nameof(keyValues));
 
-            var entity = Select(keyValue);
+            var entity = Select(keyValues);
             _entities.Remove(entity);
         }
 
@@ -577,19 +572,19 @@ namespace Fathcore.EntityFramework
         {
             try
             {
-                var count = DbContext.SaveChanges();
+                var count = _dbContext.SaveChanges();
 
                 if (TrackingBehavior == QueryTrackingBehavior.NoTracking)
                 {
-                    var currentEntries = DbContext.GetCurrentEntries();
-                    DbContext.DetachRange(currentEntries.Select(p => (TEntity)p.Entity));
+                    var currentEntries = _dbContext.GetCurrentEntries();
+                    _dbContext.DetachRange(currentEntries.Select(p => (TEntity)p.Entity));
                 }
 
                 return count;
             }
             catch (DbUpdateException)
             {
-                DbContext.RollbackEntityChanges();
+                _dbContext.RollbackEntityChanges();
                 throw;
             }
         }

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Fathcore.EntityFramework.Extensions;
 using Fathcore.Infrastructure.Pagination;
 
 namespace Fathcore.EntityFramework
 {
-    public partial class CachedRepository<TEntity> : IAsyncCachedRepository<TEntity>
+    public partial class CachedRepository<TEntity> : ICachedRepository<TEntity>
         where TEntity : BaseEntity<TEntity>, IBaseEntity
     {
         /// <summary>
