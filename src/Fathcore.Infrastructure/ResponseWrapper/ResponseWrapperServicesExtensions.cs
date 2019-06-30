@@ -1,6 +1,7 @@
 ﻿using System;
 using Fathcore.Infrastructure.ResponseWrapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fathcore.Extensions.DependencyInjection
 {
@@ -27,7 +28,8 @@ namespace Fathcore.Extensions.DependencyInjection
 
             configure.Invoke(options);
 
-            services.AddSingleton(typeof(IResponseHandler), options.ResponseHandler);
+            services.TryAddSingleton(typeof(IResponseHandler), options.ResponseHandler);
+            services.AddMvcCore(opt => opt.Filters.Add<ResponseWrapperFilter>());
 
             return services;
         }

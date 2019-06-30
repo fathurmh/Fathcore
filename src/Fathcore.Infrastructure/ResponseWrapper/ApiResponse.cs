@@ -54,7 +54,7 @@ namespace Fathcore.Infrastructure.ResponseWrapper
             IsSuccess = isSuccess;
             Message = message.FirstLetterToUpper();
             Result = result;
-            Pagination = new PagedData(pagedData);
+            Pagination = pagedData == null ? null : new PagedData(pagedData);
             ResponseException = responseException;
         }
     }
