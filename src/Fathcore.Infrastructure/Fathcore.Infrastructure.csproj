@@ -8,6 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DependencyInjection\**" />
+    <Compile Remove="Engines\**" />
+    <Compile Remove="FluentValidation\**" />
+    <Compile Remove="Localization\Resources\**" />
+    <EmbeddedResource Remove="DependencyInjection\**" />
+    <EmbeddedResource Remove="Engines\**" />
+    <EmbeddedResource Remove="FluentValidation\**" />
+    <EmbeddedResource Remove="Localization\Resources\**" />
+    <None Remove="DependencyInjection\**" />
+    <None Remove="Engines\**" />
+    <None Remove="FluentValidation\**" />
+    <None Remove="Localization\Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="EngineContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.4.0" />
     <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2" />

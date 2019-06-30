@@ -14,10 +14,11 @@ namespace Fathcore.Extensions.DependencyInjection
         /// Adds an <see cref="ICacheManager"/> service with default implementation type to the specified <see cref="IServiceCollection"/> if the service type hasn't already been registered.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="cacheSetting">The cache setting.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddScopedMemoryCacheManager(this IServiceCollection services)
+        public static IServiceCollection AddScopedMemoryCacheManager(this IServiceCollection services, ICacheSetting cacheSetting)
         {
-            services.AddScopedMemoryCacheManager<ScopedCacheManager>();
+            services.AddScopedMemoryCacheManager<ScopedCacheManager>(cacheSetting);
 
             return services;
         }
@@ -27,11 +28,12 @@ namespace Fathcore.Extensions.DependencyInjection
         /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation to use.</typeparam>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="cacheSetting">The cache setting.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddScopedMemoryCacheManager<TImplementation>(this IServiceCollection services)
+        public static IServiceCollection AddScopedMemoryCacheManager<TImplementation>(this IServiceCollection services, ICacheSetting cacheSetting)
             where TImplementation : class, ICacheManager
         {
-            services.AddScopedMemoryCacheManager(typeof(TImplementation));
+            services.AddScopedMemoryCacheManager(typeof(TImplementation), cacheSetting);
 
             return services;
         }
@@ -41,14 +43,16 @@ namespace Fathcore.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <param name="implementationType">The implementation type of the service.</param>
+        /// <param name="cacheSetting">The cache setting.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddScopedMemoryCacheManager(this IServiceCollection services, Type implementationType)
+        public static IServiceCollection AddScopedMemoryCacheManager(this IServiceCollection services, Type implementationType, ICacheSetting cacheSetting)
         {
             var serviceType = typeof(ICacheManager);
-            if (!implementationType.IsAssignableFrom(serviceType) || !implementationType.IsClass)
+            if (!serviceType.IsAssignableFrom(implementationType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(ICacheManager)}.");
 
             services.AddHttpContextAccessor();
+            services.TryAddSingleton(cacheSetting);
             services.TryAddScoped(serviceType, implementationType);
 
             return services;
@@ -58,10 +62,11 @@ namespace Fathcore.Extensions.DependencyInjection
         /// Adds <see cref="IStaticCacheManager"/> and <see cref="ILocker"/> service with default implementation type to the specified <see cref="IServiceCollection"/> if the service type hasn't already been registered.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="cacheSetting">The cache setting.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddMemoryCacheManager(this IServiceCollection services)
+        public static IServiceCollection AddMemoryCacheManager(this IServiceCollection services, ICacheSetting cacheSetting)
         {
-            services.AddMemoryCacheManager<MemoryCacheManager>();
+            services.AddMemoryCacheManager<MemoryCacheManager>(cacheSetting);
 
             return services;
         }
@@ -71,11 +76,12 @@ namespace Fathcore.Extensions.DependencyInjection
         /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation to use.</typeparam>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="cacheSetting">The cache setting.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddMemoryCacheManager<TImplementation>(this IServiceCollection services)
+        public static IServiceCollection AddMemoryCacheManager<TImplementation>(this IServiceCollection services, ICacheSetting cacheSetting)
             where TImplementation : class, IStaticCacheManager
         {
-            services.AddMemoryCacheManager(typeof(TImplementation));
+            services.AddMemoryCacheManager(typeof(TImplementation), cacheSetting);
 
             return services;
         }
@@ -85,14 +91,16 @@ namespace Fathcore.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <param name="implementationType">The implementation type of the service.</param>
+        /// <param name="cacheSetting">The cache setting.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddMemoryCacheManager(this IServiceCollection services, Type implementationType)
+        public static IServiceCollection AddMemoryCacheManager(this IServiceCollection services, Type implementationType, ICacheSetting cacheSetting)
         {
             var serviceType = new[] { typeof(IStaticCacheManager), typeof(ILocker) };
             if (!serviceType[0].IsAssignableFrom(implementationType) || !serviceType[1].IsAssignableFrom(implementationType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {nameof(IStaticCacheManager)} and {nameof(ILocker)}.");
 
             services.AddMemoryCache();
+            services.TryAddSingleton(cacheSetting);
             services.TryAddSingleton(serviceType[0], implementationType);
             services.TryAddSingleton(serviceType[1], implementationType);
 

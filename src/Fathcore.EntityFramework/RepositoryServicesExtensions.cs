@@ -1,5 +1,6 @@
 ﻿using System;
 using Fathcore.EntityFramework;
+using Fathcore.Infrastructure.Caching;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -43,10 +44,11 @@ namespace Fathcore.Extensions.DependencyInjection
         /// Adds an <see cref="Repository{TEntity}"/> service with default implementation type to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="cacheSetting">The cache setting.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddGenericCachedRepository(this IServiceCollection services)
+        public static IServiceCollection AddGenericCachedRepository(this IServiceCollection services, ICacheSetting cacheSetting)
         {
-            services.AddGenericCachedRepository(typeof(CachedRepository<>));
+            services.AddGenericCachedRepository(typeof(CachedRepository<>), cacheSetting);
 
             return services;
         }
@@ -56,15 +58,16 @@ namespace Fathcore.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <param name="implementationType">The implementation type of the service.</param>
+        /// <param name="cacheSetting">The cache setting.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddGenericCachedRepository(this IServiceCollection services, Type implementationType)
+        public static IServiceCollection AddGenericCachedRepository(this IServiceCollection services, Type implementationType, ICacheSetting cacheSetting)
         {
             var serviceType = typeof(ICachedRepository<>);
             if (!implementationType.IsAssignableToGenericType(serviceType) || !implementationType.IsClass)
                 throw new InvalidOperationException($"The {nameof(implementationType)} must be concrete class and implements {typeof(ICachedRepository<>).Name}.");
 
             services.AddGenericRepository();
-            services.AddMemoryCacheManager();
+            services.AddMemoryCacheManager(cacheSetting);
             services.TryAddScoped(serviceType, implementationType);
 
             return services;

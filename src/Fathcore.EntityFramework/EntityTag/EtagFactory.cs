@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Text;
 using Fathcore.Infrastructure.Enum;
-using Fathcore.Infrastructure.Localization.Resources;
 using Fathcore.Infrastructure.ResponseWrapper;
 using Fathcore.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Localization;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
@@ -19,8 +17,6 @@ namespace Fathcore.EntityFramework
     {
         private readonly HttpContext _httpContext;
         private readonly IHashFactory _hashFactory;
-        private readonly IStringLocalizer<CommonMessage> _commonMessageLocalizer;
-        private readonly IStringLocalizer<ValidationMessage> _validationMessageLocalizer;
 
         /// <summary>
         /// Gets current if match header value.
@@ -36,12 +32,10 @@ namespace Fathcore.EntityFramework
             }
         }
 
-        public EtagFactory(IHttpContextAccessor httpContextAccessor, IHashFactory hashFactory, IStringLocalizer<CommonMessage> commonMessageLocalizer, IStringLocalizer<ValidationMessage> validationMessageLocalizer)
+        public EtagFactory(IHttpContextAccessor httpContextAccessor, IHashFactory hashFactory)
         {
             _httpContext = httpContextAccessor.HttpContext;
             _hashFactory = hashFactory;
-            _commonMessageLocalizer = commonMessageLocalizer;
-            _validationMessageLocalizer = validationMessageLocalizer;
         }
 
         /// <summary>
@@ -232,13 +226,13 @@ namespace Fathcore.EntityFramework
                     if (!validateResult && CurrentIfMatchValue != "*" && string.IsNullOrWhiteSpace(CurrentIfMatchValue))
                     {
                         _httpContext.Response.StatusCode = StatusCodes.Status412PreconditionFailed;
-                        throw new ResponseException(_validationMessageLocalizer[ValidationMessage.ArgumentNull, HeaderNames.IfMatch], ErrorType.PreconditionFailed);
+                        throw new ResponseException($"The {HeaderNames.IfMatch} Header field cannot be null.", ErrorType.PreconditionFailed);
                     }
 
                     if (!validateResult && CurrentIfMatchValue != "*" && !string.IsNullOrWhiteSpace(CurrentIfMatchValue))
                     {
                         _httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
-                        throw new ResponseException(_commonMessageLocalizer[CommonMessage.Conflict], ErrorType.Conflict);
+                        throw new ResponseException("The data may have been modified or deleted since it were loaded.", ErrorType.Conflict);
                     }
                 }
                 break;

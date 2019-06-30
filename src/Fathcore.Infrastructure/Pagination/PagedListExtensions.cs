@@ -34,7 +34,7 @@ namespace Fathcore.Extensions
         /// <returns>A <see cref="IPagedList{T}"/> that contains elements from the input sequence.</returns>
         public static IPagedList<T> ToPagedList<T>(this IEnumerable<T> source, int pageIndex, int pageSize)
         {
-            return source.AsQueryable().ToPagedList(pageIndex, pageSize);
+            return new PagedList<T>(source.AsQueryable(), pageIndex, pageSize);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Fathcore.Extensions
         /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IPagedList{T}"/> that contains elements from the input sequence.</returns>
         public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IEnumerable<T> source, int pageIndex, int pageSize, CancellationToken cancellationToken = default)
         {
-            return await source.AsQueryable().ToPagedListAsync(pageIndex, pageSize, cancellationToken);
+            return await Task.Run(() => new PagedList<T>(source.AsQueryable(), pageIndex, pageSize), cancellationToken);
         }
 
         /// <summary>

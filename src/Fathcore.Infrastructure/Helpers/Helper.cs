@@ -6,7 +6,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Fathcore.Infrastructure.FileProviders;
 
 namespace Fathcore.Infrastructure.Helpers
 {
@@ -21,16 +20,10 @@ namespace Fathcore.Infrastructure.Helpers
         private readonly Random _random;
         private readonly Regex _extractTextDoubleQuoted;
 
-        /// <summary>
-        /// Gets or sets the default file provider.
-        /// </summary>
-        public IFileProvider DefaultFileProvider { get; set; }
-
         public Helper()
         {
             _random = new Random();
             _extractTextDoubleQuoted = new Regex(_textDoubleQuotedPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            DefaultFileProvider = EngineContext.Current.Resolve<IFileProvider>();
         }
 
         /// <summary>

@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Fathcore.Infrastructure.FileProviders;
 
 namespace Fathcore.Infrastructure.Helpers
 {
     public partial interface IHelper
     {
-        /// <summary>
-        /// Gets or sets the default file provider.
-        /// </summary>
-        IFileProvider DefaultFileProvider { get; set; }
-
         /// <summary>
         /// Generate random string.
         /// </summary>

@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Fathcore.Extensions;
 using Fathcore.Infrastructure;
+using Fathcore.Infrastructure.FileProviders;
 using PemUtils;
 
 namespace Fathcore.Security.Cryptography
@@ -14,6 +15,7 @@ namespace Fathcore.Security.Cryptography
     public class EncryptFactory : IEncryptFactory
     {
         private readonly RSA _defaultRsa;
+        private readonly IFileProvider _fileProvider;
 
         /// <summary>
         /// Gets default RSA encryption padding.
@@ -30,9 +32,10 @@ namespace Fathcore.Security.Cryptography
         /// </summary>
         public string DefaultRsaPrivateKeyFileName { get; } = "rsa_2048_priv.pem";
 
-        public EncryptFactory()
+        public EncryptFactory(IFileProvider fileProvider)
         {
-            string filePath = Path.Combine(HelperContext.Current.DefaultFileProvider.BaseDirectory, DefaultRsaPrivateKeyFileName);
+            _fileProvider = fileProvider;
+            var filePath = Path.Combine(_fileProvider.BaseDirectory, DefaultRsaPrivateKeyFileName);
             _defaultRsa = ReadRsaFile(filePath);
         }
 
@@ -113,7 +116,7 @@ namespace Fathcore.Security.Cryptography
             }
             else
             {
-                if (HelperContext.Current.DefaultFileProvider.FileExists(filePath))
+                if (_fileProvider.FileExists(filePath))
                 {
                     using (FileStream stream = File.OpenRead(filePath))
                     {
@@ -139,7 +142,7 @@ namespace Fathcore.Security.Cryptography
                         }
                     }
 
-                    using (FileStream stream = File.OpenWrite(Path.Combine(HelperContext.Current.DefaultFileProvider.GetParentDirectory(filePath), DefaultRsaPublicKeyFileName)))
+                    using (FileStream stream = File.OpenWrite(Path.Combine(_fileProvider.GetParentDirectory(filePath), DefaultRsaPublicKeyFileName)))
                     {
                         using (var writer = new PemWriter(stream))
                         {

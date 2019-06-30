@@ -55,6 +55,8 @@ namespace Fathcore.Infrastructure.Engines
                     else
                         registrar.RegisterAsSelf(services, type, attribute);
                 }
+
+                _serviceProvider = services.BuildServiceProvider();
             }
 
             if (options.ActivateClassRegistrar)
@@ -65,6 +67,8 @@ namespace Fathcore.Infrastructure.Engines
 
                 foreach (var dependencyRegistrar in dependencyRegistrars)
                     dependencyRegistrar.Register(services);
+
+                _serviceProvider = services.BuildServiceProvider();
             }
 
             services.TryAddSingleton(TypeFinder);

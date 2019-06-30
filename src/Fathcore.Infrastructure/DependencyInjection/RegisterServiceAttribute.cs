@@ -16,7 +16,7 @@ namespace Fathcore.Infrastructure.DependencyInjection
         /// <summary>
         /// Initializes a new instance of the <see cref="RegisterServiceAttribute"/> class.
         /// </summary>
-        public RegisterServiceAttribute() : this(Lifetime.Transient)
+        public RegisterServiceAttribute() : this(Lifetime.Scoped)
         {
         }
 

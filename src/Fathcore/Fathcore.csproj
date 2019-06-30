@@ -21,7 +21,6 @@
 
   <Target Name="IncludeP2PAssets">
     <ItemGroup>
-      <BuildOutputInPackage Include="$(OutputPath)Fathcore.DependencyInjection.dll" />
       <BuildOutputInPackage Include="$(OutputPath)Fathcore.EntityFramework.dll" />
       <BuildOutputInPackage Include="$(OutputPath)Fathcore.Extensions.dll" />
       <BuildOutputInPackage Include="$(OutputPath)Fathcore.Infrastructure.dll" />

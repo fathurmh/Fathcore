@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Fathcore.Infrastructure
+namespace Fathcore.Infrastructure.Caching
 {
     /// <summary>
     /// Provides a convenience methodology for implementing locked access to resources. 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Fathcore.Infrastructure.Localization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
@@ -20,10 +19,10 @@ namespace Fathcore.Infrastructure.Extensions.Builder
         /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IApplicationBuilder UseAppLocalization(this IApplicationBuilder app, Action<RequestLocalizationOptions> configure = default)
         {
-            var supportedCultures = new List<CultureInfo>
+            var supportedCultures = new List<System.Globalization.CultureInfo>
             {
-                new CultureInfo("en-US"),
-                new CultureInfo("id-ID"),
+                new System.Globalization.CultureInfo("en-US"),
+                new System.Globalization.CultureInfo("id-ID"),
             };
 
             var localizationOptions = new RequestLocalizationOptions
