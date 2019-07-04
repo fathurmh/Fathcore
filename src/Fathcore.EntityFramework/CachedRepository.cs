@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Fathcore.Extensions;
 using Fathcore.Infrastructure.Caching;
 using Fathcore.Infrastructure.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -66,7 +67,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found, or zero collection.</returns>
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, object>> navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), navigationProperty.GetBodyString());
             return _cacheManager.Get(key, () => _repository.SelectList(navigationProperty));
         }
 
@@ -79,7 +80,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found, or zero collection.</returns>
         public virtual IEnumerable<TEntity> SelectList(IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return _cacheManager.Get(key, () => _repository.SelectList(navigationProperties));
         }
 
@@ -117,7 +118,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString());
             return _cacheManager.Get(key, () => _repository.SelectList(predicate));
         }
 
@@ -131,7 +132,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), navigationProperty.GetBodyString());
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, navigationProperty));
         }
 
@@ -145,7 +146,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, navigationProperties));
         }
 
@@ -159,7 +160,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, string navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, navigationProperty);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), navigationProperty);
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, navigationProperty));
         }
 
@@ -173,7 +174,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual IEnumerable<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IEnumerable<string> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.OrderBy(p => p)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), string.Join(".", navigationProperties.OrderBy(p => p)));
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, navigationProperties));
         }
 
@@ -185,7 +186,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()));
             return _cacheManager.Get(key, () => _repository.SelectList(pagedInput));
         }
 
@@ -199,7 +200,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), navigationProperty.GetBodyString());
             return _cacheManager.Get(key, () => _repository.SelectList(pagedInput, navigationProperty));
         }
 
@@ -213,7 +214,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return _cacheManager.Get(key, () => _repository.SelectList(pagedInput, navigationProperties));
         }
 
@@ -227,7 +228,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, string navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), navigationProperty);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), navigationProperty);
             return _cacheManager.Get(key, () => _repository.SelectList(pagedInput, navigationProperty));
         }
 
@@ -241,7 +242,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), string.Join(".", navigationProperties.OrderBy(p => p)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), string.Join(".", navigationProperties.OrderBy(p => p)));
             return _cacheManager.Get(key, () => _repository.SelectList(pagedInput, navigationProperties));
         }
 
@@ -254,7 +255,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()));
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, pagedInput));
         }
 
@@ -269,7 +270,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), navigationProperty.GetBodyString());
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, pagedInput, navigationProperty));
         }
 
@@ -284,7 +285,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, pagedInput, navigationProperties));
         }
 
@@ -299,7 +300,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, string navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), navigationProperty);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), navigationProperty);
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, pagedInput, navigationProperty));
         }
 
@@ -314,7 +315,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual IPagedList<TEntity> SelectList(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), string.Join(".", navigationProperties.OrderBy(p => p)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), string.Join(".", navigationProperties.OrderBy(p => p)));
             return _cacheManager.Get(key, () => _repository.SelectList(predicate, pagedInput, navigationProperties));
         }
 
@@ -326,7 +327,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name);
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString());
             return _cacheManager.Get(key, () => _repository.Select(predicate));
         }
 
@@ -340,7 +341,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString(), navigationProperty.GetBodyString());
             return _cacheManager.Get(key, () => _repository.Select(predicate, navigationProperty));
         }
 
@@ -354,7 +355,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString(), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return _cacheManager.Get(key, () => _repository.Select(predicate, navigationProperties));
         }
 
@@ -368,7 +369,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, string navigationProperty)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, navigationProperty);
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString(), navigationProperty);
             return _cacheManager.Get(key, () => _repository.Select(predicate, navigationProperty));
         }
 
@@ -382,7 +383,7 @@ namespace Fathcore.EntityFramework
         /// <returns>The entity found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or null.</returns>
         public virtual TEntity Select(Expression<Func<TEntity, bool>> predicate, IEnumerable<string> navigationProperties)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, string.Join(".", navigationProperties.OrderBy(p => p)));
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString(), string.Join(".", navigationProperties.OrderBy(p => p)));
             return _cacheManager.Get(key, () => _repository.Select(predicate, navigationProperties));
         }
 

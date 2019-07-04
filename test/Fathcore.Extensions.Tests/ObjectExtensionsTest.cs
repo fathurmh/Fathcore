@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
 using Xunit;
@@ -207,6 +208,33 @@ namespace Fathcore.Extensions.Tests
             }
         }
 
+        [Fact]
+        public void NavigationProperty_to_String()
+        {
+            Expression<Func<Classroom, object>> nav = (x) => (x.Code);
+
+            var result = nav.GetBodyString();
+        }
+
+        [Fact]
+        public void Predicate_to_String()
+        {
+            Expression<Func<Classroom, bool>> predicate = (x) => ((x.CreatedBy == "2" || x.IsDeleted) && x.Code == "Code");
+
+            var result = predicate.GetBodyString();
+        }
+
         private class UnserializableObject { }
+
+        private class Classroom
+        {
+            public string Code { get; set; }
+            public string CreatedBy { get; set; }
+            public DateTime CreatedTime { get; set; }
+            public string ModifiedBy { get; set; }
+            public DateTime? ModifiedTime { get; set; }
+            public bool IsDeleted { get; set; }
+            public DateTime? DeletedTime { get; set; }
+        }
     }
 }

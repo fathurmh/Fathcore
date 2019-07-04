@@ -17,8 +17,8 @@ namespace Fathcore.Infrastructure.Localization
                 throw new ArgumentNullException(nameof(httpContext));
 
             var cultureInfo = httpContext.RequestServices.GetService<ICultureInfo>();
-            string defaultCulture = cultureInfo.Default;
-            string defaultUICulture = cultureInfo.DefaultUI;
+            var defaultCulture = cultureInfo?.Default ?? "en-US";
+            var defaultUICulture = cultureInfo?.DefaultUI ?? "en-US";
 
             if (defaultCulture == null && defaultUICulture == null)
                 return Task.FromResult((ProviderCultureResult)null);

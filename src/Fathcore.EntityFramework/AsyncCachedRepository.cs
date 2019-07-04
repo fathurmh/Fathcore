@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Fathcore.Extensions;
 using Fathcore.Infrastructure.Pagination;
 
 namespace Fathcore.EntityFramework
@@ -33,7 +34,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), navigationProperty.GetBodyString());
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(navigationProperty, cancellationToken));
         }
 
@@ -47,7 +48,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(navigationProperties, cancellationToken));
         }
 
@@ -88,7 +89,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString());
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, cancellationToken));
         }
 
@@ -103,7 +104,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), navigationProperty.GetBodyString());
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, navigationProperty, cancellationToken));
         }
 
@@ -118,7 +119,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, navigationProperties, cancellationToken));
         }
 
@@ -133,7 +134,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, string navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, navigationProperty);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), navigationProperty);
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, navigationProperty, cancellationToken));
         }
 
@@ -148,7 +149,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IEnumerable<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, IEnumerable<string> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), string.Join(".", navigationProperties.OrderBy(p => p)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), string.Join(".", navigationProperties.OrderBy(p => p)));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, navigationProperties, cancellationToken));
         }
 
@@ -161,7 +162,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(IPagedInput<TEntity> pagedInput, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(pagedInput, cancellationToken));
         }
 
@@ -176,7 +177,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), navigationProperty.GetBodyString());
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(pagedInput, navigationProperty, cancellationToken));
         }
 
@@ -191,7 +192,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(pagedInput, navigationProperties, cancellationToken));
         }
 
@@ -206,7 +207,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(IPagedInput<TEntity> pagedInput, string navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), navigationProperty);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), navigationProperty);
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(pagedInput, navigationProperty, cancellationToken));
         }
 
@@ -221,7 +222,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), string.Join(".", navigationProperties.OrderBy(p => p)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), string.Join(".", navigationProperties.OrderBy(p => p)));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(pagedInput, navigationProperties, cancellationToken));
         }
 
@@ -235,7 +236,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, pagedInput, cancellationToken));
         }
 
@@ -251,7 +252,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), navigationProperty.GetBodyString());
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, pagedInput, navigationProperty, cancellationToken));
         }
 
@@ -267,7 +268,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, pagedInput, navigationProperties, cancellationToken));
         }
 
@@ -283,7 +284,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, string navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), navigationProperty);
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), navigationProperty);
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, pagedInput, navigationProperty, cancellationToken));
         }
 
@@ -299,7 +300,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<IPagedList<TEntity>> SelectListAsync(Expression<Func<TEntity, bool>> predicate, IPagedInput<TEntity> pagedInput, IEnumerable<string> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.Name, pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector)), string.Join(".", navigationProperties.OrderBy(p => p)));
+            var key = string.Join(".", _cachePattern, nameof(SelectList), predicate.GetBodyString(), pagedInput.PageIndex, pagedInput.PageSize, string.Join(".", pagedInput.PageSorts.OrderBy(p => p.KeySelector).ToString()), string.Join(".", navigationProperties.OrderBy(p => p)));
             return await _cacheManager.Get(key, () => _repository.SelectListAsync(predicate, pagedInput, navigationProperties, cancellationToken));
         }
 
@@ -313,7 +314,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name);
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString());
             return await _cacheManager.Get(key, () => _repository.SelectAsync(predicate, cancellationToken));
         }
 
@@ -328,7 +329,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, navigationProperty.Name);
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString(), navigationProperty.GetBodyString());
             return await _cacheManager.Get(key, () => _repository.SelectAsync(predicate, navigationProperty, cancellationToken));
         }
 
@@ -343,7 +344,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, IEnumerable<Expression<Func<TEntity, object>>> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, string.Join(".", navigationProperties.OrderBy(p => p.Name).Select(p => p.Name)));
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString(), string.Join(".", navigationProperties.OrderBy(p => p.GetBodyString()).Select(p => p.GetBodyString())));
             return await _cacheManager.Get(key, () => _repository.SelectAsync(predicate, navigationProperties, cancellationToken));
         }
 
@@ -358,7 +359,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, string navigationProperty, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, navigationProperty);
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString(), navigationProperty);
             return await _cacheManager.Get(key, () => _repository.SelectAsync(predicate, navigationProperty, cancellationToken));
         }
 
@@ -373,7 +374,7 @@ namespace Fathcore.EntityFramework
         /// <returns>A task that represents the asynchronous operation. The entities found that contains elements from the input sequence that satisfy the condition specified by predicate predicate, or zero collection.</returns>
         public virtual async Task<TEntity> SelectAsync(Expression<Func<TEntity, bool>> predicate, IEnumerable<string> navigationProperties, CancellationToken cancellationToken = default)
         {
-            var key = string.Join(".", _cachePattern, nameof(Select), predicate.Name, string.Join(".", navigationProperties.OrderBy(p => p)));
+            var key = string.Join(".", _cachePattern, nameof(Select), predicate.GetBodyString(), string.Join(".", navigationProperties.OrderBy(p => p)));
             return await _cacheManager.Get(key, () => _repository.SelectAsync(predicate, navigationProperties, cancellationToken));
         }
 
