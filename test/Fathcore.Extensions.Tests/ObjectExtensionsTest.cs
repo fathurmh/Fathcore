@@ -219,7 +219,8 @@ namespace Fathcore.Extensions.Tests
         [Fact]
         public void Predicate_to_String()
         {
-            Expression<Func<Classroom, bool>> predicate = (x) => ((x.CreatedBy == "2" || x.IsDeleted) && x.Code == "Code");
+            var search = "2 Lalala";
+            Expression<Func<Classroom, bool>> predicate = (x) => ((x.CreatedBy == search || x.IsDeleted) && x.Code == "Code");
 
             var result = predicate.GetBodyString();
         }
