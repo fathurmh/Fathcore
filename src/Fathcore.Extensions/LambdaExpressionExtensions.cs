@@ -45,10 +45,16 @@ namespace Fathcore.Extensions
                     if (replacementExpression.Contains("value("))
                     {
                         var replacementValue = Expression.Lambda(expression).Compile().DynamicInvoke().ToString();
-                        if (!replacements.ContainsKey(replacementExpression))
-                        {
-                            replacements.Add(replacementExpression, replacementValue.ToString());
-                        }
+                        ReplaceExpression(replacements, replacementExpression, replacementValue);
+                    }
+                    break;
+
+                case ExpressionType.Convert:
+                    var convertReplacementExpression = expression.ToString();
+                    if (convertReplacementExpression.Contains("Convert("))
+                    {
+                        var replacementValue = Expression.Lambda(expression).Compile().DynamicInvoke().ToString();
+                        ReplaceExpression(replacements, convertReplacementExpression, replacementValue);
                     }
                     break;
 
@@ -83,6 +89,14 @@ namespace Fathcore.Extensions
                 default:
                     Trace.WriteLine("Unknown type");
                     break;
+            }
+        }
+
+        private static void ReplaceExpression(Dictionary<string, string> replacements, string replacementExpression, string replacementValue)
+        {
+            if (!replacements.ContainsKey(replacementExpression))
+            {
+                replacements.Add(replacementExpression, replacementValue.ToString());
             }
         }
     }

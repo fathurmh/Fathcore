@@ -219,8 +219,9 @@ namespace Fathcore.Extensions.Tests
         [Fact]
         public void Predicate_to_String()
         {
-            var search = "2 Lalala";
-            Expression<Func<Classroom, bool>> predicate = (x) => ((x.CreatedBy == search || x.IsDeleted) && x.Code == "Code");
+            var store = CompanyType.Store;
+            var code = "Code";
+            Expression<Func<Classroom, bool>> predicate = (x) => ((x.ClassType.Equals(store) || x.IsDeleted) && x.Code == code);
 
             var result = predicate.GetBodyString();
         }
@@ -229,6 +230,8 @@ namespace Fathcore.Extensions.Tests
 
         private class Classroom
         {
+            public int Id { get; set; }
+            public CompanyType ClassType { get; set; }
             public string Code { get; set; }
             public string CreatedBy { get; set; }
             public DateTime CreatedTime { get; set; }
@@ -236,6 +239,13 @@ namespace Fathcore.Extensions.Tests
             public DateTime? ModifiedTime { get; set; }
             public bool IsDeleted { get; set; }
             public DateTime? DeletedTime { get; set; }
+        }
+
+        public enum CompanyType : short
+        {
+            None = 0,
+            Store = 1,
+            Customer = 2
         }
     }
 }
